@@ -1,0 +1,20 @@
+{
+  "name": "trading-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Honest backtesting lab: decisions only from the past, costs included, results checked against independent implementations.",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run test",
+    "data": "node scripts/fetch-data.mjs",
+    "report": "tsx src/cli/report.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "^4.20.0",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}
