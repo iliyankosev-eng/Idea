@@ -5,6 +5,11 @@ const sources = {
   "data/sp500.csv": "https://raw.githubusercontent.com/datasets/s-and-p-500/main/data/data.csv",
   "data/btc.csv": "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
   "data/eth.csv": "https://raw.githubusercontent.com/coinmetrics/data/master/csv/eth.csv",
+  "data/gold.csv": "https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv",
+  "data/wti.csv": "https://raw.githubusercontent.com/datasets/oil-prices/main/data/wti-monthly.csv",
+  "data/us10y.csv": "https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv",
+  "data/fx.csv": "https://raw.githubusercontent.com/datasets/exchange-rates/main/data/monthly.csv",
+  ...Object.fromEntries(["ltc", "xrp", "doge", "ada", "bnb", "sol"].map((c) => [`data/${c}.csv`, `https://raw.githubusercontent.com/coinmetrics/data/master/csv/${c}.csv`])),
 };
 
 mkdirSync("data", { recursive: true });
@@ -12,7 +17,7 @@ for (const [file, url] of Object.entries(sources)) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   const text = await res.text();
-  if (text.length < 10_000) throw new Error(`${url}: suspiciously small (${text.length} bytes)`);
+  if (text.length < 5_000) throw new Error(`${url}: suspiciously small (${text.length} bytes)`);
   writeFileSync(file, text);
   console.log(`${file}: ${text.split("\n").length - 1} rows`);
 }
