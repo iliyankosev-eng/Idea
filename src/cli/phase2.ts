@@ -111,12 +111,12 @@ for (const c of assets) {
     const results = variants.map(([n, s]) => [n, simulate(c, s, win)] as const);
     const base = results[0]![1];
     out.push(`### ${label}: ${base.dates[0]} – ${base.dates[base.dates.length - 1]}`, "",
-      "| Вариант | CAGR % | Vol % | Max DD % | Sharpe | Сделки/год · Разходи · Данъци · Bootstrap |", "| --- | --- | --- | --- | --- | --- |");
+      "| Вариант | CAGR % | Vol % | Max DD % | Sharpe | Сделки/год · Разходи %/год · Данъци %/год · Bootstrap |", "| --- | --- | --- | --- | --- | --- |");
     for (const [n, r] of results) {
       const m = r.metrics;
       const isBase = r === base;
       const boot = isBase ? "" : ` · bootstrap ${fmt(bootstrapSharpeWin(r.returns, base.returns, c.bootstrapBlock, c.series.periodsPerYear) * 100, 0)}%`;
-      out.push(row(n, m, `${fmt(r.trades / m.years, 1)} · ${fmt(r.costsPaid * 100, 1)}% · ${fmt(r.taxesPaid * 100, 1)}%${boot}`));
+      out.push(row(n, m, `${fmt(r.trades / m.years, 1)} · ${fmt(r.costDragPerYear, 2)} · ${fmt(r.taxDragPerYear, 2)}${boot}`));
       if (!isBase && label.startsWith("Out")) {
         const b = base.metrics;
         const risk = m.sharpe > b.sharpe && Math.abs(m.maxDrawdown) <= (2 / 3) * Math.abs(b.maxDrawdown);

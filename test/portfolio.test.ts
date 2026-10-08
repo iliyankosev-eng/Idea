@@ -29,6 +29,7 @@ describe("tax (hand-calculated)", () => {
     const pf = simulatePortfolio(s, [1, 1, 0, 0], { lag: 0, cost: 0, band: 0, taxRate: 0.1 });
     expect(pf.metrics.totalReturn).toBeCloseTo(18, 10);
     expect(pf.taxesPaid).toBeCloseTo(0.02, 12);
+    expect(pf.taxDragPerYear).toBeCloseTo((0.02 / 1.2 / (3 / 365)) * 100, 8); // 0.02 paid out of 1.2
   });
 
   it("a loss next year does NOT reduce tax already due on last year's gain (no carry-forward or back)", () => {
@@ -56,6 +57,8 @@ describe("costs and rebalancing band", () => {
     const pf = simulatePortfolio(s, [1, 1, 1], { lag: 0, cost: 0.01, band: 0, taxRate: 0 });
     // buy 1.0 (cost 0.01), then at the end sell 0.99 worth (cost 0.0099)
     expect(pf.costsPaid).toBeCloseTo(0.01 + 0.0099, 12);
+    // drag: 1% of 1.0 when buying + 1% of 0.99 when selling = 2% of value, over 2 bars of 365/yr
+    expect(pf.costDragPerYear).toBeCloseTo((0.02 / (2 / 365)) * 100, 8);
     expect(pf.trades).toBe(2);
   });
 

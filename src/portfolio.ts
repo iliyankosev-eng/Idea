@@ -40,6 +40,9 @@ export interface PortfolioResult {
   /** Totals in units of starting capital (1.0 = 100% of the initial money). */
   readonly costsPaid: number;
   readonly taxesPaid: number;
+  /** Average yearly drag in % of the portfolio value at the time each cost/tax was paid. */
+  readonly costDragPerYear: number;
+  readonly taxDragPerYear: number;
 }
 
 const yearOf = (d: string) => d.slice(0, 4);
@@ -60,7 +63,7 @@ export function simulatePortfolio(series: Series, decisions: readonly number[], 
   let B = 0; // cost basis of the holding
   let realised = 0; // net realised gains in the current calendar year
   let pendingCost = 0; // trading costs of the current bar, deducted at its end
-  let trades = 0, costsPaid = 0, taxesPaid = 0;
+  let trades = 0, costsPaid = 0, taxesPaid = 0, costDrag = 0, taxDrag = 0;
   const returns: number[] = [], held: number[] = [], dates: string[] = [];
 
   const sell = (amount: number): void => {
@@ -85,6 +88,7 @@ export function simulatePortfolio(series: Series, decisions: readonly number[], 
     if (pendingCost <= 0) return;
     const E = H + C;
     const factor = 1 - pendingCost / E;
+    costDrag += pendingCost / E;
     H *= factor;
     C *= factor;
     costsPaid += pendingCost;
@@ -94,6 +98,7 @@ export function simulatePortfolio(series: Series, decisions: readonly number[], 
     const tax = o.taxRate * Math.max(0, realised);
     realised = 0;
     if (tax <= 0) return;
+    taxDrag += tax / (H + C);
     if (C < tax) sell(tax - C); // raise cash if needed; the gain of that sale counts in the new year
     C -= tax;
     taxesPaid += tax;
@@ -140,5 +145,9 @@ export function simulatePortfolio(series: Series, decisions: readonly number[], 
     start: dates[0]!,
     end: dates[dates.length - 1]!,
   });
-  return { dates, returns, heldWeights: held, metrics, trades, costsPaid, taxesPaid };
+  return {
+    dates, returns, heldWeights: held, metrics, trades, costsPaid, taxesPaid,
+    costDragPerYear: (costDrag / metrics.years) * 100,
+    taxDragPerYear: (taxDrag / metrics.years) * 100,
+  };
 }
