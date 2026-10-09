@@ -187,10 +187,11 @@ async function alpaca() {
   const manifest = existsSync(manPath) ? JSON.parse(readFileSync(manPath, "utf8")) : {};
   const months = monthRange(ALPACA.from, lastCompleteMonth());
   let added = 0, stopped = false;
-  const today = new Date().toISOString().slice(0, 10);
+  // Alpaca reads a date-only `end` as the end of that day; the free plan refuses the latest 15 minutes, so stop at yesterday.
+  const yesterday = new Date(Date.now() - DAY).toISOString().slice(0, 10);
   for (const tk of ALPACA.tickers) {
     // daily, adjusted for splits and dividends (small, refreshed every run)
-    const d = await alpacaBars(tk, "1Day", "2016-01-01", today, "all");
+    const d = await alpacaBars(tk, "1Day", "2016-01-01", yesterday, "all");
     if (d.length < 2000) throw new Error(`alpaca ${tk}: only ${d.length} daily bars`);
     write(`daily/alpaca/${tk}.csv`, "date,o,h,l,c,v\n" + d.map((b) => `${b.t.slice(0, 10)},${b.o},${b.h},${b.l},${b.c},${b.v}`).join("\n") + "\n");
     for (const month of months) {
