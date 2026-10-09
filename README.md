@@ -15,9 +15,29 @@
 ```bash
 npm install
 npm run data       # изтегля S&P 500 (Shiller) и BTC/ETH (CoinMetrics) в ./data
+npm run data:sync  # тегли клона data (1-минутни и пресни дневни данни) в ./data/branch
 npm run check      # type-check + всички тестове
 npm run report     # калибриране спрямо публикувания резултат на Faber
 ```
+
+## Данни: клонът `data`
+
+GitHub Actions (`.github/workflows/data.yml`) всеки ден в 05:23 UTC тегли данни, проверява ги и ги записва в отделен клон `data`. Така кодът в `main` остава чист.
+
+| Файл в клона `data` | Източник | Какво |
+| --- | --- | --- |
+| `daily/coinmetrics/<монета>.csv` | CoinMetrics API | Дневни цени: BTC, ETH, LTC, XRP, DOGE, ADA, BNB, SOL |
+| `daily/fred/DGS10.csv`, `DTB3.csv` | FRED | 10-годишна и 3-месечна доходност на САЩ |
+| `intraday/binance/<символ>/1m/<месец>.csv.gz` | Binance | 1-минутни свещи за BTCUSDT и ETHUSDT от 2020-01 |
+| `intraday/binance/manifest.json` | — | За всеки месец: SHA-256 на източника, брой редове, липсващи минути |
+
+Проверки преди запис:
+- SHA-256 спрямо публикувания от Binance;
+- секундите от 2025 г. насам се превръщат правилно (Binance минава на микросекунди);
+- спира при повторена минута, минута извън месеца, high/low, които не обхващат open/close, или цена ≤ 0;
+- липсващите минути (спирания на борсата) се броят и записват.
+
+`loadMinuteBars()` в `src/data/intraday.ts` чете тези файлове.
 
 ## Какво проверяват тестовете
 

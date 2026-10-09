@@ -22,6 +22,8 @@ jobs:
         run: npm run typecheck
       - name: Download data
         run: npm run data
+      - name: Get the data branch (1-minute data, fresh daily data)
+        run: git fetch --quiet --depth 1 origin data && git worktree add --quiet data/branch FETCH_HEAD
       - name: Tests (must run all, none skipped)
         run: npx vitest run --reporter=default --reporter=json --outputFile=vitest-results.json
       - name: Fail if any test was skipped
