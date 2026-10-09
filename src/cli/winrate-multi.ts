@@ -12,27 +12,14 @@ import { writeFileSync } from "node:fs";
 import { loadCoinMetrics } from "../data/coinmetrics.js";
 import { loadDailyCsv } from "../data/daily.js";
 import { runBacktest } from "../engine.js";
-import type { Strategy } from "../history.js";
 import { metrics } from "../metrics.js";
 import { buyAndHold, smaTrend } from "../strategies.js";
+import { tpSl } from "../tpsl.js";
+import type { Strategy } from "../history.js";
 import { extractTrades, tradeStats, type TradeStats } from "../trades.js";
 import type { Series } from "../types.js";
 
 const WARMUP = 500, SEEDS = 20;
-
-function tpSl(tp: number, sl: number, enterProb: number, seed: number): Strategy {
-  let entry = 0, holding = false, a = seed >>> 0;
-  const rnd = () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-  return (h) => {
-    const p = h.price(h.t);
-    if (holding) {
-      if (p >= entry * (1 + tp) || p <= entry * (1 - sl)) { holding = false; return 0; }
-      return 1;
-    }
-    if (enterProb >= 1 || rnd() < enterProb) { holding = true; entry = p; return 1; }
-    return 0;
-  };
-}
 
 function dailySigma(s: Series): number {
   const r = s.ret.slice(1, WARMUP + 1);
