@@ -14,7 +14,7 @@ export interface MinuteBars {
   readonly l: number[];
   readonly c: number[];
   readonly v: number[];
-  /** Expected minutes in the loaded range minus rows present. */
+  /** 24/7 markets (Binance): expected minutes in the range minus rows present. Stocks (Alpaca): NaN, see the manifest. */
   readonly missingMinutes: number;
 }
 
@@ -29,17 +29,20 @@ function months(from: string, to: string): string[] {
   return out;
 }
 
+export type Provider = "binance" | "alpaca";
+
 /**
- * Load Binance 1-minute bars written by scripts/pipeline.mjs (data branch, intraday/binance/<SYMBOL>/1m/<YYYY-MM>.csv.gz)
- * for whole months fromMonth..toMonth. Every month in the range must exist: a missing file is an error, not a gap.
+ * Load 1-minute bars written by scripts/pipeline.mjs (data branch, intraday/<provider>/<SYMBOL>/1m/<YYYY-MM>.csv.gz)
+ * for whole months fromMonth..toMonth. Binance: 24/7 crypto. Alpaca: US stocks, regular session only, raw prices
+ * (not adjusted for splits, so compare prices only within a day). Every month in the range must exist: a missing file is an error, not a gap.
  * Re-checks order and high/low consistency, so a corrupted file cannot slip through.
  */
-export function loadMinuteBars(dataDir: string, symbol: string, fromMonth: string, toMonth: string): MinuteBars {
+export function loadMinuteBars(dataDir: string, symbol: string, fromMonth: string, toMonth: string, provider: Provider = "binance"): MinuteBars {
   const t: number[] = [], o: number[] = [], h: number[] = [], l: number[] = [], c: number[] = [], v: number[] = [];
   const ms = months(fromMonth, toMonth);
   if (ms.length === 0) throw new DataError(`${symbol}: empty month range ${fromMonth}..${toMonth}`);
   for (const month of ms) {
-    const path = join(dataDir, "intraday", "binance", symbol, "1m", `${month}.csv.gz`);
+    const path = join(dataDir, "intraday", provider, symbol, "1m", `${month}.csv.gz`);
     if (!existsSync(path)) throw new DataError(`${symbol}: missing month file ${path}`);
     const lines = gunzipSync(readFileSync(path)).toString("utf8").split("\n");
     if (lines[0] !== "t,o,h,l,c,v") throw new DataError(`${symbol} ${month}: unexpected header "${lines[0]}"`);
@@ -59,7 +62,7 @@ export function loadMinuteBars(dataDir: string, symbol: string, fromMonth: strin
   const [fy, fm] = fromMonth.split("-").map(Number) as [number, number];
   const [ty, tm] = toMonth.split("-").map(Number) as [number, number];
   const expected = (Date.UTC(ty, tm, 1) - Date.UTC(fy, fm - 1, 1)) / MIN_MS;
-  return { symbol, t, o, h, l, c, v, missingMinutes: expected - t.length };
+  return { symbol, t, o, h, l, c, v, missingMinutes: provider === "binance" ? expected - t.length : NaN };
 }
 
 /** Daily bars (UTC days) from minute bars: open of the first minute, close of the last, max high, min low, summed volume. */

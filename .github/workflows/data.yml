@@ -35,6 +35,10 @@ jobs:
             mkdir databranch && cd databranch && git init --quiet -b data && git remote add origin "$URL"
           fi
       - name: Download and validate
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          BUDGET_MIN: "40"
         run: node scripts/pipeline.mjs databranch
       - name: Commit and push
         run: |

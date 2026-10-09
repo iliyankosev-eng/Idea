@@ -7,6 +7,12 @@
 //   intraday/binance/<SYMBOL>/1m/<YYYY-MM>.csv.gz  t,o,h,l,c,v  (t = open time, ms UTC; months are immutable,
 //                                                    downloaded once, SHA-256 checked against Binance's .CHECKSUM)
 //   intraday/binance/manifest.json  one entry per month: source hash, rows, missing minutes
+//   intraday/alpaca/<TICKER>/1m/<YYYY-MM>.csv.gz   t,o,h,l,c,v  (US stocks, consolidated SIP feed, regular session
+//                                                    09:30-16:00 New York only, RAW prices so months never change)
+//   intraday/alpaca/manifest.json   one entry per month: rows, trading days
+//   daily/alpaca/<TICKER>.csv       date,o,h,l,c,v  (split- and dividend-adjusted daily bars, refreshed every run)
+// Alpaca needs ALPACA_KEY_ID / ALPACA_SECRET_KEY in the environment (GitHub secrets); without them it is skipped.
+// A time budget stops new downloads after BUDGET_MIN minutes so a long first backfill is saved and resumed next run.
 //
 // Every file is validated before it is written; a failed check stops the run so bad data never reaches the branch.
 import { createHash } from "node:crypto";
@@ -15,6 +21,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { gzipSync } from "node:zlib";
+import { monthBoundsUtc, normalizeAlpacaBars } from "./lib/alpaca.mjs";
 import { lastCompleteMonth, monthRange, normalizeKlines } from "./lib/binance.mjs";
 
 const OUT = process.argv[2];
@@ -22,6 +29,9 @@ if (!OUT) throw new Error("usage: node scripts/pipeline.mjs <out-dir>");
 const UA = "Iliyan Kosev personal research iliyan.v.kosev@gmail.com"; // SEC/FRED ask for a contact in the User-Agent
 const DAY = 86_400_000;
 const summary = [];
+const STARTED = Date.now();
+const BUDGET_MIN = Number(process.env.BUDGET_MIN ?? 40);
+const overBudget = () => (Date.now() - STARTED) / 60_000 > BUDGET_MIN;
 
 function write(rel, data) {
   const p = join(OUT, rel);
@@ -29,9 +39,9 @@ function write(rel, data) {
   writeFileSync(p, data);
 }
 
-async function get(url, { binary = false, retries = 3 } = {}) {
+async function get(url, { binary = false, retries = 3, headers = {} } = {}) {
   for (let i = 1; ; i++) {
-    const res = await fetch(url, { headers: { "User-Agent": UA } });
+    const res = await fetch(url, { headers: { "User-Agent": UA, ...headers } });
     if (res.status === 404) return null;
     if (res.ok) return binary ? Buffer.from(await res.arrayBuffer()) : await res.text();
     if (i >= retries || (res.status < 500 && res.status !== 429)) throw new Error(`${url}: HTTP ${res.status}`);
@@ -127,6 +137,7 @@ async function binanceMonths() {
       const key = `${sym}/1m/${month}`;
       const rel = `intraday/binance/${key}.csv.gz`;
       if (manifest[key] && existsSync(join(OUT, rel))) continue; // months never change once published
+      if (overBudget()) { summary.push(`binance: time budget reached, rest continues next run`); break; }
       const base = `https://data.binance.vision/data/spot/monthly/klines/${sym}/1m/${sym}-1m-${month}.zip`;
       const zip = await get(base, { binary: true });
       if (!zip) { notFound.push(key); continue; }
@@ -150,6 +161,58 @@ async function binanceMonths() {
   summary.push(`binance: ${added} new months, ${Object.keys(sorted).length} total; months with missing minutes: ${missing.length ? missing.join("; ") : "none"}`);
 }
 
+// ---------- Alpaca US stocks ----------
+// Indices, large caps, gold/silver ETFs, and four large caps that did poorly in 2016-2026 (against survivorship bias).
+const ALPACA = { tickers: ["SPY", "QQQ", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AMD", "GLD", "SLV", "INTC", "BA", "XOM", "PFE"], from: "2016-01" };
+const ALPACA_HEADERS = { "APCA-API-KEY-ID": process.env.ALPACA_KEY_ID ?? "", "APCA-API-SECRET-KEY": process.env.ALPACA_SECRET_KEY ?? "" };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function alpacaBars(ticker, timeframe, start, end, adjustment) {
+  const bars = [];
+  let token = null;
+  do {
+    const q = new URLSearchParams({ symbols: ticker, timeframe, start, end, adjustment, feed: "sip", limit: "10000", sort: "asc" });
+    if (token) q.set("page_token", token);
+    await sleep(320); // free plan: 200 requests per minute
+    const j = JSON.parse(await get(`https://data.alpaca.markets/v2/stocks/bars?${q}`, { headers: ALPACA_HEADERS, retries: 5 }));
+    bars.push(...(j.bars?.[ticker] ?? []));
+    token = j.next_page_token;
+  } while (token);
+  return bars;
+}
+
+async function alpaca() {
+  if (!process.env.ALPACA_KEY_ID || !process.env.ALPACA_SECRET_KEY) { summary.push("alpaca: no keys, skipped"); return; }
+  const manPath = join(OUT, "intraday/alpaca/manifest.json");
+  const manifest = existsSync(manPath) ? JSON.parse(readFileSync(manPath, "utf8")) : {};
+  const months = monthRange(ALPACA.from, lastCompleteMonth());
+  let added = 0, stopped = false;
+  const today = new Date().toISOString().slice(0, 10);
+  for (const tk of ALPACA.tickers) {
+    // daily, adjusted for splits and dividends (small, refreshed every run)
+    const d = await alpacaBars(tk, "1Day", "2016-01-01", today, "all");
+    if (d.length < 2000) throw new Error(`alpaca ${tk}: only ${d.length} daily bars`);
+    write(`daily/alpaca/${tk}.csv`, "date,o,h,l,c,v\n" + d.map((b) => `${b.t.slice(0, 10)},${b.o},${b.h},${b.l},${b.c},${b.v}`).join("\n") + "\n");
+    for (const month of months) {
+      const key = `${tk}/1m/${month}`, rel = `intraday/alpaca/${key}.csv.gz`;
+      if (manifest[key] && existsSync(join(OUT, rel))) continue;
+      if (overBudget()) { stopped = true; break; }
+      const { start, end } = monthBoundsUtc(month);
+      const r = normalizeAlpacaBars(await alpacaBars(tk, "1Min", start, end, "raw"), month);
+      if (r.rows === 0) throw new Error(`alpaca ${key}: no regular-session bars`);
+      write(rel, gzipSync(r.csv, { level: 9 }));
+      manifest[key] = { rows: r.rows, days: r.days, droppedOutside: r.droppedOutside };
+      added++;
+      if (added % 20 === 0) write("intraday/alpaca/manifest.json", JSON.stringify(manifest, null, 1) + "\n"); // progress is never lost
+    }
+    if (stopped) break;
+  }
+  const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
+  write("intraday/alpaca/manifest.json", JSON.stringify(sorted, null, 1) + "\n");
+  const total = months.length * ALPACA.tickers.length;
+  summary.push(`alpaca: ${added} new months, ${Object.keys(sorted).length} of ${total}${stopped ? " (time budget reached, continues next run)" : ""}`);
+}
+
 for (const a of CM_ASSETS) {
   try { await coinmetrics(a); }
   catch (e) { if (CM_REQUIRED.has(a)) throw e; summary.push(`coinmetrics ${a}: skipped (${e.message.slice(0, 120)})`); }
@@ -157,5 +220,6 @@ for (const a of CM_ASSETS) {
 for (const id of FRED) await fred(id);
 for (const t of YAHOO) await yahoo(t);
 await binanceMonths();
+await alpaca();
 for (const s of summary) console.log(s);
 writeFileSync(join(OUT, "LAST_RUN.txt"), `${new Date().toISOString()}\n${summary.join("\n")}\n`);
