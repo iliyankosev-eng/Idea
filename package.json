@@ -14,7 +14,8 @@
     "explore": "tsx src/cli/explore-multi.ts",
     "winrate": "tsx src/cli/winrate-multi.ts",
     "data:sync": "node scripts/sync-data.mjs",
-    "metals": "tsx src/cli/metals.ts"
+    "metals": "tsx src/cli/metals.ts",
+    "daytrading": "tsx src/cli/daytrading.ts"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
