@@ -65,6 +65,20 @@ describe("toSessions (New York time, daylight saving, weekends)", () => {
   });
 });
 
+describe("toSessions with the exchange calendar", () => {
+  const bars = (iso: string[]): MinuteBars => ({ symbol: "X", t: iso.map(Date.parse), o: iso.map(() => 1), h: iso.map(() => 1), l: iso.map(() => 1), c: iso.map(() => 1), v: iso.map(() => 1), missingMinutes: NaN });
+  it("cuts an early close at 13:00 and drops a holiday with stray prints", () => {
+    const cal = new Map<string, readonly [number, number]>([["2024-11-29", [570, 780]], ["2024-12-02", [570, 960]]]);
+    const ss = toSessions(bars([
+      "2024-11-28T15:00:00Z", // Thanksgiving 10:00 EST: no session in the calendar -> dropped
+      "2024-11-29T14:30:00Z", "2024-11-29T17:59:00Z", // 09:30 and 12:59 on the early-close day -> kept
+      "2024-11-29T18:00:00Z", "2024-11-29T20:30:00Z", // 13:00 and 15:30 after the early close -> dropped
+      "2024-12-02T20:59:00Z", // 15:59 on a normal day -> kept
+    ]), cal);
+    expect(ss.map((s) => [s.date, s.minute])).toEqual([["2024-11-29", [570, 779]], ["2024-12-02", [959]]]);
+  });
+});
+
 describe("hypotheses on synthetic sessions", () => {
   // 20 previous sessions with a 1% range each: open 100, high 101, low 100
   const history = Array.from({ length: 20 }, (_, i) => sess(`2024-01-${String(i + 1).padStart(2, "0")}`, [[M(9, 30), 100, 101, 100, 100.5]]));

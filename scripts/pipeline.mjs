@@ -11,6 +11,7 @@
 //                                                    09:30-16:00 New York only, RAW prices so months never change)
 //   intraday/alpaca/manifest.json   one entry per month: rows, trading days
 //   daily/alpaca/<TICKER>.csv       date,o,h,l,c,v  (split- and dividend-adjusted daily bars, refreshed every run)
+//   daily/alpaca/calendar.csv       date,open,close (official US exchange sessions, New York time; early closes at 13:00)
 // Alpaca needs ALPACA_KEY_ID / ALPACA_SECRET_KEY in the environment (GitHub secrets); without them it is skipped.
 // A time budget stops new downloads after BUDGET_MIN minutes so a long first backfill is saved and resumed next run.
 //
@@ -111,6 +112,9 @@ async function yahoo(ticker) {
     rows.push([date, close[i], adj[i]]);
   }
   if (nulls > 5) throw new Error(`yahoo ${ticker}: ${nulls} empty days`);
+  // Yahoo includes today's unfinished session while the market is open: keep only days before today (New York date).
+  const todayNy = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+  while (rows.length && rows[rows.length - 1][0] >= todayNy) rows.pop();
   const gaps = rows.slice(1).map((r, k) => (Date.parse(r[0]) - Date.parse(rows[k][0])) / DAY);
   const sorted = [...gaps].sort((a, b) => a - b);
   if (sorted[Math.floor(sorted.length / 2)] > 1) throw new Error(`yahoo ${ticker}: not daily data (median gap ${sorted[Math.floor(sorted.length / 2)]} days)`);
@@ -189,6 +193,13 @@ async function alpaca() {
   let added = 0, stopped = false;
   // Alpaca reads a date-only `end` as the end of that day; the free plan refuses the latest 15 minutes, so stop at yesterday.
   const yesterday = new Date(Date.now() - DAY).toISOString().slice(0, 10);
+  // official trading calendar (holidays and early closes), needed to cut sessions correctly
+  await sleep(320);
+  const cal = JSON.parse(await get(`https://paper-api.alpaca.markets/v2/calendar?start=2016-01-01&end=${yesterday}`, { headers: ALPACA_HEADERS, retries: 5 }));
+  if (!Array.isArray(cal) || cal.length < 2500) throw new Error(`alpaca calendar: unexpected answer (${Array.isArray(cal) ? cal.length + " days" : typeof cal})`);
+  for (const d of cal) if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date) || !/^\d{2}:\d{2}$/.test(d.open) || !/^\d{2}:\d{2}$/.test(d.close)) throw new Error(`alpaca calendar: bad row ${JSON.stringify(d)}`);
+  write("daily/alpaca/calendar.csv", "date,open,close\n" + cal.map((d) => `${d.date},${d.open},${d.close}`).join("\n") + "\n");
+  summary.push(`alpaca calendar: ${cal.length} sessions, ${cal.filter((d) => d.close !== "16:00").length} early closes`);
   for (const tk of ALPACA.tickers) {
     // daily, adjusted for splits and dividends (small, refreshed every run)
     const d = await alpacaBars(tk, "1Day", "2016-01-01", yesterday, "all");

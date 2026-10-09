@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { loadMinuteBars, type Provider } from "../data/intraday.js";
 import { fmt, mulberry32 } from "../evaluate.js";
 import { randomTrades, realTrades, type Hypothesis } from "../intraday/hypotheses.js";
-import { toSessions } from "../intraday/sessions.js";
+import { loadCalendar, toSessions, type Calendar } from "../intraday/sessions.js";
 import type { IntradayTrade } from "../intraday/sim.js";
 
 const DATA = "data/branch";
@@ -50,6 +50,14 @@ function availableMonths(provider: Provider, symbol: string): [string, string] |
   const next = (m: string) => { const [y, mo] = m.split("-").map(Number) as [number, number]; return mo === 12 ? `${y + 1}-01` : `${y}-${String(mo + 1).padStart(2, "0")}`; };
   while (first > 0 && next(ms[first - 1]!) === ms[first]) first--;
   return [ms[first]!, ms[ms.length - 1]!];
+}
+
+/** The official exchange calendar is required for stocks (holidays, early closes at 13:00). */
+let calCache: Calendar | null = null;
+function stockCalendar(): Calendar {
+  const p = join(DATA, "daily", "alpaca", "calendar.csv");
+  if (!existsSync(p)) throw new Error(`${p} missing: run the data job and npm run data:sync`);
+  return (calCache ??= loadCalendar(p));
 }
 
 interface Stats { n: number; perYear: number; win: number; avgWin: number; avgLoss: number; pf: number; meanBp: number; meanR: number; cagr: number; boot: number; days: number }
@@ -98,7 +106,7 @@ for (const g of groups) {
   for (const [sym, cost] of Object.entries(g.symbols)) {
     const range = availableMonths(g.provider, sym);
     if (!range) { notes.push(`${g.name}: ${sym} — няма данни (още се теглят)`); continue; }
-    const ss = toSessions(loadMinuteBars(DATA, sym, range[0], range[1], g.provider));
+    const ss = toSessions(loadMinuteBars(DATA, sym, range[0], range[1], g.provider), g.provider === "alpaca" ? stockCalendar() : undefined);
     used.push(`${sym} ${range[0]}–${range[1]}`);
     for (const s of ss) {
       if (s.date >= g.periodA[0] && s.date <= g.periodA[1]) dates.A.add(s.date);

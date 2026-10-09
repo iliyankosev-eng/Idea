@@ -1,4 +1,21 @@
+import { readFileSync } from "node:fs";
 import type { MinuteBars } from "../data/intraday.js";
+import { DataError } from "../types.js";
+
+/** Official sessions: New York date -> [open minute, close minute) (e.g. 570, 960; early close 570, 780). */
+export type Calendar = Map<string, readonly [number, number]>;
+
+/** Read daily/alpaca/calendar.csv (date,open,close in New York time). */
+export function loadCalendar(path: string): Calendar {
+  const cal: Calendar = new Map();
+  const toMin = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+  for (const line of readFileSync(path, "utf8").replace(/\r/g, "").trim().split("\n").slice(1)) {
+    const [date, open, close] = line.split(",");
+    if (!date || !open || !close) throw new DataError(`calendar: bad line "${line}"`);
+    cal.set(date, [toMin(open), toMin(close)]);
+  }
+  return cal;
+}
 
 /** One regular session (09:30-16:00 New York) of one symbol. minute = minutes since New York midnight (570 = 09:30). */
 export interface Session {
@@ -21,9 +38,11 @@ const HOUR = 3_600_000;
 
 /**
  * Group minute bars into New York regular sessions (09:30-15:59), Monday to Friday.
+ * With an exchange calendar (stocks): days that are not sessions are dropped, and bars at or after the official
+ * close are dropped (early closes at 13:00 would otherwise keep after-hours prints as if they were regular trading).
  * The New York offset is computed once per UTC hour (daylight saving changes on the hour), then reused.
  */
-export function toSessions(b: MinuteBars): Session[] {
+export function toSessions(b: MinuteBars, calendar?: Calendar): Session[] {
   const out: Session[] = [];
   const offsetCache = new Map<number, { offsetMin: number }>();
   let cur: Session | null = null;
@@ -43,6 +62,10 @@ export function toSessions(b: MinuteBars): Session[] {
     const minute = local.getUTCHours() * 60 + local.getUTCMinutes();
     if (minute < OPEN || minute > LAST) continue;
     const date = local.toISOString().slice(0, 10);
+    if (calendar) {
+      const sess = calendar.get(date);
+      if (!sess || minute < sess[0] || minute >= sess[1]) continue;
+    }
     if (!cur || cur.date !== date) {
       cur = { symbol: b.symbol, date, minute: [], o: [], h: [], l: [], c: [] };
       out.push(cur);
