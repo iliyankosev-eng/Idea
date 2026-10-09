@@ -1,0 +1,28 @@
+name: alpaca-probe
+# One-off: are the Alpaca keys present and which data feed does the free plan allow? Never prints the keys.
+on:
+  workflow_dispatch:
+  push:
+    paths: [".github/workflows/alpaca-probe.yml"]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe
+        env:
+          KEY: ${{ secrets.ALPACA_KEY_ID }}
+          SECRET: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: |
+          if [ -z "$KEY" ] || [ -z "$SECRET" ]; then echo "::notice title=keys::ALPACA_KEY_ID or ALPACA_SECRET_KEY is missing"; exit 0; fi
+          echo "::notice title=keys::both secrets present (lengths ${#KEY} and ${#SECRET})"
+          probe() {
+            code=$(curl -sS -o body.json -w '%{http_code}' -H "APCA-API-KEY-ID: $KEY" -H "APCA-API-SECRET-KEY: $SECRET" "$2")
+            echo "::notice title=$1::HTTP $code $(head -c 220 body.json | tr -d '\n')"
+          }
+          B="https://data.alpaca.markets/v2/stocks/bars?symbols=SPY&timeframe=1Min&limit=3"
+          probe sip-2016 "$B&feed=sip&start=2016-01-04T14:30:00Z&end=2016-01-04T14:40:00Z"
+          probe iex-2016 "$B&feed=iex&start=2016-01-04T14:30:00Z&end=2016-01-04T14:40:00Z"
+          probe sip-recent "$B&feed=sip&start=2026-10-08T13:30:00Z&end=2026-10-08T13:40:00Z"
+          probe sip-last-15min "$B&feed=sip&start=$(date -u -d '-10 min' +%Y-%m-%dT%H:%M:%SZ)"
+          probe daily-adjusted "https://data.alpaca.markets/v2/stocks/bars?symbols=SPY&timeframe=1Day&limit=2&adjustment=all&feed=sip&start=2016-01-04&end=2016-01-06"
