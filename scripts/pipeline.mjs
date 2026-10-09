@@ -3,6 +3,7 @@
 //
 //   daily/coinmetrics/<asset>.csv   time,PriceUSD           (CoinMetrics community API, refreshed every run)
 //   daily/fred/<series>.csv         observation_date,<id>   (FRED, refreshed every run)
+//   daily/yahoo/<ticker>.csv        Date,Close,AdjClose     (Yahoo chart API, US ETFs, refreshed every run)
 //   intraday/binance/<SYMBOL>/1m/<YYYY-MM>.csv.gz  t,o,h,l,c,v  (t = open time, ms UTC; months are immutable,
 //                                                    downloaded once, SHA-256 checked against Binance's .CHECKSUM)
 //   intraday/binance/manifest.json  one entry per month: source hash, rows, missing minutes
@@ -78,8 +79,41 @@ async function fred(id) {
   summary.push(`fred ${id}: ${lines.length - 1} rows, last ${lines[lines.length - 1].slice(0, 10)}`);
 }
 
+// ---------- Yahoo daily (US ETFs) ----------
+const YAHOO = ["GLD", "SLV", "SPY"]; // gold ETF (2004-11), silver ETF (2006-04), S&P 500 ETF (1993-01)
+
+async function yahoo(ticker) {
+  const now = Math.floor(Date.now() / 1000);
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=0&period2=${now}&interval=1d&events=div%2Csplit&includeAdjustedClose=true`;
+  const j = JSON.parse(await get(url));
+  const r = j?.chart?.result?.[0];
+  if (!r) throw new Error(`yahoo ${ticker}: ${JSON.stringify(j?.chart?.error ?? "no result")}`);
+  const off = r.meta.gmtoffset; // exchange offset in seconds (New York), so the date is the exchange's trading day
+  const ts = r.timestamp, close = r.indicators.quote[0].close, adj = r.indicators.adjclose?.[0]?.adjclose;
+  if (!ts?.length || !adj) throw new Error(`yahoo ${ticker}: missing timestamps or adjusted close`);
+  const rows = [];
+  let nulls = 0;
+  for (let i = 0; i < ts.length; i++) {
+    if (close[i] == null || adj[i] == null) { nulls++; continue; }
+    const date = new Date((ts[i] + off) * 1000).toISOString().slice(0, 10);
+    if (rows.length && date <= rows[rows.length - 1][0]) throw new Error(`yahoo ${ticker}: date not increasing at ${date}`);
+    if (!(close[i] > 0 && adj[i] > 0)) throw new Error(`yahoo ${ticker}: non-positive price at ${date}`);
+    rows.push([date, close[i], adj[i]]);
+  }
+  if (nulls > 5) throw new Error(`yahoo ${ticker}: ${nulls} empty days`);
+  const gaps = rows.slice(1).map((r, k) => (Date.parse(r[0]) - Date.parse(rows[k][0])) / DAY);
+  const sorted = [...gaps].sort((a, b) => a - b);
+  if (sorted[Math.floor(sorted.length / 2)] > 1) throw new Error(`yahoo ${ticker}: not daily data (median gap ${sorted[Math.floor(sorted.length / 2)]} days)`);
+  if (Math.max(...gaps) > 7) throw new Error(`yahoo ${ticker}: gap of ${Math.max(...gaps)} days`);
+  const last = rows[rows.length - 1][0];
+  if (Date.now() - Date.parse(last) > 7 * DAY) throw new Error(`yahoo ${ticker}: stale, last day ${last}`);
+  write(`daily/yahoo/${ticker}.csv`, "Date,Close,AdjClose\n" + rows.map((x) => x.join(",")).join("\n") + "\n");
+  summary.push(`yahoo ${ticker}: ${rows.length} days, ${rows[0][0]} .. ${last}, ${nulls} empty skipped`);
+}
+
 // ---------- Binance 1-minute ----------
-const BINANCE = { symbols: ["BTCUSDT", "ETHUSDT"], from: "2020-01" };
+// PAXGUSDT: token backed 1:1 by physical gold (1 troy ounce), trades 24/7; listed on Binance in 2020.
+const BINANCE = { symbols: ["BTCUSDT", "ETHUSDT", "PAXGUSDT"], from: "2020-01" };
 
 async function binanceMonths() {
   const manPath = join(OUT, "intraday/binance/manifest.json");
@@ -87,6 +121,7 @@ async function binanceMonths() {
   const tmp = mkdtempSync(join(tmpdir(), "bn-"));
   const months = monthRange(BINANCE.from, lastCompleteMonth());
   let added = 0;
+  const notFound = [];
   for (const sym of BINANCE.symbols) {
     for (const month of months) {
       const key = `${sym}/1m/${month}`;
@@ -94,7 +129,7 @@ async function binanceMonths() {
       if (manifest[key] && existsSync(join(OUT, rel))) continue; // months never change once published
       const base = `https://data.binance.vision/data/spot/monthly/klines/${sym}/1m/${sym}-1m-${month}.zip`;
       const zip = await get(base, { binary: true });
-      if (!zip) { summary.push(`binance ${key}: not published yet`); continue; }
+      if (!zip) { notFound.push(key); continue; }
       const check = await get(`${base}.CHECKSUM`);
       const expected = check?.trim().split(/\s+/)[0];
       const actual = createHash("sha256").update(zip).digest("hex");
@@ -111,6 +146,7 @@ async function binanceMonths() {
   const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
   write("intraday/binance/manifest.json", JSON.stringify(sorted, null, 1) + "\n");
   const missing = Object.entries(sorted).filter(([, v]) => v.missingMinutes > 0).map(([k, v]) => `${k}: ${v.missingMinutes}`);
+  if (notFound.length) summary.push(`binance: not available: ${notFound.join(", ")}`);
   summary.push(`binance: ${added} new months, ${Object.keys(sorted).length} total; months with missing minutes: ${missing.length ? missing.join("; ") : "none"}`);
 }
 
@@ -119,6 +155,7 @@ for (const a of CM_ASSETS) {
   catch (e) { if (CM_REQUIRED.has(a)) throw e; summary.push(`coinmetrics ${a}: skipped (${e.message.slice(0, 120)})`); }
 }
 for (const id of FRED) await fred(id);
+for (const t of YAHOO) await yahoo(t);
 await binanceMonths();
 for (const s of summary) console.log(s);
 writeFileSync(join(OUT, "LAST_RUN.txt"), `${new Date().toISOString()}\n${summary.join("\n")}\n`);
