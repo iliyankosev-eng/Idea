@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { loadMinuteBars, type Provider } from "../data/intraday.js";
 import { fmt, mulberry32 } from "../evaluate.js";
 import { randomTrades, realTrades, type Hypothesis } from "../intraday/hypotheses.js";
-import { loadCalendar, toSessions, type Calendar } from "../intraday/sessions.js";
+import { completeSessions, loadCalendar, toSessions, type Calendar } from "../intraday/sessions.js";
 import type { IntradayTrade } from "../intraday/sim.js";
 
 const DATA = "data/branch";
@@ -106,7 +106,12 @@ for (const g of groups) {
   for (const [sym, cost] of Object.entries(g.symbols)) {
     const range = availableMonths(g.provider, sym);
     if (!range) { notes.push(`${g.name}: ${sym} — няма данни (още се теглят)`); continue; }
-    const ss = toSessions(loadMinuteBars(DATA, sym, range[0], range[1], g.provider), g.provider === "alpaca" ? stockCalendar() : undefined);
+    let ss = toSessions(loadMinuteBars(DATA, sym, range[0], range[1], g.provider), g.provider === "alpaca" ? stockCalendar() : undefined);
+    if (g.provider === "alpaca") {
+      const { kept, dropped } = completeSessions(ss, stockCalendar());
+      ss = kept;
+      if (dropped.length) notes.push(`${sym}: ${dropped.length} непълни дни (прекъсване при доставчика на данни) са изключени: ${dropped.join(", ")}`);
+    }
     used.push(`${sym} ${range[0]}–${range[1]}`);
     for (const s of ss) {
       if (s.date >= g.periodA[0] && s.date <= g.periodA[1]) dates.A.add(s.date);

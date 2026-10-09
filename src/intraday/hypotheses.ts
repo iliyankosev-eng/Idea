@@ -61,6 +61,7 @@ export function h2Plan(ss: Session[], k: number): TradePlan | null {
 export function h3Plan(ss: Session[], k: number): TradePlan | null {
   if (k < 1) return null;
   const s = ss[k]!, prev = ss[k - 1]!;
+  if (s.prevDate !== undefined && prev.date !== s.prevDate) return null; // previous session missing: no reliable previous close
   const prevClose = prev.c[prev.c.length - 1]!; // last regular bar of the previous session (15:59, or earlier on a short day)
   const i10 = lastAtOrBefore(s, M(9, 59));
   if (i10 < 0 || !s.minute.includes(M(15, 30))) return null;

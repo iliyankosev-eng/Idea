@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { MinuteBars } from "../src/data/intraday.js";
 import { h1Plan, h2Plan, h3Plan, medianRange20, randomTrades, realTrades } from "../src/intraday/hypotheses.js";
-import { toSessions, type Session } from "../src/intraday/sessions.js";
+import { completeSessions, toSessions, type Session } from "../src/intraday/sessions.js";
 import { simulateTrade } from "../src/intraday/sim.js";
 
 /** Session from rows [minute, o, h, l, c]. */
@@ -76,6 +76,25 @@ describe("toSessions with the exchange calendar", () => {
       "2024-12-02T20:59:00Z", // 15:59 on a normal day -> kept
     ]), cal);
     expect(ss.map((s) => [s.date, s.minute])).toEqual([["2024-11-29", [570, 779]], ["2024-12-02", [959]]]);
+  });
+});
+
+describe("incomplete days (data-provider outages)", () => {
+  it("drops a session with under half of the official minutes and H3 refuses a missing previous day", () => {
+    const cal = new Map<string, readonly [number, number]>([["2018-05-01", [570, 960]], ["2018-05-02", [570, 960]], ["2018-05-03", [570, 960]]]);
+    const full = (d: string, p: number) => sess(d, Array.from({ length: 390 }, (_, i) => [570 + i, p, p, p, p] as [number, number, number, number, number]));
+    const one = sess("2018-05-02", [[570, 50, 50, 50, 50]]);
+    const { kept, dropped } = completeSessions([full("2018-05-01", 100), one, full("2018-05-03", 101)], cal);
+    expect(dropped).toEqual(["2018-05-02"]);
+    kept[1]!.prevDate = "2018-05-02"; // as toSessions sets it from the calendar
+    expect(h3Plan(kept, 1)).toBeNull(); // would otherwise compare with 2018-05-01's close
+    kept[1]!.prevDate = "2018-05-01";
+    expect(h3Plan(kept, 1)!.dir).toBe(1);
+  });
+  it("toSessions sets the official previous session date", () => {
+    const cal = new Map<string, readonly [number, number]>([["2024-12-02", [570, 960]], ["2024-12-03", [570, 960]]]);
+    const b: MinuteBars = { symbol: "X", t: [Date.parse("2024-12-03T14:30:00Z")], o: [1], h: [1], l: [1], c: [1], v: [1], missingMinutes: NaN };
+    expect(toSessions(b, cal)[0]!.prevDate).toBe("2024-12-02");
   });
 });
 

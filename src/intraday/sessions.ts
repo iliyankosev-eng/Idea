@@ -26,6 +26,8 @@ export interface Session {
   readonly h: number[];
   readonly l: number[];
   readonly c: number[];
+  /** Stocks with a calendar: the official previous session date (to detect a missing previous day). */
+  prevDate?: string;
 }
 
 export const OPEN = 570; // 09:30
@@ -72,7 +74,26 @@ export function toSessions(b: MinuteBars, calendar?: Calendar): Session[] {
     }
     cur.minute.push(minute); cur.o.push(b.o[i]!); cur.h.push(b.h[i]!); cur.l.push(b.l[i]!); cur.c.push(b.c[i]!);
   }
+  if (calendar) {
+    const days = [...calendar.keys()].sort();
+    const prev = new Map(days.map((d, i) => [d, days[i - 1]] as const));
+    for (const s of out) { const p = prev.get(s.date); if (p) s.prevDate = p; }
+  }
   return out;
+}
+
+/**
+ * Stocks: drop sessions with fewer than half of the official minutes (data-provider outages; on 2018-05-02/03 the Nasdaq
+ * names have a single bar). Returns the kept sessions and the dropped dates.
+ */
+export function completeSessions(ss: Session[], calendar: Calendar): { kept: Session[]; dropped: string[] } {
+  const kept: Session[] = [], dropped: string[] = [];
+  for (const s of ss) {
+    const c = calendar.get(s.date);
+    if (c && s.minute.length >= 0.5 * (c[1] - c[0])) kept.push(s);
+    else dropped.push(s.date);
+  }
+  return { kept, dropped };
 }
 
 /** Index of the first bar at or after `minute`, or -1. */
