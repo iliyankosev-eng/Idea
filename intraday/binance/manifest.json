@@ -1132,5 +1132,523 @@
   "missingMinutes": 0,
   "first": "2026-09-01T00:00:00.000Z",
   "last": "2026-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2020-08": {
+  "sha256": "2621afefe59d83a7121a0b2ebd9654a807372affce4d4b2c8590bb919613021c",
+  "rows": 5040,
+  "missingMinutes": 39600,
+  "first": "2020-08-28T12:00:00.000Z",
+  "last": "2020-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2020-09": {
+  "sha256": "cc258c9d7318fdafe7156015839f16b97a5d3c4decae86c410d0e0e748b0d65a",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2020-09-01T00:00:00.000Z",
+  "last": "2020-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2020-10": {
+  "sha256": "b6515840d54ca927975734efe12738384fa981642c78ef3f0f0f722611daab2b",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2020-10-01T00:00:00.000Z",
+  "last": "2020-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2020-11": {
+  "sha256": "f188f0577b5d567bd44b7a61b68e75b1b5e6efe59c52af032bc33587261c6a56",
+  "rows": 43140,
+  "missingMinutes": 60,
+  "first": "2020-11-01T00:00:00.000Z",
+  "last": "2020-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2020-12": {
+  "sha256": "7aaba722abdb3bf59de9ffe52a9109e350a826969a0c643a701aaaf94afe6592",
+  "rows": 44349,
+  "missingMinutes": 291,
+  "first": "2020-12-01T00:00:00.000Z",
+  "last": "2020-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-01": {
+  "sha256": "fc9b9bd4d8f3c7eec0b39ba50fab9791fa36409afe1542eeb12d6701b933f1dc",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2021-01-01T00:00:00.000Z",
+  "last": "2021-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-02": {
+  "sha256": "2057188a35b5f900cea47bce3c896f6ff8b113ab77901ff1db600d1dbc527b45",
+  "rows": 40241,
+  "missingMinutes": 79,
+  "first": "2021-02-01T00:00:00.000Z",
+  "last": "2021-02-28T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-03": {
+  "sha256": "eb1214aef891d95d366dcd2e49ffefa9e63ee19e8a3a0888b27b52bf1c667985",
+  "rows": 44550,
+  "missingMinutes": 90,
+  "first": "2021-03-01T00:00:00.000Z",
+  "last": "2021-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-04": {
+  "sha256": "ee0afa2c19c76af9c330e192a4c62f57e98a9591f46bdebc3660b4ef0803fa5c",
+  "rows": 42766,
+  "missingMinutes": 434,
+  "first": "2021-04-01T00:00:00.000Z",
+  "last": "2021-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-05": {
+  "sha256": "382377267517d887094407caff9c7fbd999f3527cfb461fa5d6f95dedd3e95b6",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2021-05-01T00:00:00.000Z",
+  "last": "2021-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-06": {
+  "sha256": "77eedbcdce822f0b8a98a6623b96da74259c3e65e75ab680288269219b695722",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2021-06-01T00:00:00.000Z",
+  "last": "2021-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-07": {
+  "sha256": "57f4883d5e3ef9fbd47955bd18266d6fe26e4a5b1ad18e6f9bbc95371a524e26",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2021-07-01T00:00:00.000Z",
+  "last": "2021-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-08": {
+  "sha256": "aa44e2f47560cb2ba1b10bd747ccdaa30def41845d73e055d7d3d9d76b7ca71c",
+  "rows": 44370,
+  "missingMinutes": 270,
+  "first": "2021-08-01T00:00:00.000Z",
+  "last": "2021-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-09": {
+  "sha256": "e99213812e730e06282c0404386dfc18026ab8e3cccab60ce8cf7f64d0141a21",
+  "rows": 43080,
+  "missingMinutes": 120,
+  "first": "2021-09-01T00:00:00.000Z",
+  "last": "2021-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-10": {
+  "sha256": "1392164e9d109749517bbb45f30411c4c3a73c6205692298e7987eb7739be365",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2021-10-01T00:00:00.000Z",
+  "last": "2021-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-11": {
+  "sha256": "560af575f5cf1c9e483fe9c8a9c3194dd5b82433b56801d3cba3151829b2d29c",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2021-11-01T00:00:00.000Z",
+  "last": "2021-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2021-12": {
+  "sha256": "58071509bc1809c9ac07abe70da4ce509613a323834f25c72dbe5204ed2c15e1",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2021-12-01T00:00:00.000Z",
+  "last": "2021-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-01": {
+  "sha256": "76828a5edab485ae00ea46cd9cf93ee9ecea56b4c27effeb611bc0aa9e26dca5",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-01-01T00:00:00.000Z",
+  "last": "2022-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-02": {
+  "sha256": "fd2499a71293b95e29271f324094c309c5cf7396d259b4b8e47303d909f576da",
+  "rows": 40320,
+  "missingMinutes": 0,
+  "first": "2022-02-01T00:00:00.000Z",
+  "last": "2022-02-28T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-03": {
+  "sha256": "3ba19944abce3525b54597fcad74632b8dae58625c4e42f1bd82a8229b3b50c9",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-03-01T00:00:00.000Z",
+  "last": "2022-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-04": {
+  "sha256": "454cde099646645f0e10d041ecbbf58e1c26ea8493c43bf7c99a8f03867bc5ac",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2022-04-01T00:00:00.000Z",
+  "last": "2022-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-05": {
+  "sha256": "73fa063e0a397d3febeb2aed14ae53a015cf63f577c05ae08eeff67b119a4fae",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-05-01T00:00:00.000Z",
+  "last": "2022-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-06": {
+  "sha256": "81f85f58a6e39cc0d137f342e6839c6257416bf1800074aed88523cde7a2aab1",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2022-06-01T00:00:00.000Z",
+  "last": "2022-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-07": {
+  "sha256": "85af18bda566bf3104258681d19ae982b8475d46d50aaaa9d98adf2b5098f1a9",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-07-01T00:00:00.000Z",
+  "last": "2022-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-08": {
+  "sha256": "340587807a90a8e32c3a108e9d9f93c7eac2bbea26eb73fe9610ce31043071ea",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-08-01T00:00:00.000Z",
+  "last": "2022-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-09": {
+  "sha256": "19685333f9d239f5325a4423b5829fc1db53c2621b95fe198fd457c6bf74ff84",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2022-09-01T00:00:00.000Z",
+  "last": "2022-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-10": {
+  "sha256": "7f7f2973b442a4be087810e1349184c1099729e75af93ce6354d50e40fbeab4f",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-10-01T00:00:00.000Z",
+  "last": "2022-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-11": {
+  "sha256": "0afc0c5e30125c87ed24845d7a74d6903bdda533ecead7a82b6cea8c05533e9d",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2022-11-01T00:00:00.000Z",
+  "last": "2022-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2022-12": {
+  "sha256": "c0352da9c59bbe969581f1b7403b38f213e813487b93d1d6a50d99c0fb8ca67b",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2022-12-01T00:00:00.000Z",
+  "last": "2022-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-01": {
+  "sha256": "a8912c54279e56ff77e95c27853f5e98d88c2c9fa8625f4bdbbc5b791fbe6df3",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-01-01T00:00:00.000Z",
+  "last": "2023-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-02": {
+  "sha256": "12dbd3b115825cacf1aabb0cace154236c2ae1fa80f2d74416b141617954a1e7",
+  "rows": 40320,
+  "missingMinutes": 0,
+  "first": "2023-02-01T00:00:00.000Z",
+  "last": "2023-02-28T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-03": {
+  "sha256": "11584ded1740d1c3444aeb3b325bdb8dba68235ac81674d59e3baba0cb396b8f",
+  "rows": 44560,
+  "missingMinutes": 80,
+  "first": "2023-03-01T00:00:00.000Z",
+  "last": "2023-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-04": {
+  "sha256": "39c3221d1ae847c15811cbeda5fb164e99964efed39d2decfb67618876345d11",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2023-04-01T00:00:00.000Z",
+  "last": "2023-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-05": {
+  "sha256": "59e746f34257f4523479d73c766ee85e562aeb580c6977e697b474caefda9a6f",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-05-01T00:00:00.000Z",
+  "last": "2023-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-06": {
+  "sha256": "dc30bf696b074169f4bf2e07c1f5f19549e6f31bdffb7a5017543bc4a1228eba",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2023-06-01T00:00:00.000Z",
+  "last": "2023-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-07": {
+  "sha256": "95c818a27516ead900791789368600f04ef99708a37b94483d3c8350387459b8",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-07-01T00:00:00.000Z",
+  "last": "2023-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-08": {
+  "sha256": "120880005f1a9d87ca48b6ab2166a1688e441dc59316e88cd4893ffda4294bed",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-08-01T00:00:00.000Z",
+  "last": "2023-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-09": {
+  "sha256": "718124cc043558f3d00cdef5a6e5e61d2d82b6dea7a78b358d39667ad699ad8d",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2023-09-01T00:00:00.000Z",
+  "last": "2023-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-10": {
+  "sha256": "df521dee940e5df5a25d5bd0e6b4bd550cf09b44fd7d1ec0747e600e3f038935",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-10-01T00:00:00.000Z",
+  "last": "2023-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-11": {
+  "sha256": "e76c9dcde37b9786a4511658873c40f93cdf92900bf0679125810d074b8af466",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2023-11-01T00:00:00.000Z",
+  "last": "2023-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2023-12": {
+  "sha256": "6a7d615505181fda6095f6ccb1b20e6958179b06f6fddcf53826e132690daf9f",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2023-12-01T00:00:00.000Z",
+  "last": "2023-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-01": {
+  "sha256": "84d790dda546070e4be0fbcc02e7751c2339c7d35ba91bfa1ad0f4f19aa7dcdc",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-01-01T00:00:00.000Z",
+  "last": "2024-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-02": {
+  "sha256": "8728c8b936d07a92cca930462945b7c3d410a624e02832ee72d440798a84599d",
+  "rows": 41760,
+  "missingMinutes": 0,
+  "first": "2024-02-01T00:00:00.000Z",
+  "last": "2024-02-29T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-03": {
+  "sha256": "a4f4ee7e0207c722e4a3cf3ccc4b5c6cde46849aeb1c434258a42acc4a8ecf0e",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-03-01T00:00:00.000Z",
+  "last": "2024-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-04": {
+  "sha256": "76ee2db636e7d818c74c5a5cfde2e3da615ab9050e7c14e5c587b81cfbedacf9",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2024-04-01T00:00:00.000Z",
+  "last": "2024-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-05": {
+  "sha256": "774c4fc55a4e595f98c4379fa5cdd5e74151a29a1abd9d65e60ecf2aa74c1691",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-05-01T00:00:00.000Z",
+  "last": "2024-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-06": {
+  "sha256": "74f5a506689e91efc53811e608a69b715c962f7ec8078569c0dfac26ede2aef8",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2024-06-01T00:00:00.000Z",
+  "last": "2024-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-07": {
+  "sha256": "f6a89e5e8ffb9509a9e5e2c020a51dc4f3d0bee3b5b49fdfcaa8187ecba1b2e2",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-07-01T00:00:00.000Z",
+  "last": "2024-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-08": {
+  "sha256": "93d4255700ba8be2eec224e7806a28179926e42e9b26ddb6e851ee93cdc8886b",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-08-01T00:00:00.000Z",
+  "last": "2024-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-09": {
+  "sha256": "55389ec9433f2927e730d191f43bf2951d08277c597332476669a26e57b0bb78",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2024-09-01T00:00:00.000Z",
+  "last": "2024-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-10": {
+  "sha256": "58d18c4f709dfbde5183f93da86bb2191b4c37ff03475f9628690cf9e93a3f7c",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-10-01T00:00:00.000Z",
+  "last": "2024-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-11": {
+  "sha256": "22d077d730932ede190ad708cfcbd3962d6a8e272d0883950384461fb703f6cc",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2024-11-01T00:00:00.000Z",
+  "last": "2024-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2024-12": {
+  "sha256": "f9bc08020c4f9d3c9926627201e68b55d90a6fea01fd17dedd52ea78e696d5a7",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2024-12-01T00:00:00.000Z",
+  "last": "2024-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-01": {
+  "sha256": "c60a69e1f9ea10f07338e673af5d082b8c3e2033b951b204d82fecd9df7f8dd0",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-01-01T00:00:00.000Z",
+  "last": "2025-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-02": {
+  "sha256": "c2b2752199e88a274ed49c632a8e430f240d13387a7a9bade3f81dceb06a04d3",
+  "rows": 40320,
+  "missingMinutes": 0,
+  "first": "2025-02-01T00:00:00.000Z",
+  "last": "2025-02-28T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-03": {
+  "sha256": "3a924fd85fd6ab1d5ad25e1603401c9bec6ecb3e36608f3f17ff291556537aa5",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-03-01T00:00:00.000Z",
+  "last": "2025-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-04": {
+  "sha256": "74d2234b842564a8429362ac7974234d5bc70cc03879517bc9b6f8156a3e34fd",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2025-04-01T00:00:00.000Z",
+  "last": "2025-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-05": {
+  "sha256": "fbbc9aff8ed3b2d584e14886d1551706174922674cb81eca3e71643840d650dc",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-05-01T00:00:00.000Z",
+  "last": "2025-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-06": {
+  "sha256": "877f7f6e78ad63e53c021da814b1243d45eac486f2c4d70ed32ae41c523f8b2a",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2025-06-01T00:00:00.000Z",
+  "last": "2025-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-07": {
+  "sha256": "c91e71f0543f7f6769ae1550fa27ee2c303b5d3f570247ededc418ea7e10bab0",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-07-01T00:00:00.000Z",
+  "last": "2025-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-08": {
+  "sha256": "b492e2c6fb5928ccf9008be72ddcbbf6303a6f123463c4f34db4f3d1522bfad4",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-08-01T00:00:00.000Z",
+  "last": "2025-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-09": {
+  "sha256": "7e30447d6a0cfc46a454256380f28a3841804ac12bbdc2f2dbab7b27caab40e8",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2025-09-01T00:00:00.000Z",
+  "last": "2025-09-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-10": {
+  "sha256": "502dc4a347f8198da7a4957b1a447a665e526f1f266dac711c4ee417de6d0f07",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-10-01T00:00:00.000Z",
+  "last": "2025-10-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-11": {
+  "sha256": "a6901417c61123d0e12aaf80091cab136cb1000ca4b99440c3858c2977960be7",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2025-11-01T00:00:00.000Z",
+  "last": "2025-11-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2025-12": {
+  "sha256": "53c5e6e4ec21e3f43e9b21f3dd1d6cd319e59efa54c8208947793765440b0d33",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2025-12-01T00:00:00.000Z",
+  "last": "2025-12-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-01": {
+  "sha256": "e997ee43e1ad73db87b8cca2ce93bced1afe94eab4414ae8326d8bcfb36361f9",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2026-01-01T00:00:00.000Z",
+  "last": "2026-01-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-02": {
+  "sha256": "b8c0f99e46bac023a1003bddffbd492406476305638636fe5658650814cc33e3",
+  "rows": 40320,
+  "missingMinutes": 0,
+  "first": "2026-02-01T00:00:00.000Z",
+  "last": "2026-02-28T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-03": {
+  "sha256": "bb6dc484e5b69bfaace0861411c49a4fe8ba8a5c6db6ae9f8ecf78f835e3657e",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2026-03-01T00:00:00.000Z",
+  "last": "2026-03-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-04": {
+  "sha256": "f0e448f9a7860e3d334859f36ed4796573abca8ac19afed82001e86ab82a07d5",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2026-04-01T00:00:00.000Z",
+  "last": "2026-04-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-05": {
+  "sha256": "6d13c2ba335ecda5ecb939b449c8d46e3e55094b1da9cc18fecfeea3354f7697",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2026-05-01T00:00:00.000Z",
+  "last": "2026-05-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-06": {
+  "sha256": "be53c69abe7243dede1a3510323f5f1e2f84bb5c2028129fb73d7c6b8c551452",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2026-06-01T00:00:00.000Z",
+  "last": "2026-06-30T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-07": {
+  "sha256": "0f7fc90694754e9414a8380f4e77c8f27022ccd3ed911da54bacece674f0d474",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2026-07-01T00:00:00.000Z",
+  "last": "2026-07-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-08": {
+  "sha256": "d1387d856e2c39133a57084dc375940b077a38a42759edaf85bd36791d70b6e1",
+  "rows": 44640,
+  "missingMinutes": 0,
+  "first": "2026-08-01T00:00:00.000Z",
+  "last": "2026-08-31T23:59:00.000Z"
+ },
+ "PAXGUSDT/1m/2026-09": {
+  "sha256": "0c332146369e660c1587279e69d6f5036241bdf6a4f40c6eb75b5b9fe3f17481",
+  "rows": 43200,
+  "missingMinutes": 0,
+  "first": "2026-09-01T00:00:00.000Z",
+  "last": "2026-09-30T23:59:00.000Z"
  }
 }
