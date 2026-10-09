@@ -69,8 +69,8 @@ out = {
     "sp500_sma12_long10y": sp500_case(sp, 12, "long"),
     "sp500_sma10_long10y_2010": sp500_case(sp, 10, "long", start="2010-01"),
     "btc_sma100_2015_2020": crypto_case(btc, 100, "2015-01-01", "2020-12-31"),
-    "btc_sma100_2021_end": crypto_case(btc, 100, "2021-01-01", "9999-12-31"),
-    "btc_sma50_2021_end": crypto_case(btc, 50, "2021-01-01", "9999-12-31"),
-    "eth_sma200_2021_end": crypto_case(eth, 200, "2021-01-01", "9999-12-31"),
+    "btc_sma100_2021_2026": crypto_case(btc, 100, "2021-01-01", "2026-05-23"),
+    "btc_sma50_2021_2026": crypto_case(btc, 50, "2021-01-01", "2026-05-23"),
+    "eth_sma200_2021_2026": crypto_case(eth, 200, "2021-01-01", "2026-05-23"),
 }
 json.dump(out, sys.stdout, indent=1)

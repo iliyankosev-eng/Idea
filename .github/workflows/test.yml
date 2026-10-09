@@ -1,0 +1,33 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1" # every Monday: re-download data and re-check the golden numbers
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run typecheck
+      - name: Download data
+        run: npm run data
+      - name: Tests (must run all, none skipped)
+        run: npx vitest run --reporter=default --reporter=json --outputFile=vitest-results.json
+      - name: Fail if any test was skipped
+        run: |
+          node -e '
+            const r = require("./vitest-results.json");
+            console.log(`total ${r.numTotalTests}, passed ${r.numPassedTests}, skipped ${r.numPendingTests + r.numTodoTests}`);
+            if (r.numPendingTests + r.numTodoTests > 0 || r.numPassedTests !== r.numTotalTests) process.exit(1);
+          '

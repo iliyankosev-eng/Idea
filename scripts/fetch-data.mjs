@@ -25,4 +25,4 @@ for (const [file, url] of Object.entries(sources)) {
   console.log(`${file}: ${text.split("\n").length - 1} rows`);
 }
 console.log("Note: the reference numbers in test/fixtures/golden.json were made from the data of 2026-10-08.");
-console.log("Newer data adds rows; the S&P cases end 2023-06 and are unaffected, crypto 'to end' cases may shift.");
+console.log("All golden cases have fixed end dates (S&P 2023-06, crypto 2026-05-23), so newer rows do not change them. A failure means past data was revised.");

@@ -15,6 +15,8 @@ import { buyAndHold, smaTrend } from "../src/strategies.js";
 import type { Series } from "../src/types.js";
 
 const files = { sp: "data/sp500.csv", btc: "data/btc.csv", eth: "data/eth.csv" };
+/** Fixed end date: newer data must not change the reference numbers (the case counts exact days). */
+const END = "2026-05-23";
 const haveData = Object.values(files).every((f) => existsSync(f));
 
 type G = { cagr: number; vol: number; maxDrawdown: number; sharpe: number; periods: number };
@@ -47,12 +49,12 @@ describe.skipIf(!haveData)("matches the independent Python implementation", () =
     check("sp500_sma10_long10y_2010", loadShiller(files.sp), 10, 0.001, "2010-01", "2023-06"));
   it("BTC 100-day SMA, 2015-2020", () =>
     check("btc_sma100_2015_2020", loadCoinMetrics(files.btc, "BTC"), 100, 0.002, "2015-01-01", "2020-12-31"));
-  it("BTC 100-day SMA, 2021-end", () =>
-    check("btc_sma100_2021_end", loadCoinMetrics(files.btc, "BTC"), 100, 0.002, "2021-01-01"));
-  it("BTC 50-day SMA, 2021-end", () =>
-    check("btc_sma50_2021_end", loadCoinMetrics(files.btc, "BTC"), 50, 0.002, "2021-01-01"));
-  it("ETH 200-day SMA, 2021-end", () =>
-    check("eth_sma200_2021_end", loadCoinMetrics(files.eth, "ETH"), 200, 0.002, "2021-01-01"));
+  it("BTC 100-day SMA, 2021-01-01 to 2026-05-23", () =>
+    check("btc_sma100_2021_2026", loadCoinMetrics(files.btc, "BTC"), 100, 0.002, "2021-01-01", END));
+  it("BTC 50-day SMA, 2021-01-01 to 2026-05-23", () =>
+    check("btc_sma50_2021_2026", loadCoinMetrics(files.btc, "BTC"), 50, 0.002, "2021-01-01", END));
+  it("ETH 200-day SMA, 2021-01-01 to 2026-05-23", () =>
+    check("eth_sma200_2021_2026", loadCoinMetrics(files.eth, "ETH"), 200, 0.002, "2021-01-01", END));
 });
 
 describe.skipIf(!haveData)("calibration against a published result", () => {
