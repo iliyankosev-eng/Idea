@@ -9,6 +9,9 @@ const sources = {
   "data/wti.csv": "https://raw.githubusercontent.com/datasets/oil-prices/main/data/wti-monthly.csv",
   "data/us10y.csv": "https://raw.githubusercontent.com/datasets/bond-yields-us-10y/main/data/monthly.csv",
   "data/fx.csv": "https://raw.githubusercontent.com/datasets/exchange-rates/main/data/monthly.csv",
+  "data/brent-daily.csv": "https://raw.githubusercontent.com/datasets/oil-prices/main/data/brent-daily.csv",
+  "data/natgas-daily.csv": "https://raw.githubusercontent.com/datasets/natural-gas/main/data/daily.csv",
+  "data/fx-daily.csv": "https://raw.githubusercontent.com/datasets/exchange-rates/main/data/daily.csv",
   ...Object.fromEntries(["ltc", "xrp", "doge", "ada", "bnb", "sol"].map((c) => [`data/${c}.csv`, `https://raw.githubusercontent.com/coinmetrics/data/master/csv/${c}.csv`])),
 };
 
