@@ -1,0 +1,48 @@
+name: data
+# Downloads and validates market data, then commits it to the `data` branch (kept apart from the code on main).
+on:
+  schedule:
+    - cron: "23 5 * * *" # every day 05:23 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/pipeline.mjs", "scripts/lib/**", ".github/workflows/data.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check out the data branch (create it on the first run)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git clone --quiet --depth 1 --branch data "$URL" databranch
+          else
+            mkdir databranch && cd databranch && git init --quiet -b data && git remote add origin "$URL"
+          fi
+      - name: Download and validate
+        run: node scripts/pipeline.mjs databranch
+      - name: Commit and push
+        run: |
+          cd databranch
+          git config user.name "data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git commit --quiet -m "data: $(date -u +%F)"
+          git push --quiet origin data
+          while read -r line; do echo "::notice title=data::$line"; done < <(tail -n +2 LAST_RUN.txt | head -n 9)
