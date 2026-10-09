@@ -213,13 +213,24 @@ async function alpaca() {
   summary.push(`alpaca: ${added} new months, ${Object.keys(sorted).length} of ${total}${stopped ? " (time budget reached, continues next run)" : ""}`);
 }
 
-for (const a of CM_ASSETS) {
-  try { await coinmetrics(a); }
-  catch (e) { if (CM_REQUIRED.has(a)) throw e; summary.push(`coinmetrics ${a}: skipped (${e.message.slice(0, 120)})`); }
+async function main() {
+  for (const a of CM_ASSETS) {
+    try { await coinmetrics(a); }
+    catch (e) { if (CM_REQUIRED.has(a)) throw e; summary.push(`coinmetrics ${a}: skipped (${e.message.slice(0, 120)})`); }
+  }
+  for (const id of FRED) await fred(id);
+  for (const t of YAHOO) await yahoo(t);
+  await binanceMonths();
+  await alpaca();
+  for (const s of summary) console.log(s);
+  writeFileSync(join(OUT, "LAST_RUN.txt"), `${new Date().toISOString()}\n${summary.join("\n")}\n`);
 }
-for (const id of FRED) await fred(id);
-for (const t of YAHOO) await yahoo(t);
-await binanceMonths();
-await alpaca();
-for (const s of summary) console.log(s);
-writeFileSync(join(OUT, "LAST_RUN.txt"), `${new Date().toISOString()}\n${summary.join("\n")}\n`);
+
+try {
+  await main();
+} catch (e) {
+  // Shown as an annotation on the run (readable without the full log). Messages never contain the API keys.
+  console.log(`::error title=pipeline::${String(e?.message ?? e).slice(0, 500)}`);
+  for (const s of summary) console.log(s);
+  process.exit(1);
+}
