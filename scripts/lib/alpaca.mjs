@@ -51,3 +51,23 @@ export function monthBoundsUtc(month) {
   const [y, m] = month.split("-").map(Number);
   return { start: new Date(Date.UTC(y, m - 1, 1, 6)).toISOString(), end: new Date(Date.UTC(y, m, 1, 6)).toISOString() };
 }
+
+export const PRE_OPEN_MIN = 4 * 60; // 04:00 New York, start of Alpaca's pre-market data
+
+/**
+ * Pre-market high and low per New York date from 04:00 to 09:29 (bar start), from raw Alpaca bars of one month.
+ * Returns a Map date -> { pmh, pml, bars }. Days without pre-market bars are absent.
+ */
+export function premarketLevels(bars, month) {
+  const out = new Map();
+  for (const b of bars) {
+    const t = Date.parse(b.t);
+    const { date, minute } = nyParts(t);
+    if (date.slice(0, 7) !== month || minute < PRE_OPEN_MIN || minute >= OPEN_MIN) continue;
+    if (!(b.h > 0 && b.l > 0 && b.l <= b.h)) throw new Error(`${month}: bad pre-market bar at ${b.t}`);
+    const cur = out.get(date);
+    if (!cur) out.set(date, { pmh: b.h, pml: b.l, bars: 1 });
+    else { cur.pmh = Math.max(cur.pmh, b.h); cur.pml = Math.min(cur.pml, b.l); cur.bars++; }
+  }
+  return out;
+}

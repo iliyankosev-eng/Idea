@@ -45,3 +45,19 @@ describe("normalizeAlpacaBars", () => {
     expect(() => normalizeAlpacaBars(bars, "2024-03")).toThrow();
   });
 });
+
+describe("premarketLevels", () => {
+  it("takes high/low from 04:00 to 09:29 New York only, per day", async () => {
+    // @ts-expect-error plain .mjs module without type declarations
+    const { premarketLevels } = await import("../scripts/lib/alpaca.mjs");
+    const m = premarketLevels([
+      bar("2024-03-08T08:59:00Z", 100, 105, 99, 100), // 03:59 EST: before pre-market -> ignored
+      bar("2024-03-08T09:00:00Z", 100, 101, 98, 100), // 04:00 EST
+      bar("2024-03-08T14:29:00Z", 100, 102, 99.5, 100), // 09:29 EST
+      bar("2024-03-08T14:30:00Z", 100, 110, 90, 100), // 09:30 regular session -> ignored
+      bar("2024-03-11T08:00:00Z", 50, 51, 49, 50), // 04:00 EDT next Monday
+    ], "2024-03");
+    expect(m.get("2024-03-08")).toEqual({ pmh: 102, pml: 98, bars: 2 });
+    expect(m.get("2024-03-11")).toEqual({ pmh: 51, pml: 49, bars: 1 });
+  });
+});

@@ -12,6 +12,7 @@
 //   intraday/alpaca/manifest.json   one entry per month: rows, trading days
 //   daily/alpaca/<TICKER>.csv       date,o,h,l,c,v  (split- and dividend-adjusted daily bars, refreshed every run)
 //   daily/alpaca/calendar.csv       date,open,close (official US exchange sessions, New York time; early closes at 13:00)
+//   daily/alpaca/premarket/<TICKER>.csv  date,pmh,pml,bars (04:00-09:29 New York high/low; SPY and QQQ only)
 // Alpaca needs ALPACA_KEY_ID / ALPACA_SECRET_KEY in the environment (GitHub secrets); without them it is skipped.
 // A time budget stops new downloads after BUDGET_MIN minutes so a long first backfill is saved and resumed next run.
 //
@@ -22,7 +23,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { gzipSync } from "node:zlib";
-import { monthBoundsUtc, normalizeAlpacaBars } from "./lib/alpaca.mjs";
+import { monthBoundsUtc, normalizeAlpacaBars, premarketLevels } from "./lib/alpaca.mjs";
 import { lastCompleteMonth, monthRange, normalizeKlines } from "./lib/binance.mjs";
 
 const OUT = process.argv[2];
@@ -185,6 +186,17 @@ async function alpacaBars(ticker, timeframe, start, end, adjustment) {
   return bars;
 }
 
+const PM_TICKERS = new Set(["SPY", "QQQ"]);
+
+/** Merge pre-market levels of one month into daily/alpaca/premarket/<tk>.csv (kept sorted, one row per date). */
+function savePremarket(tk, levels) {
+  const rel = `daily/alpaca/premarket/${tk}.csv`, p = join(OUT, rel);
+  const rows = new Map();
+  if (existsSync(p)) for (const line of readFileSync(p, "utf8").trim().split("\n").slice(1)) { const [d, h, l, n] = line.split(","); rows.set(d, `${d},${h},${l},${n}`); }
+  for (const [d, v] of levels) rows.set(d, `${d},${v.pmh},${v.pml},${v.bars}`);
+  write(rel, "date,pmh,pml,bars\n" + [...rows.keys()].sort().map((d) => rows.get(d)).join("\n") + "\n");
+}
+
 async function alpaca() {
   if (!process.env.ALPACA_KEY_ID || !process.env.ALPACA_SECRET_KEY) { summary.push("alpaca: no keys, skipped"); return; }
   const manPath = join(OUT, "intraday/alpaca/manifest.json");
@@ -207,10 +219,19 @@ async function alpaca() {
     write(`daily/alpaca/${tk}.csv`, "date,o,h,l,c,v\n" + d.map((b) => `${b.t.slice(0, 10)},${b.o},${b.h},${b.l},${b.c},${b.v}`).join("\n") + "\n");
     for (const month of months) {
       const key = `${tk}/1m/${month}`, rel = `intraday/alpaca/${key}.csv.gz`;
-      if (manifest[key] && existsSync(join(OUT, rel))) continue;
+      const pmKey = `${tk}/pm/${month}`;
+      const needPm = PM_TICKERS.has(tk) && !manifest[pmKey];
+      if (manifest[key] && existsSync(join(OUT, rel)) && !needPm) continue;
       if (overBudget()) { stopped = true; break; }
       const { start, end } = monthBoundsUtc(month);
-      const r = normalizeAlpacaBars(await alpacaBars(tk, "1Min", start, end, "raw"), month);
+      const raw = await alpacaBars(tk, "1Min", start, end, "raw");
+      if (needPm) {
+        const lv = premarketLevels(raw, month);
+        savePremarket(tk, lv);
+        manifest[pmKey] = { days: lv.size };
+      }
+      if (manifest[key] && existsSync(join(OUT, rel))) continue; // minute file already stored; only the pre-market part was missing
+      const r = normalizeAlpacaBars(raw, month);
       if (r.rows === 0) throw new Error(`alpaca ${key}: no regular-session bars`);
       write(rel, gzipSync(r.csv, { level: 9 }));
       manifest[key] = { rows: r.rows, days: r.days, droppedOutside: r.droppedOutside };
