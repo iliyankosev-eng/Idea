@@ -10,17 +10,17 @@ import { buyAndHold, smaTrend } from "../strategies.js";
 import type { Series } from "../types.js";
 const B = "data/branch/daily";
 
-const cagr = (r: number[], ppy: number) => (r.reduce((g, x) => g * (1 + x), 1) ** (ppy / r.length) - 1) * 100;
-const maxDD = (r: number[]) => { let eq = 1, pk = 1, dd = 0; for (const x of r) { eq *= 1 + x; pk = Math.max(pk, eq); dd = Math.min(dd, eq / pk - 1); } return dd * 100; };
-const sharpe = (r: number[], rf: number[] | null, ppy: number) => { const e = r.map((x, i) => x - (rf ? rf[i]! : 0)); const m = e.reduce((a, b) => a + b, 0) / e.length; const sd = Math.sqrt(e.reduce((a, b) => a + (b - m) ** 2, 0) / (e.length - 1)); return (m / sd) * Math.sqrt(ppy); };
+const cagr = (r: readonly number[], ppy: number) => (r.reduce((g, x) => g * (1 + x), 1) ** (ppy / r.length) - 1) * 100;
+const maxDD = (r: readonly number[]) => { let eq = 1, pk = 1, dd = 0; for (const x of r) { eq *= 1 + x; pk = Math.max(pk, eq); dd = Math.min(dd, eq / pk - 1); } return dd * 100; };
+const sharpe = (r: readonly number[], rf: readonly number[] | null, ppy: number) => { const e = r.map((x, i) => x - (rf ? rf[i]! : 0)); const m = e.reduce((a, b) => a + b, 0) / e.length; const sd = Math.sqrt(e.reduce((a, b) => a + (b - m) ** 2, 0) / (e.length - 1)); return (m / sd) * Math.sqrt(ppy); };
 
 function compare(label: string, s: Series, n: number, cost: number, lag: number, from: string, to: string, win: number, step: number, rfMode: "cash" | "none") {
   const tr = runBacktest(s, smaTrend(n), { cost, lag }).returns, bh = runBacktest(s, buyAndHold, { cost: 0, lag }).returns;
   const idx = s.dates.map((d, i) => [d, i] as const).filter(([d]) => d >= from && d <= to && Number(d.slice(0, 4)) > 0).map(([, i]) => i).filter((i) => i > n + lag + 1);
   const i0 = idx[0]!, i1 = idx[idx.length - 1]!;
   const rf = rfMode === "cash" ? s.cash : null;
-  const sl = (r: number[], a: number, b: number) => r.slice(a, b + 1);
-  const full = (r: number[]) => sl(r, i0, i1);
+  const sl = (r: readonly number[], a: number, b: number) => r.slice(a, b + 1);
+  const full = (r: readonly number[]) => sl(r, i0, i1);
   const p = s.periodsPerYear;
   console.log(`\n== ${label}: ${s.dates[i0]} .. ${s.dates[i1]}`);
   console.log(`  whole period: B&H CAGR ${cagr(full(bh), p).toFixed(1)}% DD ${maxDD(full(bh)).toFixed(0)}% Sharpe(excess) ${sharpe(full(bh), rf ? full(rf) : null, p).toFixed(2)} | trend CAGR ${cagr(full(tr), p).toFixed(1)}% DD ${maxDD(full(tr)).toFixed(0)}% Sharpe(excess) ${sharpe(full(tr), rf ? full(rf) : null, p).toFixed(2)}`);
