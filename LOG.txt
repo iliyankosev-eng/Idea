@@ -1,0 +1,19 @@
+gamma-temp-0: HTTP 200, 3712455 bytes
+gamma-temp-500: HTTP 200, 4279538 bytes
+gamma-temp-1000: HTTP 200, 4564544 bytes
+gamma-temp-1500: HTTP 200, 4559791 bytes
+gamma-temp-2000: HTTP 200, 4547191 bytes
+gamma-temp-2500: HTTP 422, 97 bytes
+temp events: 500
+clob-hist-f1: HTTP 200, 73051 bytes
+clob-hist-f10: HTTP 200, 7301 bytes
+clob-hist-f60: HTTP 200, 1212 bytes
+clob-hist-max: HTTP 200, 15 bytes
+data-trades-0: HTTP 200, 43891 bytes
+data-trades-3000: HTTP 200, 2 bytes
+data-trades-10000: HTTP 200, 2 bytes
+gamma-big-closed: HTTP 200, 589099 bytes
+om-prevruns-klga: HTTP 200, 2970 bytes
+om-prevruns-klga-2024: HTTP 200, 2155 bytes
+awc-stations: HTTP 200, 1044 bytes
+iem-klga: HTTP 200, 667 bytes
