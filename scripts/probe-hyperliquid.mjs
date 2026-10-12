@@ -1,14 +1,16 @@
 // One-off research probe (runs in GitHub Actions; the sandbox cannot reach these sites).
 // 1) Hyperliquid public info API: history of the wallets a Telegram copy-trading group gave out.
 // 2) Feasibility check for testing Polymarket weather markets (Polymarket gamma/clob + Open-Meteo).
-// Usage: node scripts/probe-hyperliquid.mjs <outDir>. Writes raw JSON only; analysis is done separately.
-import { mkdirSync, writeFileSync } from "node:fs";
+// Usage: node scripts/probe-hyperliquid.mjs <outDir> [wallets.json]. Writes raw JSON only; analysis is done separately.
+// With a wallets file ([{name, address, ...}]) only those wallets are fetched and the Polymarket samples are skipped.
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const OUT = process.argv[2] ?? "probe-out";
 mkdirSync(`${OUT}/hl`, { recursive: true });
 mkdirSync(`${OUT}/pm`, { recursive: true });
 
-const WALLETS = {
+const LIST = process.argv[3] ? JSON.parse(readFileSync(process.argv[3], "utf8")) : null;
+const WALLETS = LIST ? Object.fromEntries(LIST.map((w) => [w.name, w.address])) : {
   current: "0x3e470a0bf8460c3a8320327cf5db7deed3a3aaf6",
   prev1: "0x3d5f1ad033c4e7c6a6d433d50d694c488dcaebcf",
   prev2: "0x19f5c3bc2e0978d9a1da389d7d4cfe33cd770fe9",
@@ -65,6 +67,7 @@ for (const [name, user] of Object.entries(WALLETS)) {
   }
 }
 
+if (!LIST) {
 // Polymarket + Open-Meteo feasibility (status and a sample only).
 async function sample(name, url) {
   try {
@@ -79,6 +82,8 @@ async function sample(name, url) {
 await sample("gamma-search-temperature", "https://gamma-api.polymarket.com/public-search?q=highest%20temperature&limit_per_type=50&events_status=closed");
 await sample("gamma-events-weather", "https://gamma-api.polymarket.com/events?tag_slug=weather&closed=true&limit=100&order=endDate&ascending=false");
 await sample("openmeteo-histforecast-madrid", "https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=40.4936&longitude=-3.5668&start_date=2026-09-01&end_date=2026-09-07&daily=temperature_2m_max&models=ecmwf_ifs025,gfs_seamless,icon_seamless&timezone=Europe%2FMadrid");
+
+}
 
 writeFileSync(`${OUT}/LOG.txt`, log.join("\n") + "\n");
 console.log(log.join("\n"));

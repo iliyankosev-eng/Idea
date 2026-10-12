@@ -1,0 +1,16 @@
+[
+  { "name": "a01", "address": "0xd3c0b0a80ef1364c2693e07527dd673919054a80", "shared": "2026-09-17T04:34:00Z", "claim": "nine-month cycle, PnL curve almost a straight line" },
+  { "name": "a02", "address": "0x8cbe593aa5b6fffb5254429d1812abdbd1f06959", "shared": "2026-09-17T04:36:00Z", "claim": "only US stocks, PnL almost a straight line" },
+  { "name": "a03", "address": "0x523979b277a398574a81da1d3511cb84823ce040", "shared": "2026-09-17T04:37:00Z", "claim": "" },
+  { "name": "a04", "address": "0x47096aea5fbac0ea3d6e0bb4d2d1b52b21b524ca", "shared": "2026-09-17T04:40:00Z", "claim": "small-capital arbitrage, 0.4% profit per trade" },
+  { "name": "a05", "address": "0xd08a4557671ca465e7bba41110a93148c90f9931", "shared": "2026-09-17T04:42:00Z", "claim": "long-term holder, many positions > 100 days" },
+  { "name": "a06", "address": "0x1313d08233619c6ebecf84465a85b595c6b2a5ce", "shared": "2026-09-17T04:25:00Z", "claim": "only trades ZEC" },
+  { "name": "a07", "address": "0x41c684cbde3e449cc67c70aacb6132e3eb25b06d", "shared": "2026-09-17T04:28:00Z", "claim": "" },
+  { "name": "a08", "address": "0x238a47bad16d3afb6821fd6cdd609cc084eba106", "shared": "2026-09-17T04:28:00Z", "claim": "" },
+  { "name": "a09", "address": "0xe4c0f75521c93a8c8a14e3770ca891c9a10ed02d", "shared": "2026-09-17T04:28:00Z", "claim": "" },
+  { "name": "a10", "address": "0x0a506b1e47726e769949086ea60b5b01cbaf956a", "shared": "2026-09-17T04:28:00Z", "claim": "posted twice" },
+  { "name": "a11", "address": "0x6608d5342ca0fc0acf0c334c2496f1542af1fc71", "shared": "2026-09-17T04:31:00Z", "claim": "profitable for two years running" },
+  { "name": "a12", "address": "0x288262dcdf3e2f3dbcb2dcfbf9dcc0d9adc50f8a", "shared": "2026-09-17T04:32:00Z", "claim": "" },
+  { "name": "a13", "address": "0xabf01ed4099f86c5837e02268fb31dea93e79604", "shared": "2026-09-17T04:24:00Z", "claim": "" },
+  { "name": "a14", "address": "0x833b99b27dac651d02080f5e220e929df891db06", "shared": "2026-04-14T07:27:00Z", "claim": "It is time to return (referral link ApexTopOne)" }
+]
