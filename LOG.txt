@@ -1,0 +1,5 @@
+ALOIS: dexscreener pairs 5, gt pools 8, candles 3147/652, top pool 3N91PMvHgu6mntZjYZPJ1f7U8vToWxkpp8zNYtUWkjgU (pumpswap)
+CYBERLEEK: dexscreener pairs 29, gt pools 20, candles 5000/1000, top pool G8kgi7aUpeX8EVR8VMkrth9SKEv5BietWC33UjAiiMGh (raydium)
+PLIQ: dexscreener pairs 1, gt pools 2, candles 72/8, top pool GiHyjapz5Z21rcPCnCDvzYiLjzPRF1VemHhNJiB9UZUK (pumpswap)
+GLYPH8192: dexscreener pairs 1, gt pools 2, candles 83/4, top pool 5KiA3ZonTXVvwqMr1VxaJZZ4yHz5Ww3S3e5cPCPyq3LP (pumpswap)
+OWL: dexscreener pairs 3, gt pools 16, candles 3000/2000, top pool AVaw6h3zE2eU57zDTMqPwdmxJnrFbuBcKoJ3FsdKdL49 (raydium)
