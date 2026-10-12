@@ -76,16 +76,18 @@ if (!wEvents) {
 
 // stations
 const stPath = `${DIR}/w/stations.json`;
-let stations = existsSync(stPath) ? JSON.parse(readFileSync(stPath, "utf8")) : null;
+let stations = existsSync(stPath) ? JSON.parse(readFileSync(stPath, "utf8")) : {};
 const icaoOf = (desc) => {
-  const m = desc.match(/wunderground\.com\/history\/daily\/[a-z]{2}\/[^/\s]+\/([A-Za-z0-9]{4})\b/i) ?? desc.match(/timeseries\?site=([A-Za-z0-9]{4})\b/i);
+  const m = desc.match(/wunderground\.com\/history\/daily\/(?:[^/\s]+\/)+([A-Za-z0-9]{4})(?=[/?#.,\s)]|$)/i) ?? desc.match(/timeseries\?site=([A-Za-z0-9]{4})\b/i);
   return m ? m[1].toUpperCase() : null;
 };
-if (!stations) {
+{
   const ids = [...new Set(wEvents.map((e) => icaoOf(e.desc)).filter(Boolean))];
-  const { json } = await getJson(`https://aviationweather.gov/api/data/stationinfo?ids=${ids.join(",")}&format=json`);
-  stations = {};
-  for (const s of json ?? []) stations[s.icaoId] = { lat: s.lat, lon: s.lon, site: s.site };
+  const missing = ids.filter((id) => !stations[id]);
+  if (missing.length) {
+    const { json } = await getJson(`https://aviationweather.gov/api/data/stationinfo?ids=${missing.join(",")}&format=json`);
+    for (const s of json ?? []) stations[s.icaoId] = { lat: s.lat, lon: s.lon, site: s.site };
+  }
   writeFileSync(stPath, JSON.stringify(stations));
   const noIcao = wEvents.filter((e) => !icaoOf(e.desc));
   say(`W stations: ${Object.keys(stations).length} of ${ids.length} found (${ids.join(",")}); events without a parsable station: ${noIcao.length} (${[...new Set(noIcao.map((e) => e.title.replace(/ on .*/, "")))].join("; ")})`);
