@@ -1,0 +1,11 @@
+current 0x3e470a0bf8460c3a8320327cf5db7deed3a3aaf6: fills 14392, funding 981, ledger 5
+prev1 0x3d5f1ad033c4e7c6a6d433d50d694c488dcaebcf: fills 29460, funding 2674, ledger 56
+prev2 0x19f5c3bc2e0978d9a1da389d7d4cfe33cd770fe9: fills 14926, funding 791, ledger 91
+prev3 0x2f01afc9f9437c4fcb8f2e8612c57bf522bcc81d: fills 1168, funding 614, ledger 2496
+prev4 0xc3d101ae37bba62baf199c6d5e5d8f0eecfd200e: fills 36904, funding 2114, ledger 458
+prev5 0x987163b6b482c30c2f5f3aa2760109668eb0091d: fills 35998, funding 2084, ledger 272
+prev6 0xe2f86feccb1207710a442bc4e27a0701a290275a: fills 16896, funding 1275, ledger 161
+prev7 0x04a30a7d59d08b028c7efceffc69e737cecef111: fills 6952, funding 1090, ledger 31
+gamma-search-temperature: HTTP 200, 3135140 bytes
+gamma-events-weather: HTTP 200, 5607759 bytes
+openmeteo-histforecast-madrid: HTTP 200, 650 bytes
