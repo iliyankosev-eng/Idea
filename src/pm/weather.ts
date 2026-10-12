@@ -78,6 +78,8 @@ export interface WResult {
   readonly randomMeans: number[];
   readonly brier: { model: number; market: number; n: number };
   readonly counts: Record<string, number>;
+  /** every bucket with a price at T (for calibration tables) */
+  readonly scored: { p: number; q: number; win: boolean }[];
 }
 
 const actual = (b: Bucket) => (Number.isFinite(b.lo) && Number.isFinite(b.hi) ? (b.lo + b.hi) / 2 : Number.isFinite(b.hi) ? b.hi : b.lo);
@@ -91,6 +93,7 @@ export function runWeather(events: readonly WEvent[], ctx: WContext, o: WOptions
   const trades: WTrade[] = [], favorite: WTrade[] = [];
   const randomPools: { p: number; win: boolean }[][] = []; // per traded event: the eligible buckets
   let bm = 0, bk = 0, bn = 0;
+  const allScored: { p: number; q: number; win: boolean }[] = [];
   const rows = events.map((e) => ({ e, D: eventDay(e) })).filter((x) => { if (!x.D) inc("excluded: date mismatch"); return !!x.D; }).sort((a, b) => (a.D! < b.D! ? -1 : a.D! > b.D! ? 1 : 0));
 
   for (const { e, D } of rows) {
@@ -131,6 +134,7 @@ export function runWeather(events: readonly WEvent[], ctx: WContext, o: WOptions
       for (const s of scored) { const y = s.win ? 1 : 0; bm += (s.q - y) ** 2; bk += (s.p! - y) ** 2; }
     }
     const priced = scored.filter((s) => s.p !== null) as { label: string; q: number; p: number; win: boolean }[];
+    for (const s of priced) allScored.push({ p: s.p, q: s.q, win: s.win });
     if (priced.length) {
       const fav = priced.reduce((a, b) => (b.p > a.p ? b : a));
       favorite.push({ id: e.id, city, day: D!, label: fav.label, p: fav.p, q: fav.q, win: fav.win, r: ret(fav.p + o.cost, fav.win ? 1 : 0) });
@@ -149,5 +153,5 @@ export function runWeather(events: readonly WEvent[], ctx: WContext, o: WOptions
     for (const pool of randomPools) { const x = pool[Math.floor(rnd() * pool.length)]!; sum += ret(x.p + o.cost, x.win ? 1 : 0); }
     randomMeans.push(randomPools.length ? sum / randomPools.length : NaN);
   }
-  return { trades, favorite, randomMeans, brier: { model: bm / bn, market: bk / bn, n: bn }, counts };
+  return { trades, favorite, randomMeans, brier: { model: bm / bn, market: bk / bn, n: bn }, counts, scored: allScored };
 }
