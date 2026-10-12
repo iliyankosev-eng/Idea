@@ -45,7 +45,7 @@ for (const s of signals) {
     const from = Math.floor(Date.parse(s.postedUtc) / 1000) - 2 * 86400;
     let before = Math.floor(Date.now() / 1000), rows = [];
     for (let k = 0; k < 6 && before > from; k++) {
-      const r = await get(`https://api.geckoterminal.com/api/v2/networks/solana/pools/${p.address}/ohlcv/minute?aggregate=1&limit=1000&before_timestamp=${before}&currency=usd&token=base`);
+      const r = await get(`https://api.geckoterminal.com/api/v2/networks/solana/pools/${p.address}/ohlcv/minute?aggregate=1&limit=1000&before_timestamp=${before}&currency=usd&token=${s.address}`); // price of THIS token (in some pools it is the quote token)
       const list = r.json?.data?.attributes?.ohlcv_list ?? [];
       if (!list.length) { if (!r.json) say(`${s.symbol} ${p.address} ohlcv HTTP ${r.status} ${r.text ?? ""}`); break; }
       rows = rows.concat(list);
