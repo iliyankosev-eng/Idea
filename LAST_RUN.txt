@@ -1,6 +1,27 @@
 W stations: 13 of 13 found (KLGA,KATL,EGLC,LFPG,KORD,EDDM,RJTT,VHHH,ZSPD,LIMC,LEMD,UUWW,LFPB); events without a parsable station: 208 (Highest temperature in Hong Kong)
-W forecasts: 37 chunks, new 11, failed 0
+W forecasts: 37 chunks, new 0, failed 0
 W prices: new events 0, empty bucket histories 0, failures 0
-P histories: new 0, failures 1706
-K trades: new 0, incomplete 0
-requests: {"previous-runs-api.open-meteo.com":11,"clob.polymarket.com":1706}; minutes 3; all stages done
+P histories: new 1706, failures 0
+  P error: 517231 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 522057 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 523420 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 535013 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 522057 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 523420 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 535013 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 517231 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 523420 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+  P error: 522057 2592000s: HTTP 400 {"error":"invalid filters: 'startTs' and 'endTs' interval is too long"}
+
+list pmdata/k/markets-v2.json: 13964 binary markets; windows over the 2000 cap: 0
+K trades: new 400, incomplete 7
+requests: {"clob.polymarket.com":26422,"gamma-api.polymarket.com":627,"data-api.polymarket.com":1762}; minutes 64; all stages done
