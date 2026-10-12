@@ -11,7 +11,7 @@ const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > BUDGET_MS;
 const log = [];
 const say = (s) => { log.push(s); console.log(s); };
-for (const d of ["w/prices", "w/fc", "p/h", "k/t"]) mkdirSync(`${DIR}/${d}`, { recursive: true });
+for (const d of ["w/prices", "w/fc", "p/h", "k/t2"]) mkdirSync(`${DIR}/${d}`, { recursive: true });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const GAP = { "gamma-api.polymarket.com": 150, "clob.polymarket.com": 110, "data-api.polymarket.com": 160, "previous-runs-api.open-meteo.com": 400, "aviationweather.gov": 1200 };
@@ -144,12 +144,14 @@ const unitOf = (e) => (e.markets.some((m) => /°F/.test(m.label ?? "")) ? "fahre
 }
 
 // ---------------- markets lists for P and K ----------------
-async function marketList(path, query, from, to, keep) {
+async function marketList(path, query, from, to, keep, stepDays = 14) {
   if (existsSync(path)) return JSON.parse(readFileSync(path, "utf8"));
   const byId = new Map();
-  for (let a = from; a < to; a += 14 * day) {
-    const b = Math.min(a + 14 * day, to);
+  let capped = 0;
+  for (let a = from; a < to; a += stepDays * day) {
+    const b = Math.min(a + stepDays * day, to);
     for (let off = 0; off < 2400; off += 100) {
+      if (off >= 2000) { capped++; say(`list ${path} ${iso(a)}: more than 2000 markets in the window, rest skipped`); break; }
       const { status, json, text } = await getJson(`${G}/markets?closed=true&limit=100&offset=${off}&end_date_min=${iso(a)}&end_date_max=${iso(b)}&${query}`);
       if (!Array.isArray(json)) { say(`list ${path} ${iso(a)} off ${off}: HTTP ${status} ${text ?? ""}`); break; }
       for (const m of json) {
@@ -165,7 +167,7 @@ async function marketList(path, query, from, to, keep) {
   }
   const xs = [...byId.values()];
   writeFileSync(path, JSON.stringify(xs));
-  say(`list ${path}: ${xs.length} binary markets`);
+  say(`list ${path}: ${xs.length} binary markets; windows over the 2000 cap: ${capped}`);
   return xs;
 }
 
@@ -173,6 +175,7 @@ async function marketList(path, query, from, to, keep) {
 if (!timeUp()) {
   const pm = await marketList(`${DIR}/p/markets.json`, "volume_num_min=1000000", Date.UTC(2026, 0, 1), Date.UTC(2026, 9, 11), (v) => v >= 1e6);
   let done = 0, failed = 0;
+  const errors = [];
   await pool(pm, 4, async (m) => {
     const p = `${DIR}/p/h/${m.id}.json.gz`;
     if (existsSync(p) || !m.closedTime) return;
@@ -180,39 +183,45 @@ if (!timeUp()) {
     const st = Math.floor(Date.parse(m.startDate ?? m.createdAt) / 1000);
     const start = Math.max(st, end - 120 * 86400);
     if (!(end > start)) return;
+    // A window that errors or comes back empty is split: 30 days -> 7 days -> 1 day.
+    const getRange = async (a, b, size) => {
+      const url = `https://clob.polymarket.com/prices-history?market=${m.tokens[0]}&startTs=${a}&endTs=${b}&fidelity=10`;
+      const r = await getJson(url);
+      const h = r.json?.history;
+      if (Array.isArray(h) && (h.length || size <= 86400)) return h;
+      if (!r.json && errors.length < 10) errors.push(`${m.id} ${b - a}s: HTTP ${r.status} ${r.text ?? ""}`);
+      if (size <= 86400) return null;
+      const next = size > 7 * 86400 ? 7 * 86400 : 86400;
+      const all = [];
+      for (let c = a; c < b; c += next) { const part = await getRange(c, Math.min(c + next, b), next); if (part === null) return null; all.push(...part); }
+      return all;
+    };
     const pts = [];
     for (let a = start; a < end; a += 30 * 86400) {
-      const b = Math.min(a + 30 * 86400, end);
-      const { json } = await getJson(`https://clob.polymarket.com/prices-history?market=${m.tokens[0]}&startTs=${a}&endTs=${b}&fidelity=10`);
-      if (!json) { failed++; return; }
-      let h = json.history ?? [];
-      if (!h.length && b - a > 7 * 86400) { // long windows may come back empty: retry in 7-day pieces
-        for (let c = a; c < b; c += 7 * 86400) {
-          const r = await getJson(`https://clob.polymarket.com/prices-history?market=${m.tokens[0]}&startTs=${c}&endTs=${Math.min(c + 7 * 86400, b)}&fidelity=10`);
-          if (!r.json) { failed++; return; }
-          h = h.concat(r.json.history ?? []);
-        }
-      }
+      const h = await getRange(a, Math.min(a + 30 * 86400, end), 30 * 86400);
+      if (h === null) { failed++; return; }
       for (const x of h) pts.push([x.t, x.p]);
     }
     saveGz(p, pts);
     done++;
   });
   say(`P histories: new ${done}, failures ${failed}`);
+  for (const e of errors) say(`  P error: ${e}`);
 }
 
 // ---------------- K: trades of a random sample ----------------
 if (!timeUp()) {
-  const km = await marketList(`${DIR}/k/markets.json`, "volume_num_min=100000&volume_num_max=5000000", Date.UTC(2026, 3, 1), Date.UTC(2026, 9, 11), (v) => v >= 1e5 && v <= 5e6);
+  // v2: the first list used 14-day windows and hit the API's offset cap in every window (incomplete list) -> 1-day windows, new files
+  const km = await marketList(`${DIR}/k/markets-v2.json`, "volume_num_min=100000&volume_num_max=5000000", Date.UTC(2026, 3, 1), Date.UTC(2026, 9, 11), (v) => v >= 1e5 && v <= 5e6, 1);
   let seed = 12;
   const rnd = () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   const sorted = [...km].sort((a, b) => (a.id < b.id ? -1 : 1));
   for (let i = sorted.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [sorted[i], sorted[j]] = [sorted[j], sorted[i]]; }
   const sample = sorted.slice(0, 400);
-  writeFileSync(`${DIR}/k/sample.json`, JSON.stringify(sample.map((m) => m.id)));
+  writeFileSync(`${DIR}/k/sample-v2.json`, JSON.stringify(sample.map((m) => m.id)));
   let done = 0, partial = 0;
   await pool(sample, 3, async (m) => {
-    const p = `${DIR}/k/t/${m.id}.json.gz`;
+    const p = `${DIR}/k/t2/${m.id}.json.gz`;
     if (existsSync(p)) return;
     const rows = [];
     let complete = false, note = "";
