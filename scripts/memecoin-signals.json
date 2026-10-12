@@ -1,0 +1,7 @@
+[
+  { "symbol": "ALOIS", "address": "2Dx7XJQp2LGdq14nP98swmtUhfhHz8FVs98bt11Mpump", "postedUtc": "2026-10-11T05:51:00Z", "entryMcap": 765187, "tp": [0.0013008181, 0.0022955613, 0.0045911226, 0.0122429936] },
+  { "symbol": "CYBERLEEK", "address": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg", "postedUtc": "2026-10-11T06:14:00Z", "entryMcap": 7102651, "tp": [0.0120745069, 0.0213079533, 0.0426159066, 0.1136424176] },
+  { "symbol": "PLIQ", "address": "GPTAba2jfVkE4QJSXGmwAjKBu6pHvhSguL92vB4Fpump", "postedUtc": "2026-10-11T08:35:00Z", "entryMcap": 28522, "tp": [0.0000484889, 0.0000855687, 0.0001711374, 0.0004563664] },
+  { "symbol": "GLYPH8192", "address": "EDGHjfg851HefJ8EuCDtGwNeW2zFqzmFHznrHz53pump", "postedUtc": "2026-10-11T09:18:00Z", "entryMcap": 51794, "tp": [0.0000880503, 0.0001553829, 0.0003107658, 0.0008287088] },
+  { "symbol": "OWL", "address": "68AGsjomsgTtiTaDhF6XGCeVJDnFeh415ngYYgVxGzns", "postedUtc": "2026-10-11T12:10:00Z", "entryMcap": 680970, "tp": [0.0011576493, 0.0020429106, 0.0040858212, 0.0108955232] }
+]
