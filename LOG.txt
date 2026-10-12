@@ -1,0 +1,14 @@
+a01 0xd3c0b0a80ef1364c2693e07527dd673919054a80: fills 3016, funding 1527, ledger 49
+a02 0x8cbe593aa5b6fffb5254429d1812abdbd1f06959: fills 19150, funding 247, ledger 88
+a03 0x523979b277a398574a81da1d3511cb84823ce040: fills 6695, funding 1934, ledger 18
+a04 0x47096aea5fbac0ea3d6e0bb4d2d1b52b21b524ca: fills 11705, funding 590, ledger 39
+a05 0xd08a4557671ca465e7bba41110a93148c90f9931: fills 19723, funding 9619, ledger 17
+a06 0x1313d08233619c6ebecf84465a85b595c6b2a5ce: fills 4990, funding 106, ledger 4
+a07 0x41c684cbde3e449cc67c70aacb6132e3eb25b06d: fills 23606, funding 930, ledger 202
+a08 0x238a47bad16d3afb6821fd6cdd609cc084eba106: fills 2156, funding 185, ledger 129
+a09 0xe4c0f75521c93a8c8a14e3770ca891c9a10ed02d: fills 20900, funding 1216, ledger 4
+a10 0x0a506b1e47726e769949086ea60b5b01cbaf956a: fills 55633, funding 15219, ledger 14
+a11 0x6608d5342ca0fc0acf0c334c2496f1542af1fc71: fills 18103, funding 977, ledger 598
+a12 0x288262dcdf3e2f3dbcb2dcfbf9dcc0d9adc50f8a: fills 11824, funding 1290, ledger 99
+a13 0xabf01ed4099f86c5837e02268fb31dea93e79604: fills 8767, funding 4900, ledger 35
+a14 0x833b99b27dac651d02080f5e220e929df891db06: fills 19355, funding 1658, ledger 772
