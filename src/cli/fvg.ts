@@ -17,7 +17,7 @@ const ASSETS: Asset[] = [
   { sym: "ETHUSDT", provider: "binance", from: "2020-01", cost: 0.0005, group: "crypto" },
   { sym: "SPY", provider: "alpaca", from: "2016-01", cost: 0.0002, group: "stocks" },
   { sym: "QQQ", provider: "alpaca", from: "2016-01", cost: 0.0002, group: "stocks" },
-  { sym: "PAXGUSDT", provider: "binance", from: "2020-01", cost: 0.0005, group: "other" },
+  { sym: "PAXGUSDT", provider: "binance", from: "2020-08", cost: 0.0005, group: "other" },
   ...["GLD", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AMD", "SLV", "INTC", "BA", "XOM", "PFE"].map((sym) => ({ sym, provider: "alpaca" as const, from: "2016-01", cost: 0.0003, group: "other" as const })),
 ];
 const TO = "2026-09";
