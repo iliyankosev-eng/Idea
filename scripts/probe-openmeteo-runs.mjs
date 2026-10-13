@@ -4,9 +4,9 @@ const OUT = process.argv[2] ?? "out";
 mkdirSync(OUT, { recursive: true });
 const log = [];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const models = ["ecmwf_ifs025", "icon_d2", "icon_eu", "icon_global", "gfs_seamless", "gfs_global", "ncep_hrrr_conus"];
-const places = { munich: [48.35, 11.79], miami: [25.79, -80.32] };
-for (const run of ["2026-09-18T00:00", "2026-04-01T00:00", "2026-01-05T00:00"]) for (const [pl, [la, lo]] of Object.entries(places)) for (const m of models) {
+const models = ["ecmwf_ifs025", "icon_d2", "icon_eu", "gfs_global"];
+const places = { munich: [48.35, 11.79] };
+for (const run of ["2026-06-01T00:00", "2026-07-01T00:00", "2026-07-20T00:00", "2026-08-01T00:00", "2026-08-15T00:00", "2026-08-25T00:00", "2026-09-01T00:00", "2026-09-10T06:00", "2026-09-10T03:00"]) for (const [pl, [la, lo]] of Object.entries(places)) for (const m of models) {
   await sleep(400);
   const url = `https://single-runs-api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&hourly=temperature_2m&models=${m}&run=${run}&forecast_hours=48`;
   try {

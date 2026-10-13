@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 const claims = JSON.parse(readFileSync(new URL("../weather-claims.json", import.meta.url), "utf8"));
 const ev = JSON.parse(readFileSync(process.argv[2] + "/events.json", "utf8"));
-const TZ = { London: "Europe/London", "Los Angeles": "America/Los_Angeles", Chicago: "America/Chicago", "Buenos Aires": "America/Argentina/Buenos_Aires", Madrid: "Europe/Madrid", Paris: "Europe/Paris", Miami: "America/New_York", Toronto: "America/Toronto" };
+const TZ = { London: "Europe/London", "Los Angeles": "America/Los_Angeles", Chicago: "America/Chicago", "Buenos Aires": "America/Argentina/Buenos_Aires", Madrid: "Europe/Madrid", Paris: "Europe/Paris", Miami: "America/New_York", Munich: "Europe/Berlin", Toronto: "America/Toronto" };
 const loc = (s, tz) => new Date(s * 1000).toLocaleString("sv-SE", { timeZone: tz }).slice(5, 16);
 let sameDay = 0, before = 0;
 for (const [date, city, bucket, side, entry, , res] of claims) {
@@ -16,7 +16,7 @@ for (const [date, city, bucket, side, entry, , res] of claims) {
   if (prior === 0) sameDay++; else before++;
   console.log(`${date} ${city.padEnd(12)} ${bucket.padEnd(14)} ${side} ${String(entry).padStart(5)}¢ ${res.padEnd(4)} | price seen (local): ${near.length ? `${loc(near[0][0], tz)} .. ${loc(near.at(-1)[0], tz)}` : "-"} | before the day: ${prior} pts, on the day: ${onDay.length}${onDay.length ? ` (${loc(onDay[0][0], tz).slice(6)}–${loc(onDay.at(-1)[0], tz).slice(6)})` : ""}`);
 }
-console.log(`entry price ONLY available on the day itself: ${sameDay}/31; also available earlier: ${before}/31`);
+console.log(`entry price ONLY available on the day itself: ${sameDay}/${claims.length}; also available earlier: ${before}/${claims.length}`);
 // How lucky is each entry? Share of the time (before the outcome was decided) when the claimed side was CHEAPER than the claimed entry.
 console.log("\nshare of pre-decision time when the side was cheaper than the claimed entry (low = claimed entry is among the best prices):");
 const out = [];
