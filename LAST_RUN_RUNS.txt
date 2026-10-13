@@ -1,0 +1,13 @@
+LEMD icon_d2: no data for this location
+UUWW icon_d2: no data for this location
+RJTT ecmwf_ifs025 2026-06-10T12:00: HTTP 400 {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-10T12:00Z","error":true}
+RJTT icon_global 2026-06-10T18:00: HTTP 400 {"error":true,"reason":"The requested model run is not available. Model: dwd_icon, run: 2026-06-10T18:00Z"}
+RJTT gfs_global 2026-06-10T18:00: HTTP 400 {"error":true,"reason":"The requested model run is not available. Model: ncep_gfs013, run: 2026-06-10T18:00Z"}
+ZSPD ecmwf_ifs025 2026-06-10T12:00: HTTP 400 {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-10T12:00Z","error":true}
+ZSPD gfs_global 2026-06-10T18:00: HTTP 400 {"error":true,"reason":"The requested model run is not available. Model: ncep_gfs013, run: 2026-06-10T18:00Z"}
+ZSPD icon_global 2026-06-10T18:00: HTTP 400 {"reason":"The requested model run is not available. Model: dwd_icon, run: 2026-06-10T18:00Z","error":true}
+ZSPD ecmwf_ifs025 2026-06-10T18:00: HTTP 400 {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-10T18:00Z","error":true}
+EGLC ecmwf_ifs025 2026-06-10T18:00: HTTP 400 {"error":true,"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-10T18:00Z"}
+EGLC ecmwf_ifs025 2026-06-11T00:00: HTTP 400 {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-11T00:00Z","error":true}
+LFPB ecmwf_ifs025 2026-06-10T18:00: HTTP 400 {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-06-10T18:00Z","error":true}
+runs: jobs 5796, new 5503, already there 262, failed 28, minutes 119
