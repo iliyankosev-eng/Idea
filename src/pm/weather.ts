@@ -37,13 +37,17 @@ function tzOffset(tz: string, utcMs: number): number {
   const p = Object.fromEntries(f.formatToParts(new Date(utcMs)).map((x) => [x.type, x.value]));
   return Date.UTC(+p.year!, +p.month! - 1, +p.day!, +p.hour!, +p.minute!, +p.second!) - utcMs;
 }
-/** Decision time: 12:00 local time on the day before D, as unix seconds. */
-export function decisionTime(D: string, tz: string): number {
+/** Local wall-clock time (date D shifted by dayOffset days, at `hour`) in time zone tz -> unix seconds. */
+export function localToUtc(D: string, dayOffset: number, hour: number, tz: string): number {
   const [y, m, d] = D.split("-").map(Number) as [number, number, number];
-  const guess = Date.UTC(y, m - 1, d - 1, 12);
+  const guess = Date.UTC(y, m - 1, d + dayOffset, hour);
   let utc = guess - tzOffset(tz, guess);
   utc = guess - tzOffset(tz, utc);
   return utc / 1000;
+}
+/** Decision time: 12:00 local time on the day before D, as unix seconds. */
+export function decisionTime(D: string, tz: string): number {
+  return localToUtc(D, -1, 12, tz);
 }
 
 /** Hourly previous_day2 forecast -> daily mean of the models' 24-hour maxima (>= 2 models with >= 20 hours each). */
