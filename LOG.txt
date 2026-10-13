@@ -1,0 +1,36 @@
+2026-09-01|London: highest-temperature-in-london-on-september-1-2026, 11 buckets
+2026-09-01|Los Angeles: highest-temperature-in-los-angeles-on-september-1-2026, 11 buckets
+2026-09-02|Chicago: highest-temperature-in-chicago-on-september-2-2026, 11 buckets
+2026-09-03|Buenos Aires: highest-temperature-in-buenos-aires-on-september-3-2026, 11 buckets
+2026-09-03|Los Angeles: highest-temperature-in-los-angeles-on-september-3-2026, 11 buckets
+2026-09-03|Madrid: highest-temperature-in-madrid-on-september-3-2026, 11 buckets
+2026-09-03|Paris: highest-temperature-in-paris-on-september-3-2026, 11 buckets
+2026-09-04|Buenos Aires: highest-temperature-in-buenos-aires-on-september-4-2026, 11 buckets
+2026-09-04|Chicago: highest-temperature-in-chicago-on-september-4-2026, 11 buckets
+2026-09-04|Paris: highest-temperature-in-paris-on-september-4-2026, 11 buckets
+2026-09-05|Miami: highest-temperature-in-miami-on-september-5-2026, 11 buckets
+2026-09-05|Toronto: highest-temperature-in-toronto-on-september-5-2026, 11 buckets
+2026-09-06|London: highest-temperature-in-london-on-september-6-2026, 11 buckets
+2026-09-07|Paris: highest-temperature-in-paris-on-september-7-2026, 11 buckets
+2026-09-07|Toronto: highest-temperature-in-toronto-on-september-7-2026, 11 buckets
+2026-09-08|Buenos Aires: highest-temperature-in-buenos-aires-on-september-8-2026, 11 buckets
+2026-09-08|Chicago: highest-temperature-in-chicago-on-september-8-2026, 11 buckets
+2026-09-09|Buenos Aires: highest-temperature-in-buenos-aires-on-september-9-2026, 11 buckets
+2026-09-09|Los Angeles: highest-temperature-in-los-angeles-on-september-9-2026, 11 buckets
+2026-09-10|Buenos Aires: highest-temperature-in-buenos-aires-on-september-10-2026, 11 buckets
+2026-09-10|Los Angeles: highest-temperature-in-los-angeles-on-september-10-2026, 11 buckets
+2026-09-10|Madrid: highest-temperature-in-madrid-on-september-10-2026, 11 buckets
+2026-09-10|Paris: highest-temperature-in-paris-on-september-10-2026, 11 buckets
+2026-09-11|Chicago: highest-temperature-in-chicago-on-september-11-2026, 11 buckets
+2026-09-11|Madrid: highest-temperature-in-madrid-on-september-11-2026, 11 buckets
+2026-09-11|Toronto: highest-temperature-in-toronto-on-september-11-2026, 11 buckets
+2026-09-12|Chicago: highest-temperature-in-chicago-on-september-12-2026, 11 buckets
+2026-09-12|London: highest-temperature-in-london-on-september-12-2026, 11 buckets
+2026-09-12|Madrid: highest-temperature-in-madrid-on-september-12-2026, 11 buckets
+2026-09-12|Toronto: highest-temperature-in-toronto-on-september-12-2026, 11 buckets
+2026-09-18|Buenos Aires: highest-temperature-in-buenos-aires-on-september-18-2026, 11 buckets
+2026-09-18|Chicago: highest-temperature-in-chicago-on-september-18-2026, 11 buckets
+2026-09-18|London: highest-temperature-in-london-on-september-18-2026, 11 buckets
+2026-09-18|Madrid: highest-temperature-in-madrid-on-september-18-2026, 11 buckets
+2026-09-18|Miami: highest-temperature-in-miami-on-september-18-2026, 11 buckets
+2026-09-18|Munich: highest-temperature-in-munich-on-september-18-2026, 11 buckets
