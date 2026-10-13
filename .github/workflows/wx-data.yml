@@ -1,0 +1,49 @@
+name: wx-data
+# Downloads the raw data for experiments/polymarket-preregistration.md into the `pmdata` branch. Resumable: run again until LAST_RUN says "all stages done".
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/wx-fetch.mjs", ".github/workflows/wx-data.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pmdata-branch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check out the pmdata branch (create it on the first run)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin pmdata >/dev/null; then
+            git clone --quiet --depth 1 --branch pmdata "$URL" pmdata
+          else
+            mkdir pmdata && cd pmdata && git init --quiet -b pmdata && git remote add origin "$URL"
+          fi
+      - name: Download
+        env:
+          BUDGET_MIN: "60"
+        run: node scripts/wx-fetch.mjs pmdata
+      - name: Commit and push
+        if: always()
+        run: |
+          cd pmdata
+          git config user.name "data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git commit --quiet -m "pmdata $(date -u +%FT%TZ)"
+          git push --quiet origin pmdata
+          while read -r line; do echo "::notice title=pmdata::$line"; done < LAST_RUN_WX.txt
