@@ -1,0 +1,36 @@
+2026-06-01T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 23.7 
+2026-06-01T00:00 munich icon_d2: HTTP 200, values 48, max 21.9 
+2026-06-01T00:00 munich icon_eu: HTTP 200, values 48, max 23 
+2026-06-01T00:00 munich gfs_global: HTTP 200, values 48, max 23.4 
+2026-07-01T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 23.5 
+2026-07-01T00:00 munich icon_d2: HTTP 200, values 48, max 24.9 
+2026-07-01T00:00 munich icon_eu: HTTP 200, values 48, max 24.3 
+2026-07-01T00:00 munich gfs_global: HTTP 200, values 48, max 24.6 
+2026-07-20T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 21.5 
+2026-07-20T00:00 munich icon_d2: HTTP 200, values 48, max 23.3 
+2026-07-20T00:00 munich icon_eu: HTTP 200, values 48, max 22.7 
+2026-07-20T00:00 munich gfs_global: HTTP 200, values 48, max 21.7 
+2026-08-01T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 29.4 
+2026-08-01T00:00 munich icon_d2: HTTP 200, values 48, max 28.8 
+2026-08-01T00:00 munich icon_eu: HTTP 200, values 48, max 29.1 
+2026-08-01T00:00 munich gfs_global: HTTP 200, values 48, max 29 
+2026-08-15T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 31.4 
+2026-08-15T00:00 munich icon_d2: HTTP 200, values 48, max 34.6 
+2026-08-15T00:00 munich icon_eu: HTTP 200, values 48, max 34.4 
+2026-08-15T00:00 munich gfs_global: HTTP 200, values 48, max 34 
+2026-08-25T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 25 
+2026-08-25T00:00 munich icon_d2: HTTP 200, values 48, max 24.9 
+2026-08-25T00:00 munich icon_eu: HTTP 200, values 48, max 24.9 
+2026-08-25T00:00 munich gfs_global: HTTP 200, values 48, max 25.1 
+2026-09-01T00:00 munich ecmwf_ifs025: HTTP 200, values 48, max 23.8 
+2026-09-01T00:00 munich icon_d2: HTTP 200, values 48, max 23.5 
+2026-09-01T00:00 munich icon_eu: HTTP 200, values 48, max 23.5 
+2026-09-01T00:00 munich gfs_global: HTTP 200, values 48, max 22.6 
+2026-09-10T06:00 munich ecmwf_ifs025: HTTP 200, values 48, max 19.1 
+2026-09-10T06:00 munich icon_d2: HTTP 200, values 48, max 19.4 
+2026-09-10T06:00 munich icon_eu: HTTP 200, values 48, max 17.9 
+2026-09-10T06:00 munich gfs_global: HTTP 200, values 48, max 19.3 
+2026-09-10T03:00 munich ecmwf_ifs025: HTTP 400, values 0, max -Infinity {"reason":"The requested model run is not available. Model: ecmwf_ifs025, run: 2026-09-10T03:00Z","error":true}
+2026-09-10T03:00 munich icon_d2: HTTP 200, values 48, max 19.4 
+2026-09-10T03:00 munich icon_eu: HTTP 200, values 31, max 16.3 
+2026-09-10T03:00 munich gfs_global: HTTP 400, values 0, max -Infinity {"reason":"The requested model run is not available. Model: ncep_gfs013, run: 2026-09-10T03:00Z","error":true}
