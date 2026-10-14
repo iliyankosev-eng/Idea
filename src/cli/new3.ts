@@ -10,6 +10,8 @@ import { byYear, perf, type DayRet } from "../daytrade/dt.js";
 import { n1, n2 } from "../daytrade/new3.js";
 import { n3, type N3Day } from "../options/n3.js";
 import { completeSessions, loadCalendar, toSessions, type Session } from "../intraday/sessions.js";
+import { dt8 } from "../daytrade/dt78.js";
+import { mulberry32 } from "../evaluate.js";
 import { bootstrapByDay } from "../pm/common.js";
 
 const D = "data/branch", C = 0.0045;
@@ -48,6 +50,25 @@ out.push("## N2: ръст преди решението на Фед (Lucca, Moen
   `Събития: ${ev.length}; средно ${fmt(100 * ev.reduce((a, x) => a + x.r, 0) / ev.length, 3)}% на събитие; положителни ${fmt(100 * ev.filter((x) => x.r > 0).length / ev.length, 0)}%. ` +
   `За сравнение, средната нетна доходност на SPY от затваряне до 13:59 на следващия ден за всички дни: ${fmt(100 * n2(S["SPY"]!, new Set(S["SPY"]!.map((s) => s.date)), C).filter((x) => x.trades).reduce((a, x, _, arr) => a + x.r / arr.length, 0), 3)}%.`, "");
 
+// ---------- stricter check for long-only rules: better than random days in the market? ----------
+/** p-value: share of 20 000 random draws of n days from `pool` whose mean is >= the observed mean. */
+const permP = (obs: number[], pool: number[], seed: number) => { const m = obs.reduce((a, b) => a + b, 0) / obs.length, rnd = mulberry32(seed); let ge = 0; for (let k = 0; k < 20000; k++) { let s = 0; for (let j = 0; j < obs.length; j++) s += pool[Math.floor(rnd() * pool.length)]!; if (s / obs.length >= m) ge++; } return ge / 20000; };
+{
+  const allN2 = n2(S["SPY"]!, new Set(S["SPY"]!.map((s) => s.date)), C).filter((x) => x.trades && x.day >= "2016-01-04");
+  const evR = allN2.filter((x) => fomc.has(x.day)).map((x) => x.r), nonR = allN2.filter((x) => !fomc.has(x.day)).map((x) => x.r);
+  const med = [...evR].sort((a, b) => a - b)[Math.floor(evR.length / 2)]!;
+  out.push("**По-строга проверка на N2.** Стратегия само с покупки печели и от общия ръст на пазара, а критерий C2 (средно > 0) не го отделя.",
+    `Сравнение с ${nonR.length} обикновени дни (същият прозорец: затваряне → 13:59): средно ${fmt(100 * nonR.reduce((a, b) => a + b, 0) / nonR.length, 3)}%. Медианата на FOMC дните е ${fmt(100 * med, 3)}%.`,
+    `Вероятност 85 случайни обикновени дни да дадат толкова или повече: **p = ${fmt(permP(evR, nonR, 3), 3)}**. Под 0.05 би било доказателство; над това не е.`, "");
+  const rows = readFileSync(`${D}/daily/alpaca/SPY.csv`, "utf8").trim().split("\n").slice(1).map((l) => l.split(",")).filter((r) => r[0]! <= "2026-09-30");
+  const date = rows.map((r) => r[0]!), c = rows.map((r) => Number(r[4]));
+  const held = dt8({ date, c }, 0).map((x, i) => ({ held: x.r !== 0, r: c[i + 1]! / c[i]! - 1 }));
+  const hr = held.filter((x) => x.held).map((x) => x.r), pool = held.slice(199).map((x) => x.r);
+  out.push("**Същата проверка за DT8 (RSI(2) в бота).**",
+    `Средно на ден в позиция: ${fmt(100 * hr.reduce((a, b) => a + b, 0) / hr.length, 3)}% (${hr.length} дни); средно за всички дни: ${fmt(100 * pool.reduce((a, b) => a + b, 0) / pool.length, 3)}%. **p = ${fmt(permP(hr, pool, 5), 3)}**.`,
+    "Т.е. и за DT8 предимството пред „случайни дни в пазара“ не е доказано на 5%. Остава ползата от по-малкия спад (2022: −2.9% срещу −18.2%), но това не е доказан ръб.", "");
+}
+
 // ---------- N3 ----------
 const optPath = process.argv[2] ?? "data/options/spy0dte_entry.json.gz";
 if (existsSync(optPath)) {
@@ -65,6 +86,11 @@ if (existsSync(optPath)) {
     "| Вариант | Дни | Печеливши | Средно на ден | Sharpe | Най-лош ден | Bootstrap > 0 | 2025-06 –: средно · Sharpe | Решение |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     line3("**Iron condor, $0.01/крак** (доходност върху риска)", ic), line3("Iron condor, $0.02/крак", ic2), line3("Къс ATM стредъл, $0.01/крак (в % от цената на SPY)", st), "");
 } else out.push("## N3", "", `Няма данни за опциите (${optPath}).`, "");
+out.push("## Извод", "",
+  "- **N1 (последните 30 минути):** STOP. Посоката съвпада в ~50% от дните; от 2021 нататък е на загуба. Ефектът от статията (до 2020) не се вижда в SPY/QQQ след това.",
+  "- **N2 (преди Фед):** минава формалните критерии, но не е по-добър от случайни дни в пазара (p ≈ 0.10). Не го добавям в бота.",
+  "- **N3 (0DTE iron condor):** STOP (bootstrap под 95%). 80% печеливши дни, но един лош ден изтрива ~25 добри; при $0.02 на крак печалбата почти изчезва. Само 2.6 години данни.",
+  "- **Самокритика:** за стратегии само с покупки критерият „средно > 0“ е слаб. Отсега ги сравнявам и със случайни дни в пазара. Това сваля и DT8 от „доказан“ на „недоказан ръб, но по-малък спад“.", "");
 const text = out.join("\n");
 console.log(text);
 writeFileSync("reports/new3.md", text + "\n");
