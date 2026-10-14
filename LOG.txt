@@ -16,3 +16,12 @@ https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2024/02/05/BID_candles_min
 https://datafeed.dukascopy.com/datafeed/USDJPY/2024/02/05/ASK_candles_min_1.bi5: URLError <urlopen error timed out>
 https://datafeed.dukascopy.com/datafeed/XAUUSD/2024/02/05/BID_candles_min_1.bi5: URLError <urlopen error [Errno 104] Connection reset by peer>
 https://datafeed.dukascopy.com/datafeed/XAUUSD/2024/02/05/BID_candles_min_1.bi5: URLError <urlopen error timed out>
+XAUUSD 2016: 37 days failed, not saved (e.g. ['2016-01-18', '2016-01-19', '2016-01-17'])
+time budget used, stopping before XAUUSD 2017
+time budget used, stopping before USA500IDXUSD 2016
+time budget used, stopping before USATECHIDXUSD 2016
+time budget used, stopping before DEUIDXEUR 2016
+time budget used, stopping before GBRIDXGBP 2016
+time budget used, stopping before EURUSD 2016
+time budget used, stopping before GBPUSD 2016
+time budget used, stopping before USDJPY 2016
