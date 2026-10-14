@@ -1,0 +1,37 @@
+name: probe-iex
+# QQQ IEX 1-minute bars around the open (bot feed vs SIP backtest). Raw results go to the `probe-iex` branch.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/probe-iex.mjs", ".github/workflows/probe-iex.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: node scripts/probe-iex.mjs out
+      - name: Push raw results to the probe-iex branch
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd out
+          git init --quiet -b probe-iex
+          git config user.name "probe-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit --quiet -m "probe-iex $(date -u +%FT%TZ)"
+          git push --force --quiet "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" probe-iex
+          while read -r line; do echo "::notice title=probe-iex::$line"; done < LOG.txt
