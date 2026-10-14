@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { halted, orbPlan, rsiDecision } from "../src/bot/logic.js";
+import { halted, orbPlan, rsiDecision, stopTouched } from "../src/bot/logic.js";
 import { loadMinuteBars } from "../src/data/intraday.js";
-import { dt3 } from "../src/daytrade/dt.js";
+import { dt3, dt3Late } from "../src/daytrade/dt.js";
 import { dt8 } from "../src/daytrade/dt78.js";
 import { completeSessions, loadCalendar, toSessions } from "../src/intraday/sessions.js";
 
@@ -21,11 +21,18 @@ describe("bot logic (hand-calculated)", () => {
     expect(rsiDecision(up.slice(0, 150), false)).toBe("none");
     expect([halted(79, 100), halted(81, 100)]).toEqual([true, false]);
   });
+  it("stop already touched before the delayed entry", () => {
+    const later = [b(100.5, 100.7, 100.3, 100.4), b(100.4, 100.5, 99.6, 100.0)];
+    expect(stopTouched(later, "buy", 99.6)).toBe(true); // low 99.6 <= stop 99.6
+    expect(stopTouched(later, "buy", 99.5)).toBe(false);
+    expect(stopTouched(later, "sell", 100.7)).toBe(true);
+    expect(stopTouched(later, "sell", 100.71)).toBe(false);
+  });
 });
 
 const D = "data/branch";
 describe.skipIf(!existsSync(`${D}/daily/alpaca/calendar.csv`))("bot = backtest on real history", () => {
-  it("ORB: the same direction and stop as DT3 on every QQQ day of 2026-01..2026-09", () => {
+  it("ORB: trade / no-trade identical to DT3 on every QQQ day of 2026-01..2026-09", () => {
     const cal = loadCalendar(`${D}/daily/alpaca/calendar.csv`);
     const ss = completeSessions(toSessions(loadMinuteBars(D, "QQQ", "2026-01", "2026-09", "alpaca"), cal), cal).kept;
     const bt = dt3(ss, 0);
@@ -53,5 +60,25 @@ describe.skipIf(!existsSync(`${D}/daily/alpaca/calendar.csv`))("bot = backtest o
     }
     expect(trades).toBeGreaterThan(50);
     expect(mism).toBe(0);
+  });
+  it("delayed ORB: dt3Late(e=5) is exactly dt3, and the bot rule matches dt3Late(e=20) on every QQQ day of 2025-2026", () => {
+    const cal = loadCalendar(`${D}/daily/alpaca/calendar.csv`);
+    const ss = completeSessions(toSessions(loadMinuteBars(D, "QQQ", "2025-01", "2026-09", "alpaca"), cal), cal).kept;
+    expect(dt3Late(ss, 0.0045, 5)).toEqual(dt3(ss, 0.0045));
+    const bt = dt3Late(ss, 0, 20);
+    let same = 0, n = 0, trades = 0;
+    ss.forEach((s, i) => {
+      if (s.minute[0] !== 570 || s.minute[4] !== 574) return;
+      const i0 = s.minute.indexOf(590);
+      if (i0 < 5) return;
+      const bar = (k: number) => ({ o: s.o[k]!, h: s.h[k]!, l: s.l[k]!, c: s.c[k]! });
+      const p = orbPlan([0, 1, 2, 3, 4].map(bar), s.o[i0]!, 100_000);
+      const go = p !== null && !stopTouched(Array.from({ length: i0 - 5 }, (_, k) => bar(5 + k)), p.side, p.stop);
+      n++; if (go) trades++;
+      if (go === (bt[i]!.trades === 1)) same++;
+    });
+    expect(n).toBeGreaterThan(350);
+    expect(trades).toBeGreaterThan(150);
+    expect(same).toBe(n);
   });
 });

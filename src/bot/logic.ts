@@ -31,3 +31,7 @@ export function rsiDecision(closes: readonly number[], inPosition: boolean): "bu
 
 /** Daily drawdown guard: stop opening new trades when equity is more than `maxDd` below its high-water mark. */
 export const halted = (equity: number, highWater: number, maxDd = 0.2) => equity < highWater * (1 - maxDd);
+/** True if the stop level was already touched by any of the bars (09:35 .. entry): the delayed-entry DT3 then skips the day. */
+export function stopTouched(bars: readonly Bar[], side: "buy" | "sell", stop: number): boolean {
+  return bars.some((b) => (side === "buy" ? b.l <= stop : b.h >= stop));
+}

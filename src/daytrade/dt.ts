@@ -117,6 +117,35 @@ export function dt3(ss: readonly Session[], cost: number): DayRet[] {
   });
 }
 
+/**
+ * DT3 with a later entry (bot adaptation, post-hoc): the free Alpaca plan gives SIP bars only with a 15-minute delay,
+ * so the opening range 09:30-09:34 from SIP is known at 09:50. Entry at the open of minute 09:30 + e; the day is skipped
+ * if the stop was already touched between 09:35 and the entry. e = 5 is exactly dt3().
+ */
+export function dt3Late(ss: readonly Session[], cost: number, e: number): DayRet[] {
+  return ss.map((s) => {
+    const none = { day: s.date, r: 0, trades: 0 };
+    if (s.minute[0] !== 570 || s.minute[4] !== 574) return none;
+    const i0 = s.minute.indexOf(570 + e);
+    if (i0 < 5) return none;
+    const o0 = s.o[0]!, c4 = s.c[4]!;
+    if (c4 === o0) return none;
+    const dir = c4 > o0 ? 1 : -1;
+    const stop = dir === 1 ? Math.min(...s.l.slice(0, 5)) : Math.max(...s.h.slice(0, 5));
+    for (let i = 5; i < i0; i++) if (dir === 1 ? s.l[i]! <= stop : s.h[i]! >= stop) return none;
+    const entry = s.o[i0]!, risk = dir * (entry - stop);
+    if (!(risk > 0)) return none;
+    const target = entry + dir * 10 * risk, q = Math.min(0.01 / risk, 4 / entry);
+    let exit = s.c[s.c.length - 1]!;
+    for (let i = i0; i < s.minute.length; i++) {
+      if (dir * (s.o[i]! - stop) <= 0 && i > i0) { exit = s.o[i]!; break; }
+      if (dir === 1 ? s.l[i]! <= stop : s.h[i]! >= stop) { exit = stop; break; }
+      if (dir === 1 ? s.h[i]! >= target : s.l[i]! <= target) { exit = target; break; }
+    }
+    return { day: s.date, r: dir * (exit - entry) * q - 2 * cost * q, trades: 1 };
+  });
+}
+
 // ---------------- DT4: first half-hour predicts the last half-hour ----------------
 export function dt4(ss: readonly Session[], cost: number): DayRet[] {
   const out: DayRet[] = [];

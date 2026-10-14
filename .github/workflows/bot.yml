@@ -1,0 +1,72 @@
+name: bot
+# Paper-trading bot (src/bot/run.ts): DT3 ORB on QQQ + DT8 RSI(2) on SPY. Logs go to the `botlog` branch.
+# Without the secrets ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY it is a dry run: decisions are logged, no orders are sent.
+# Times are UTC; two crons per job cover summer and winter time in New York, the run that is in the wrong hour exits in seconds.
+on:
+  schedule:
+    - cron: "17 13,14 * * 1-5" # open job: 09:17 New York (EDT 13:17 UTC, EST 14:17 UTC), waits until 09:35 / 09:50
+    - cron: "27 16,17,19,20 * * 1-5" # close job: 15:27 New York (12:27 on half days), waits until 15:40 / 15:55
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "open, close or check (check = no waiting, no orders, prints today's decisions)"
+        default: check
+      dry_run:
+        description: "1 = never send orders"
+        default: "1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bot
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Check out the botlog branch (create it on the first run)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin botlog >/dev/null; then
+            git clone --quiet --depth 1 --branch botlog "$URL" botlog
+          else
+            mkdir botlog && cd botlog && git init --quiet -b botlog && git remote add origin "$URL"
+          fi
+      - name: Run
+        env:
+          ALPACA_PAPER_KEY_ID: ${{ secrets.ALPACA_PAPER_KEY_ID }}
+          ALPACA_PAPER_SECRET_KEY: ${{ secrets.ALPACA_PAPER_SECRET_KEY }}
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || '0' }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MODE: ${{ inputs.mode }}
+        run: |
+          case "$SCHEDULE" in
+            "17 13,14 * * 1-5") MODE=open ;;
+            "27 16,17,19,20 * * 1-5") MODE=close ;;
+            *) MODE="$INPUT_MODE" ;;
+          esac
+          npx tsx src/bot/run.ts "$MODE"
+      - name: Push the logs
+        if: always()
+        run: |
+          cd botlog
+          git config user.name "trading-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to log"; exit 0; fi
+          git commit --quiet -m "botlog $(date -u +%FT%TZ)"
+          git push --quiet origin botlog
+          tail -n 30 "$(ls -t *.log | head -1)" | while read -r line; do echo "::notice title=bot::$line"; done
