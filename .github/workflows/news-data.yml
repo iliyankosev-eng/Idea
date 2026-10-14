@@ -1,0 +1,50 @@
+name: news-data
+# Alpaca (Benzinga) news history for the stock universe into the `newsdata` branch (experiments/dt6-preregistration.md).
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/news-fetch.mjs", ".github/workflows/news-data.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-branch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check out the newsdata branch (create it on the first run)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin newsdata >/dev/null; then
+            git clone --quiet --depth 1 --branch newsdata "$URL" newsdata
+          else
+            mkdir newsdata && cd newsdata && git init --quiet -b newsdata && git remote add origin "$URL"
+          fi
+      - name: Download
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: node scripts/news-fetch.mjs newsdata
+      - name: Commit and push
+        if: always()
+        run: |
+          cd newsdata
+          git config user.name "data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git commit --quiet -m "newsdata $(date -u +%FT%TZ)"
+          git push --quiet origin newsdata
+          while read -r line; do echo "::notice title=newsdata::$line"; done < LAST_RUN_NEWS.txt
