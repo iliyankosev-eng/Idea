@@ -1,6 +1,7 @@
 name: bot
 # Paper-trading bot (src/bot/run.ts): DT3 ORB on QQQ + DT8 RSI(2) on SPY. Logs go to the `botlog` branch.
-# Without the secrets ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY it is a dry run: decisions are logged, no orders are sent.
+# Trades on the Alpaca PAPER account of ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY, or of ALPACA_KEY_ID / ALPACA_SECRET_KEY
+# when those are not set. Manual runs default to a dry run (dry_run=1): decisions are logged, no orders are sent.
 # Times are UTC; two crons per job cover summer and winter time in New York, the run that is in the wrong hour exits in seconds.
 on:
   schedule:

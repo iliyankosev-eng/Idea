@@ -8,7 +8,7 @@
  *  close: ~15:40 (20 minutes before the close; earlier on half days): DT8 decision with a market-on-close order (cutoff 15:50);
  *         5 minutes before the close: cancels the QQQ orders and closes the QQQ position (DT3 never holds overnight).
  *  check: no waiting and no orders: fetches the data both jobs need and prints the decisions they would take now (smoke test).
- * Safety: the trading endpoint is fixed to PAPER; without ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY (or with DRY_RUN=1)
+ * Safety: the trading endpoint is fixed to PAPER; without keys (or with DRY_RUN=1, or in check mode)
  * nothing is sent, orders are only logged; no new trades after a 20% drawdown from the equity high-water mark;
  * one order per strategy per day (client_order_id). News headlines are logged for context only: in the tests (reports/dt6.md)
  * news did not improve the opening-range breakout, so they do not change any decision.
@@ -42,10 +42,11 @@ type RawBar = { t: string; o: number; h: number; l: number; c: number };
 const nyMin = (b: RawBar) => ny(new Date(b.t)).min;
 const bar = (b: RawBar): Bar => ({ o: b.o, h: b.h, l: b.l, c: b.c });
 
-const key = process.env.ALPACA_PAPER_KEY_ID ?? "", secret = process.env.ALPACA_PAPER_SECRET_KEY ?? "";
+// Keys: ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY if set, otherwise the repository's ALPACA_KEY_ID / ALPACA_SECRET_KEY.
+// Either way the trading endpoint is the PAPER one: live keys do not authenticate there, so no real money can move.
+const key = process.env.ALPACA_PAPER_KEY_ID || process.env.ALPACA_KEY_ID || "", secret = process.env.ALPACA_PAPER_SECRET_KEY || process.env.ALPACA_SECRET_KEY || "";
 const paper = !!key && !!secret && process.env.DRY_RUN !== "1" && mode !== "check";
-// market data and the calendar work with any paper keys; the research keys are used for data when no bot keys are set
-const api = new Alpaca(key || process.env.ALPACA_KEY_ID || "", secret || process.env.ALPACA_SECRET_KEY || "", !paper, log);
+const api = new Alpaca(key, secret, !paper, log);
 const fomc = new Set((JSON.parse(readFileSync("scripts/fomc-dates.json", "utf8")) as { dates: string[] }).dates);
 const STATE = `${LOGDIR}/state.json`;
 const state: { highWater: number } = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : { highWater: 0 };
@@ -78,6 +79,13 @@ async function main() {
   log(`session ${cal.open}-${cal.close}; equity ${equity.toFixed(2)}, high-water ${state.highWater.toFixed(2)}${stop ? " -> HALTED (drawdown > 20%): no new trades" : ""}`);
 
   if (mode === "check") {
+    // read-only look at the paper account the bot will trade in (no account number is logged)
+    try {
+      const a = await api.account();
+      log(`paper account: status ${a.status}, equity ${a.equity}, cash ${a.cash}, buying power ${a.buying_power}, multiplier ${a.multiplier}, shorting ${a.shorting_enabled}, pattern day trader ${a.pattern_day_trader}, trading blocked ${a.trading_blocked}`);
+      const ps = (await api.positions()) as { symbol: string; qty: string }[];
+      log(`open positions: ${ps.length ? ps.map((x) => `${x.symbol} ${x.qty}`).join(", ") : "none"}`);
+    } catch (e) { log(`paper account not readable with these keys: ${e}`); }
     const t = ny();
     if (t.min >= openMin + 21) { const r = await dt3Plan(openMin, 0.5 * equity); log(`DT3 now: ${r.plan ? JSON.stringify(r.plan) : "no trade, " + r.why}${fomc.has(today) ? " (FOMC day: would be skipped)" : ""}`); }
     else log("DT3 check needs the time after 09:51 New York");
