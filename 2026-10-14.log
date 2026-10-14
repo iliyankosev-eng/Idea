@@ -1,0 +1,4 @@
+2026-10-14T07:39:23.658Z [check] start, DRY RUN (no orders are sent)
+2026-10-14T07:39:23.927Z [check] session 09:30-16:00; equity 100000.00, high-water 100000.00
+2026-10-14T07:39:23.928Z [check] DT3 check needs the time after 09:51 New York
+2026-10-14T07:39:24.265Z [check] DT8: 289 daily closes (last 2026-10-13), SPY now 778.03, in position false, decision none
