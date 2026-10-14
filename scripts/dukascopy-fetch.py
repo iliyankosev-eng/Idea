@@ -30,14 +30,14 @@ def fetch(sym, day, side, tries=6):
             if e.code == 404:
                 return None
             ERRORS.append(f"{url}: HTTP {e.code}")
-            time.sleep(2 + attempt * 3)
+            time.sleep(min(60, 2 ** (attempt + 1)))
         except Exception as e:
             ERRORS.append(f"{url}: {type(e).__name__} {e}")
-            time.sleep(2 + attempt * 3)
+            time.sleep(min(60, 2 ** (attempt + 1)))
     raise RuntimeError(f"failed {url}")
 
 def day_rows(sym, day):
-    tries = 2 if sys.argv[2] == "probe" else 6
+    tries = 2 if sys.argv[2] == "probe" else 9
     bid, ask = fetch(sym, day, "BID", tries), fetch(sym, day, "ASK", tries)
     if not bid:
         return day, [], bid is None
@@ -67,21 +67,35 @@ def main():
         log.extend(sorted(set(ERRORS))[:20])
     else:
         a, b = dt.date.fromisoformat(sys.argv[2]), dt.date.fromisoformat(sys.argv[3])
+        t0 = time.time()
         for sym in sys.argv[4].split(","):
             for year in range(a.year, b.year + 1):
                 path = f"{out}/{sym}/{year}.csv.gz"
                 if os.path.exists(path):
                     continue
+                if time.time() - t0 > 250 * 60:  # leave time to push; the next run resumes here
+                    log.append(f"time budget used, stopping before {sym} {year}")
+                    break
                 days = [d for d in (dt.date(year, 1, 1) + dt.timedelta(n) for n in range(366)) if d.year == year and a <= d <= b and d.weekday() != 5]
-                res = {}
-                with cf.ThreadPoolExecutor(8) as ex:
-                    for d, rows, _ in ex.map(lambda d: day_rows(sym, d), days):
+                res, failed = {}, []
+                def safe(d):
+                    try:
+                        return day_rows(sym, d)
+                    except Exception:
+                        failed.append(d.isoformat())
+                        return d, [], False
+                with cf.ThreadPoolExecutor(4) as ex:
+                    for d, rows, _ in ex.map(safe, days):
                         res[d] = rows
+                if len(failed) > 5:  # do not save a year with holes; the next run retries it
+                    log.append(f"{sym} {year}: {len(failed)} days failed, not saved (e.g. {failed[:3]})")
+                    print(log[-1], flush=True)
+                    continue
                 rows = [r for d in sorted(res) for r in res[d]]
                 os.makedirs(f"{out}/{sym}", exist_ok=True)
                 with gzip.open(path, "wt") as f:
                     f.write("t,o,h,l,c,ask_c\n" + "\n".join(rows) + "\n")
-                log.append(f"{sym} {year}: {len(rows)} minutes, {sum(1 for d in res if res[d])} days with data; first {rows[0] if rows else '-'}; last {rows[-1] if rows else '-'}")
+                log.append(f"{sym} {year}: {len(rows)} minutes, {sum(1 for d in res if res[d])} days with data, failed days {failed}; first {rows[0] if rows else '-'}; last {rows[-1] if rows else '-'}")
                 print(log[-1], flush=True)
     with open(f"{out}/LOG.txt", "a") as f:
         f.write("\n".join(log) + "\n")
