@@ -18,3 +18,8 @@
 2026-10-14T14:18:51.030Z [open] start, PAPER trading
 2026-10-14T14:18:51.515Z [open] session 09:30-16:00; equity 100000.00, high-water 100000.00
 2026-10-14T14:18:51.516Z [open] not the open window (New York 10:18), exit
+2026-10-14T19:25:19.608Z [close] start, PAPER trading
+2026-10-14T19:25:19.902Z [close] session 09:30-16:00; equity 100000.00, high-water 100000.00
+2026-10-14T19:40:01.250Z [close] DT8: 289 daily closes (last 2026-10-13), SPY now 768.54, in position false, decision buy
+2026-10-14T19:40:01.251Z [close] ORDER {"symbol":"SPY","qty":"65","side":"buy","type":"market","time_in_force":"cls","client_order_id":"dt8-buy-2026-10-14"}
+2026-10-14T19:55:00.480Z [close] no QQQ position to close
