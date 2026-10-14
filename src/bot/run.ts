@@ -99,6 +99,7 @@ async function main() {
     if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await api.cancelOpenOrders("QQQ"); await sleep(3000); await api.closePosition("QQQ"); } }
     try { for (const n of (await api.news("QQQ", new Date(Date.now() - 18 * 3600_000).toISOString())).slice(0, 5)) log(`news ${n.created_at} ${n.headline}`); } catch (e) { log(`news unavailable: ${e}`); }
     if (fomc.has(today)) { log("FOMC statement day -> DT3 skipped (rule from reports/dt6.md)"); return; }
+    if (closeMin !== 16 * 60) { log(`early close at ${cal.close} -> DT3 skipped (the close job runs at 15:25 and could not flatten QQQ)`); return; }
     if (stop) return;
     // shadow: the original 09:35 plan from the real-time IEX feed (logged only)
     if (await waitUntil(openMin + 5, 5, 120)) {

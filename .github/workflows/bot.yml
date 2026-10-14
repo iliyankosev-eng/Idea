@@ -2,11 +2,9 @@ name: bot
 # Paper-trading bot (src/bot/run.ts): DT3 ORB on QQQ + DT8 RSI(2) on SPY. Logs go to the `botlog` branch.
 # Trades on the Alpaca PAPER account of ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY, or of ALPACA_KEY_ID / ALPACA_SECRET_KEY
 # when those are not set. Manual runs default to a dry run (dry_run=1): decisions are logged, no orders are sent.
-# Times are UTC; two crons per job cover summer and winter time in New York, the run that is in the wrong hour exits in seconds.
+# Started by workflow_dispatch from scheduled tasks at 09:20 and 15:25 New York (mode=open / mode=close, dry_run=0).
+# GitHub's own cron is not used: in this repository scheduled runs started 5-9 hours late.
 on:
-  schedule:
-    - cron: "17 13,14 * * 1-5" # open job: 09:17 New York (EDT 13:17 UTC, EST 14:17 UTC), waits until 09:35 / 09:50
-    - cron: "27 16,17,19,20 * * 1-5" # close job: 15:27 New York (12:27 on half days), waits until 15:40 / 15:55
   workflow_dispatch:
     inputs:
       mode:
@@ -50,16 +48,10 @@ jobs:
           ALPACA_PAPER_SECRET_KEY: ${{ secrets.ALPACA_PAPER_SECRET_KEY }}
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || '0' }}
-          SCHEDULE: ${{ github.event.schedule }}
+          DRY_RUN: ${{ inputs.dry_run }}
           INPUT_MODE: ${{ inputs.mode }}
         run: |
-          case "$SCHEDULE" in
-            "17 13,14 * * 1-5") MODE=open ;;
-            "27 16,17,19,20 * * 1-5") MODE=close ;;
-            *) MODE="$INPUT_MODE" ;;
-          esac
-          npx tsx src/bot/run.ts "$MODE"
+          npx tsx src/bot/run.ts "$INPUT_MODE"
       - name: Push the logs
         if: always()
         run: |
