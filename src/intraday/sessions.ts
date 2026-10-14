@@ -26,6 +26,8 @@ export interface Session {
   readonly h: number[];
   readonly l: number[];
   readonly c: number[];
+  /** Volume per minute (set by toSessions; optional so hand-built test sessions need not supply it). */
+  readonly v?: number[];
   /** Stocks with a calendar: the official previous session date (to detect a missing previous day). */
   prevDate?: string;
 }
@@ -69,10 +71,10 @@ export function toSessions(b: MinuteBars, calendar?: Calendar): Session[] {
       if (!sess || minute < sess[0] || minute >= sess[1]) continue;
     }
     if (!cur || cur.date !== date) {
-      cur = { symbol: b.symbol, date, minute: [], o: [], h: [], l: [], c: [] };
+      cur = { symbol: b.symbol, date, minute: [], o: [], h: [], l: [], c: [], v: [] };
       out.push(cur);
     }
-    cur.minute.push(minute); cur.o.push(b.o[i]!); cur.h.push(b.h[i]!); cur.l.push(b.l[i]!); cur.c.push(b.c[i]!);
+    cur.minute.push(minute); cur.o.push(b.o[i]!); cur.h.push(b.h[i]!); cur.l.push(b.l[i]!); cur.c.push(b.c[i]!); cur.v!.push(b.v[i]!);
   }
   if (calendar) {
     const days = [...calendar.keys()].sort();
