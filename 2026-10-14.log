@@ -2,3 +2,9 @@
 2026-10-14T07:39:23.927Z [check] session 09:30-16:00; equity 100000.00, high-water 100000.00
 2026-10-14T07:39:23.928Z [check] DT3 check needs the time after 09:51 New York
 2026-10-14T07:39:24.265Z [check] DT8: 289 daily closes (last 2026-10-13), SPY now 778.03, in position false, decision none
+2026-10-14T08:12:55.622Z [check] start, DRY RUN (no orders are sent)
+2026-10-14T08:12:55.967Z [check] session 09:30-16:00; equity 100000.00, high-water 100000.00
+2026-10-14T08:12:56.070Z [check] paper account: status ACTIVE, equity 100000, cash 100000, buying power 400000, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-14T08:12:56.297Z [check] open positions: none
+2026-10-14T08:12:56.299Z [check] DT3 check needs the time after 09:51 New York
+2026-10-14T08:12:57.088Z [check] DT8: 289 daily closes (last 2026-10-13), SPY now 778.03, in position false, decision none
