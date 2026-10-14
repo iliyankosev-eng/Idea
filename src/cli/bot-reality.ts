@@ -34,8 +34,9 @@ const rows = readFileSync(`${D}/daily/alpaca/SPY.csv`, "utf8").trim().split("\n"
 const date = rows.map((r) => r[0]!), c = rows.map((r) => Number(r[4]));
 const sma = (xs: number[], n: number) => xs.slice(-n).reduce((a, b) => a + b, 0) / n;
 let flips = 0;
-const dt8Early: DayRet[] = [];
-{ let inPos = false;
+function dt8EarlyAt(cost: number): DayRet[] {
+  const res: DayRet[] = []; flips = 0;
+  let inPos = false;
   for (let i = 1; i < c.length; i++) {
     let r = inPos ? c[i]! / c[i - 1]! - 1 : 0, trades = 0;
     const f = ratio.get(date[i]!);
@@ -44,10 +45,13 @@ const dt8Early: DayRet[] = [];
       const act = inPos ? px > sma(ser, 5) : i >= 199 && rsi(ser, 2)[i]! < 10 && px > sma(ser, 200);
       const actRef = inPos ? c[i]! > sma(ref, 5) : i >= 199 && rsi(ref, 2)[i]! < 10 && c[i]! > sma(ref, 200);
       if (act !== actRef) flips++;
-      if (act && inPos) { inPos = false; r -= C / c[i]!; trades = 1; } else if (act) { inPos = true; r -= C / c[i]!; }
+      if (act && inPos) { inPos = false; r -= cost / c[i]!; trades = 1; } else if (act) { inPos = true; r -= cost / c[i]!; }
     }
-    dt8Early.push({ day: date[i]!, r, trades });
-  } }
+    res.push({ day: date[i]!, r, trades });
+  }
+  return res;
+}
+const dt8Early = dt8EarlyAt(C);
 const dt8Close = dt8({ date, c }, C);
 out.push("## 1. DT8 (RSI(2) SPY): решение 20 минути преди затварянето", "",
   "Поръчката „на затварянето“ (MOC) трябва да е изпратена до 15:50, затова ботът решава в 15:40 с цената тогава, а не с цената на затварянето.", "",
@@ -109,9 +113,11 @@ out.push("", "Всички редове: без дните с FOMC.", "");
 const a = noFomc(dt3Late(qqq, C, 20)), b = new Map(dt8Early.map((x) => [x.day, x.r]));
 const hold = new Map(c.slice(1).map((v, i) => [date[i + 1]!, v / c[i]! - 1]));
 const combo: DayRet[] = a.map((x) => ({ day: x.day, r: 0.5 * x.r + 0.5 * (b.get(x.day) ?? 0), trades: x.trades }));
+const comboAt = (cost: number): DayRet[] => { const x = noFomc(dt3Late(qqq, cost, 20)); const y = new Map(dt8EarlyAt(cost).map((z) => [z.day, z.r])); return x.map((z) => ({ day: z.day, r: 0.5 * z.r + 0.5 * (y.get(z.day) ?? 0), trades: z.trades })); };
 const hh: DayRet[] = a.map((x) => ({ day: x.day, r: hold.get(x.day) ?? 0, trades: 0 }));
 out.push("## 4. Реалистичният бот: 50% DT3 (09:50, без FOMC) + 50% DT8 (решение в 15:40)", "",
-  ...HEAD("2021–2026"), row("**Ботът (реалистично)**", combo, "2021-01-01"), row("Купи и дръж SPY", hh, "2021-01-01"), "",
+  ...HEAD("2021–2026"), row("**Ботът (реалистично)**, $0.0045/акция", combo, "2021-01-01"), row("Ботът, $0.01/акция (половин спред + плъзгане)", comboAt(0.01), "2021-01-01"), row("Ботът, $0.02/акция (песимистично)", comboAt(0.02), "2021-01-01"), row("Купи и дръж SPY", hh, "2021-01-01"), "",
+  "Разходът на акция и страна е най-несигурното предположение. Alpaca не взима комисиона, но пазарната поръчка плаща половин спред (QQQ/SPY: обикновено $0.005), а стопът при бърз пазар може да се изпълни по-лошо.", "",
   "**По години (бот / SPY), %:** " + [...byYear(combo)].map(([y, r]) => `${y}: ${fmt(100 * r, 1)} / ${fmt(100 * (byYear(hh).get(y) ?? 0), 1)}`).join("; "), "");
 const text = out.join("\n");
 console.log(text);
