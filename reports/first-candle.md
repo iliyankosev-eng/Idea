@@ -37,3 +37,5 @@
 - DAX: няма данни (data/fx/DEUIDXEUR)
 - FTSE: няма данни (data/fx/GBRIDXGBP)
 
+
+**Данните за злато, FX и индекси (Dukascopy) не можаха да се свалят:** сървърът им връща 503 / прекъсва връзката към GitHub Actions. За 4 часа не се събра нито една пълна година XAUUSD (`fxdata` клон, LOG.txt). Затова P2 (XAUUSD) не е тестван; P1 по-горе е само за SPY, QQQ, IWM, GLD.
