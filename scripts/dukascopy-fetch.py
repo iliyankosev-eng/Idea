@@ -10,9 +10,11 @@ import concurrent.futures as cf, datetime as dt, gzip, io, lzma, os, struct, sys
 POINT = {"XAUUSD": 1e-3, "EURUSD": 1e-5, "GBPUSD": 1e-5, "USDJPY": 1e-3,
          "USA500IDXUSD": 1e-3, "USATECHIDXUSD": 1e-3, "DEUIDXEUR": 1e-3, "GBRIDXGBP": 1e-3}
 
-def fetch(sym, day, side):
+ERRORS = []
+
+def fetch(sym, day, side, tries=6):
     url = f"https://datafeed.dukascopy.com/datafeed/{sym}/{day.year}/{day.month - 1:02d}/{day.day:02d}/{side}_candles_min_1.bi5"
-    for attempt in range(6):
+    for attempt in range(tries):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=30) as r:
                 raw = r.read()
@@ -27,13 +29,16 @@ def fetch(sym, day, side):
         except urllib.error.HTTPError as e:
             if e.code == 404:
                 return None
+            ERRORS.append(f"{url}: HTTP {e.code}")
             time.sleep(2 + attempt * 3)
-        except Exception:
+        except Exception as e:
+            ERRORS.append(f"{url}: {type(e).__name__} {e}")
             time.sleep(2 + attempt * 3)
     raise RuntimeError(f"failed {url}")
 
 def day_rows(sym, day):
-    bid, ask = fetch(sym, day, "BID"), fetch(sym, day, "ASK")
+    tries = 2 if sys.argv[2] == "probe" else 6
+    bid, ask = fetch(sym, day, "BID", tries), fetch(sym, day, "ASK", tries)
     if not bid:
         return day, [], bid is None
     p = POINT[sym]
@@ -54,8 +59,12 @@ def main():
     log = []
     if sys.argv[2] == "probe":
         for sym in POINT:
-            d, rows, missing = day_rows(sym, dt.date(2024, 3, 5))
-            log.append(f"{sym}: {'404' if missing else len(rows)} minutes; first {rows[:2]}; at 14:30 UTC {[r for r in rows if r.startswith('2024-03-05T14:30')]}")
+            try:
+                d, rows, missing = day_rows(sym, dt.date(2024, 3, 5))
+                log.append(f"{sym}: {'404' if missing else len(rows)} minutes; first {rows[:2]}; at 14:30 UTC {[r for r in rows if r.startswith('2024-03-05T14:30')]}")
+            except Exception as e:
+                log.append(f"{sym}: FAILED {e}")
+        log.extend(sorted(set(ERRORS))[:20])
     else:
         a, b = dt.date.fromisoformat(sys.argv[2]), dt.date.fromisoformat(sys.argv[3])
         for sym in sys.argv[4].split(","):
