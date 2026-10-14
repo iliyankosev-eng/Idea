@@ -1,0 +1,18 @@
+XAUUSD: FAILED failed https://datafeed.dukascopy.com/datafeed/XAUUSD/2024/02/05/BID_candles_min_1.bi5
+EURUSD: FAILED failed https://datafeed.dukascopy.com/datafeed/EURUSD/2024/02/05/ASK_candles_min_1.bi5
+GBPUSD: FAILED failed https://datafeed.dukascopy.com/datafeed/GBPUSD/2024/02/05/BID_candles_min_1.bi5
+USDJPY: 1435 minutes; first ['2024-03-05T00:00,150.457,150.457,150.428,150.451,150.454', '2024-03-05T00:01,150.45,150.465,150.442,150.463,150.466']; at 14:30 UTC ['2024-03-05T14:30,150.007,150.033,150.007,150.028,150.033']
+USA500IDXUSD: FAILED failed https://datafeed.dukascopy.com/datafeed/USA500IDXUSD/2024/02/05/ASK_candles_min_1.bi5
+USATECHIDXUSD: FAILED failed https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2024/02/05/BID_candles_min_1.bi5
+DEUIDXEUR: FAILED failed https://datafeed.dukascopy.com/datafeed/DEUIDXEUR/2024/02/05/BID_candles_min_1.bi5
+GBRIDXGBP: FAILED failed https://datafeed.dukascopy.com/datafeed/GBRIDXGBP/2024/02/05/BID_candles_min_1.bi5
+https://datafeed.dukascopy.com/datafeed/DEUIDXEUR/2024/02/05/BID_candles_min_1.bi5: HTTP 503
+https://datafeed.dukascopy.com/datafeed/EURUSD/2024/02/05/ASK_candles_min_1.bi5: URLError <urlopen error [Errno 104] Connection reset by peer>
+https://datafeed.dukascopy.com/datafeed/EURUSD/2024/02/05/ASK_candles_min_1.bi5: URLError <urlopen error timed out>
+https://datafeed.dukascopy.com/datafeed/GBPUSD/2024/02/05/BID_candles_min_1.bi5: URLError <urlopen error [Errno 104] Connection reset by peer>
+https://datafeed.dukascopy.com/datafeed/GBRIDXGBP/2024/02/05/BID_candles_min_1.bi5: HTTP 503
+https://datafeed.dukascopy.com/datafeed/USA500IDXUSD/2024/02/05/ASK_candles_min_1.bi5: HTTP 503
+https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2024/02/05/BID_candles_min_1.bi5: HTTP 503
+https://datafeed.dukascopy.com/datafeed/USDJPY/2024/02/05/ASK_candles_min_1.bi5: URLError <urlopen error timed out>
+https://datafeed.dukascopy.com/datafeed/XAUUSD/2024/02/05/BID_candles_min_1.bi5: URLError <urlopen error [Errno 104] Connection reset by peer>
+https://datafeed.dukascopy.com/datafeed/XAUUSD/2024/02/05/BID_candles_min_1.bi5: URLError <urlopen error timed out>
