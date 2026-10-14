@@ -142,7 +142,7 @@ async function dt8(equity: number, stop: boolean, trade: boolean) {
   const hist = (await api.bars("SPY", "1Day", new Date(Date.now() - 420 * 86400_000).toISOString().slice(0, 10), `${today}T00:00:00Z`, "sip", "all")) as RawBar[];
   const closes = hist.filter((b) => b.t.slice(0, 10) < today).map((b) => b.c);
   const px = Number((await api.latestTrade("SPY")).p);
-  const pos = paper ? await api.position("SPY") : null;
+  const pos = key && secret ? await api.position("SPY") : null; // read-only, also in check mode
   const inPos = !!pos && Number(pos.qty) > 0;
   const d = rsiDecision([...closes, px], inPos);
   log(`DT8: ${closes.length} daily closes (last ${hist.at(-1)?.t?.slice(0, 10)}), SPY now ${px}, in position ${inPos}, decision ${d}`);
