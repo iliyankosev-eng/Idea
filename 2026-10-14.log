@@ -15,3 +15,6 @@
 2026-10-14T14:06:26.028Z [check] DT3 data: SIP 09:30-09:34 [[737.98,738.54,737.55,738.24],[738.24,738.705,737.23,737.23],[737.21,738,736.9,737.74],[737.75,739.03,737.6,738.89],[738.9,738.94,737.95,737.95]]; IEX bars since 09:35: 31; QQQ now 736.53
 2026-10-14T14:06:26.028Z [check] DT3 now: no trade, stop 739.03 already touched after 09:35
 2026-10-14T14:06:26.324Z [check] DT8: 289 daily closes (last 2026-10-13), SPY now 773.27, in position false, decision none
+2026-10-14T14:18:51.030Z [open] start, PAPER trading
+2026-10-14T14:18:51.515Z [open] session 09:30-16:00; equity 100000.00, high-water 100000.00
+2026-10-14T14:18:51.516Z [open] not the open window (New York 10:18), exit
