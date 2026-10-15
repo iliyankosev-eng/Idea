@@ -95,7 +95,7 @@ async function main() {
 
   if (mode === "open") {
     const t = ny();
-    if (t.min < openMin - 60 || t.min > openMin + 18) { log(`not the open window (New York ${hhmm(t.min)}), exit`); return; }
+    if (t.min < openMin - 60 || t.min > openMin + 19) { log(`not the open window (New York ${hhmm(t.min)}), exit`); return; }
     if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await api.cancelOpenOrders("QQQ"); await sleep(3000); await api.closePosition("QQQ"); } }
     try { for (const n of (await api.news("QQQ", new Date(Date.now() - 18 * 3600_000).toISOString())).slice(0, 5)) log(`news ${n.created_at} ${n.headline}`); } catch (e) { log(`news unavailable: ${e}`); }
     if (fomc.has(today)) { log("FOMC statement day -> DT3 skipped (rule from reports/dt6.md)"); return; }

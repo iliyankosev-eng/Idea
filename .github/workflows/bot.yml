@@ -2,7 +2,8 @@ name: bot
 # Paper-trading bot (src/bot/run.ts): DT3 ORB on QQQ + DT8 RSI(2) on SPY. Logs go to the `botlog` branch.
 # Trades on the Alpaca PAPER account of ALPACA_PAPER_KEY_ID / ALPACA_PAPER_SECRET_KEY, or of ALPACA_KEY_ID / ALPACA_SECRET_KEY
 # when those are not set. Manual runs default to a dry run (dry_run=1): decisions are logged, no orders are sent.
-# Started by workflow_dispatch from scheduled tasks at 09:20 and 15:25 New York (mode=open / mode=close, dry_run=0).
+# Started by workflow_dispatch from cron-job.org at 09:45 and 15:35 New York (mode=open / mode=close, dry_run=0);
+# late starts keep the paid-for waiting short (GitHub Actions minutes).
 # GitHub's own cron is not used: in this repository scheduled runs started 5-9 hours late.
 on:
   workflow_dispatch:
