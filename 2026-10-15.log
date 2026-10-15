@@ -1,0 +1,6 @@
+2026-10-15T12:33:00.986Z [check] start, DRY RUN (no orders are sent)
+2026-10-15T12:33:01.247Z [check] session 09:30-16:00; equity 100000.00, high-water 100000.00
+2026-10-15T12:33:01.345Z [check] paper account: status ACTIVE, equity 99845.29, cash 49973.39, buying power 339534.88, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-15T12:33:01.403Z [check] open positions: SPY 65
+2026-10-15T12:33:01.404Z [check] DT3 check needs the time after 09:51 New York
+2026-10-15T12:33:01.745Z [check] DT8: 289 daily closes (last 2026-10-14), SPY now 767.12, in position true, decision hold
