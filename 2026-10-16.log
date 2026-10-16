@@ -1,0 +1,10 @@
+2026-10-16T13:45:22.734Z [open] start, PAPER trading
+2026-10-16T13:45:23.025Z [open] session 09:30-16:00; equity 100173.38, high-water 100173.38
+2026-10-16T13:45:23.224Z [open] news 2026-10-16T13:04:33Z AI Bubble Worries Hand Long-Term Treasuries Their Best Week Since March 2025
+2026-10-16T13:45:23.224Z [open] news 2026-10-16T12:43:12Z Stock Market Today: Dow Jones, S&P 500 Futures Rise, Nasdaq Falls as Bessent Intensifies Economic Pressure on Iran— TSLA, AA, IBKR in Focus (UPDATED)
+2026-10-16T13:45:23.224Z [open] news 2026-10-16T12:09:08Z S&P 500 Could Hit 9,000 Without Iran War: Why Kobeissi Letter Sees a ‘Historic Opportunity’ for a ‘Violent Rally’
+2026-10-16T13:45:23.224Z [open] news 2026-10-16T09:47:09Z Mike Novogratz Warns Nasdaq Could Plunge 30% in an ‘AI Catastrophe’ — Here’s Why He Still Expects the Data Center Boom to Continue
+2026-10-16T13:45:23.224Z [open] news 2026-10-16T06:24:14Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-16T13:50:45.683Z [open] DT3 data: SIP 09:30-09:34 [[725.52,725.96,724.6,725.2705],[725.29,725.29,724.02,724.8],[724.87,725.5,724.83,725.21],[725.21,725.46,724.55,724.6357],[724.61,724.8,724.14,724.2297]]; IEX bars since 09:35: 15; QQQ now 721.74
+2026-10-16T13:50:45.683Z [open] DT3 plan {"side":"sell","qty":118,"stop":725.96,"target":679.54}
+2026-10-16T13:50:45.683Z [open] ORDER {"symbol":"QQQ","qty":"118","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"679.54"},"stop_loss":{"stop_price":"725.96"},"client_order_id":"dt3-2026-10-16"}
