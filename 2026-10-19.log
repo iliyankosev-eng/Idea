@@ -8,3 +8,7 @@
 2026-10-19T13:50:45.997Z [open] DT3 data: SIP 09:30-09:34 [[719.58,719.73,718.35,719.57],[719.55,719.55,718.77,719.18],[719.21,719.89,719.05,719.45],[719.47,720.22,719.27,719.97],[719.96,720.21,719,719.47]]; IEX bars since 09:35: 15; QQQ now 719.62
 2026-10-19T13:50:45.998Z [open] DT3 plan {"side":"sell","qty":281,"stop":720.22,"target":713.62}
 2026-10-19T13:50:45.998Z [open] ORDER {"symbol":"QQQ","qty":"281","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"713.62"},"stop_loss":{"stop_price":"720.22"},"client_order_id":"dt3-2026-10-19"}
+2026-10-19T19:35:21.593Z [close] start, PAPER trading
+2026-10-19T19:35:22.178Z [close] session 09:30-16:00; equity 101113.70, high-water 101224.19
+2026-10-19T19:40:01.558Z [close] DT8: 289 daily closes (last 2026-10-16), SPY now 768.255, in position true, decision hold
+2026-10-19T19:55:01.032Z [close] no QQQ position to close
