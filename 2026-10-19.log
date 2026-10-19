@@ -1,0 +1,10 @@
+2026-10-19T13:45:24.248Z [open] start, PAPER trading
+2026-10-19T13:45:24.425Z [open] session 09:30-16:00; equity 101224.19, high-water 101224.19
+2026-10-19T13:45:24.552Z [open] news 2026-10-19T12:24:34Z Chip Stocks Repeated a Lehman-Era Losing Streak: Is The Bottom Now In?
+2026-10-19T13:45:24.552Z [open] news 2026-10-19T12:23:11Z Stock Market Today: Dow Futures Drop, S&P 500, Nasdaq 100 Rise as Scott Bessent Links September Inflation to 'Energy Shock'— RCAT, ESLT, STLD in Focus (UPDATED)
+2026-10-19T13:45:24.552Z [open] news 2026-10-19T11:36:59Z Top Economist Warns US Is Headed for a ‘Fiscal Reckoning’ as $1.99 Trillion Deficit Pushes Interest Payments Above Defense Spending
+2026-10-19T13:45:24.552Z [open] news 2026-10-19T10:21:55Z Kevin Warsh Says 'I Have Failed,' Admitting That He Neglected Bank Supervision in First 148 Days
+2026-10-19T13:45:24.552Z [open] news 2026-10-19T08:52:50Z Michael Burry Warns Stocks Could Face 15-20 Years of Poor Real Returns: ‘Speculation Has Overrun Investing’
+2026-10-19T13:50:45.997Z [open] DT3 data: SIP 09:30-09:34 [[719.58,719.73,718.35,719.57],[719.55,719.55,718.77,719.18],[719.21,719.89,719.05,719.45],[719.47,720.22,719.27,719.97],[719.96,720.21,719,719.47]]; IEX bars since 09:35: 15; QQQ now 719.62
+2026-10-19T13:50:45.998Z [open] DT3 plan {"side":"sell","qty":281,"stop":720.22,"target":713.62}
+2026-10-19T13:50:45.998Z [open] ORDER {"symbol":"QQQ","qty":"281","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"713.62"},"stop_loss":{"stop_price":"720.22"},"client_order_id":"dt3-2026-10-19"}
