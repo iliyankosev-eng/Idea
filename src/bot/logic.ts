@@ -35,3 +35,8 @@ export const halted = (equity: number, highWater: number, maxDd = 0.2) => equity
 export function stopTouched(bars: readonly Bar[], side: "buy" | "sell", stop: number): boolean {
   return bars.some((b) => (side === "buy" ? b.l <= stop : b.h >= stop));
 }
+/** Shares of SPY to sell at the open when the last DT8 order was a sell but shares are still held (e.g. a partially filled
+ * market-on-close order); 0 otherwise. `lastDt8Id` = client_order_id of the most recent DT8 order ("dt8-buy-..." / "dt8-sell-..."). */
+export function dt8Leftover(lastDt8Id: string | undefined, heldQty: number): number {
+  return lastDt8Id?.startsWith("dt8-sell-") && heldQty > 0 ? heldQty : 0;
+}

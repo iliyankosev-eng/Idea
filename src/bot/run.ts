@@ -15,7 +15,7 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { Alpaca } from "./alpaca.js";
-import { halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
+import { dt8Leftover, halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
 
 const mode = process.argv[2] ?? "";
 const LOGDIR = process.env.BOT_LOG_DIR ?? "botlog";
@@ -101,6 +101,12 @@ async function main() {
     const t = ny();
     if (t.min < openMin - 60 || t.min > openMin + 19) { log(`not the open window (New York ${hhmm(t.min)}), exit`); return; }
     if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await api.cancelOpenOrders("QQQ"); await sleep(3000); await api.closePosition("QQQ"); } }
+    if (paper) { // DT8: the last DT8 order was a sell but SPY shares are still held (partial fill of the close order) -> sell the rest now
+      const spy = await api.position("SPY");
+      const last = ((await api.closedOrders(new Date(Date.now() - 60 * 86400_000).toISOString())) as { client_order_id: string; filled_qty: string }[]).filter((o) => o.client_order_id.startsWith("dt8-") && Number(o.filled_qty) > 0).at(-1);
+      const q = dt8Leftover(last?.client_order_id, spy ? Number(spy.qty) : 0);
+      if (q > 0) { log(`WARNING: ${q} SPY left after ${last!.client_order_id} (partial fill), selling them now`); await api.order({ symbol: "SPY", qty: String(q), side: "sell", type: "market", time_in_force: "day", client_order_id: `dt8-fix-${today}` }); }
+    }
     try { for (const n of (await api.news("QQQ", new Date(Date.now() - 18 * 3600_000).toISOString())).slice(0, 5)) log(`news ${n.created_at} ${n.headline}`); } catch (e) { log(`news unavailable: ${e}`); }
     if (fomc.has(today)) { log("FOMC statement day -> DT3 skipped (rule from reports/dt6.md)"); return; }
     if (closeMin !== 16 * 60) { log(`early close at ${cal.close} -> DT3 skipped (the close job runs at 15:25 and could not flatten QQQ)`); return; }

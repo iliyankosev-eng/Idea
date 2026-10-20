@@ -82,3 +82,13 @@ describe.skipIf(!existsSync(`${D}/daily/alpaca/calendar.csv`))("bot = backtest o
     expect(same).toBe(n);
   });
 });
+
+describe("DT8 leftover after a partial fill", () => {
+  it("sells what is left only when the last DT8 order was a sell", async () => {
+    const { dt8Leftover } = await import("../src/bot/logic.js");
+    expect(dt8Leftover("dt8-sell-2026-10-20", 39)).toBe(39);
+    expect(dt8Leftover("dt8-buy-2026-10-14", 65)).toBe(0);
+    expect(dt8Leftover("dt8-sell-2026-10-20", 0)).toBe(0);
+    expect(dt8Leftover(undefined, 10)).toBe(0);
+  });
+});
