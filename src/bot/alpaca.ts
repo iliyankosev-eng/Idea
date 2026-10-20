@@ -35,6 +35,8 @@ export class Alpaca {
   calendar(date: string) { return this.req(PAPER, `/v2/calendar?start=${date}&end=${date}`); }
   account() { return this.req(PAPER, "/v2/account"); }
   positions() { return this.req(PAPER, "/v2/positions"); }
+  /** Closed orders since `afterIso` (oldest first), legs nested. Read-only. */
+  closedOrders(afterIso: string) { return this.req(PAPER, `/v2/orders?status=closed&after=${afterIso}&limit=500&direction=asc&nested=true`); }
   async position(sym: string): Promise<{ qty: string; side: string } | null> {
     try { return await this.req(PAPER, `/v2/positions/${sym}`); } catch (e) { if (String(e).includes("HTTP 404")) return null; throw e; }
   }

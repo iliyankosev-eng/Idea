@@ -85,6 +85,10 @@ async function main() {
       log(`paper account: status ${a.status}, equity ${a.equity}, cash ${a.cash}, buying power ${a.buying_power}, multiplier ${a.multiplier}, shorting ${a.shorting_enabled}, pattern day trader ${a.pattern_day_trader}, trading blocked ${a.trading_blocked}`);
       const ps = (await api.positions()) as { symbol: string; qty: string }[];
       log(`open positions: ${ps.length ? ps.map((x) => `${x.symbol} ${x.qty}`).join(", ") : "none"}`);
+      type O = { symbol: string; side: string; type: string; filled_qty: string; filled_avg_price: string | null; filled_at: string | null; client_order_id: string; legs?: O[] };
+      const flat = (os: O[]): O[] => os.flatMap((o) => [o, ...flat(o.legs ?? [])]);
+      const fills = flat((await api.closedOrders(new Date(Date.now() - 30 * 86400_000).toISOString())) as O[]).filter((o) => Number(o.filled_qty) > 0).sort((a, b) => (a.filled_at! < b.filled_at! ? -1 : 1));
+      for (const o of fills) log(`fill ${o.filled_at} ${o.symbol} ${o.side} ${o.filled_qty} @ ${o.filled_avg_price} (${o.type}${o.client_order_id.startsWith("dt") ? ", " + o.client_order_id : ""})`);
     } catch (e) { log(`paper account not readable with these keys: ${e}`); }
     const t = ny();
     if (t.min >= openMin + 21) { const r = await dt3Plan(openMin, 0.5 * equity); log(`DT3 now: ${r.plan ? JSON.stringify(r.plan) : "no trade, " + r.why}${fomc.has(today) ? " (FOMC day: would be skipped)" : ""}`); }
