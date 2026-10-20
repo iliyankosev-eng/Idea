@@ -22,3 +22,18 @@
 2026-10-20T19:40:01.958Z [close] DT8: 289 daily closes (last 2026-10-19), SPY now 768.01, in position true, decision sell
 2026-10-20T19:40:01.959Z [close] ORDER {"symbol":"SPY","qty":"65","side":"sell","type":"market","time_in_force":"cls","client_order_id":"dt8-sell-2026-10-20"}
 2026-10-20T19:55:01.541Z [close] no QQQ position to close
+2026-10-20T20:06:31.859Z [check] start, DRY RUN (no orders are sent)
+2026-10-20T20:06:32.147Z [check] session 09:30-16:00; equity 100000.00, high-water 101224.19
+2026-10-20T20:06:32.227Z [check] paper account: status ACTIVE, equity 100583.06, cash 70583.87, buying power 366333.21, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-20T20:06:32.304Z [check] open positions: SPY 39
+2026-10-20T20:06:32.551Z [check] fill 2026-10-14T19:59:56.705144Z SPY buy 65 @ 769.64 (market, dt8-buy-2026-10-14)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-16T13:50:48.892733Z QQQ sell 118 @ 721.750509 (market, dt3-2026-10-16)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-16T19:55:15.227373Z QQQ buy 118 @ 709.89017 (market)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-19T13:50:46.595225Z QQQ sell 281 @ 719.57 (market, dt3-2026-10-19)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-20T13:50:48.127232Z QQQ sell 194 @ 712.61 (market, dt3-2026-10-20)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-20T13:58:37.076215Z QQQ buy 194 @ 715.562577 (stop)
+2026-10-20T20:06:32.552Z [check] fill 2026-10-20T19:59:57.128568Z SPY sell 26 @ 768.53 (market, dt8-sell-2026-10-20)
+2026-10-20T20:06:33.206Z [check] DT3 data: SIP 09:30-09:34 [[715.27,715.52,714.35,714.74],[714.75,715.28,713.79,713.82],[713.72,714.27,713.3901,713.8099],[713.76,713.9078,713.01,713.29],[713.23,714.1,713.23,713.78]]; IEX bars since 09:35: 364; QQQ now 717.21
+2026-10-20T20:06:33.206Z [check] DT3 now: no trade, doji first 5 minutes or the price is already beyond the stop
+2026-10-20T20:06:33.689Z [check] DT8: 289 daily closes (last 2026-10-19), SPY now 769.09, in position true, decision sell
