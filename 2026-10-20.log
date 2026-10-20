@@ -9,3 +9,11 @@
 2026-10-20T06:38:39.488Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
 2026-10-20T06:38:39.489Z [check] DT3 check needs the time after 09:51 New York
 2026-10-20T06:38:39.808Z [check] DT8: 289 daily closes (last 2026-10-19), SPY now 766.73, in position true, decision hold
+2026-10-20T13:45:27.294Z [open] start, PAPER trading
+2026-10-20T13:45:27.532Z [open] session 09:30-16:00; equity 100880.72, high-water 101224.19
+2026-10-20T13:45:27.683Z [open] news 2026-10-20T10:13:04Z Stock Market Today:  Dow Jones, S&P 500, Nasdaq 100 Futures Fall as Iran Threatens to Target Undersea Cables — SPCX, NFLX, STLD in Focus (UPDATED)
+2026-10-20T13:45:27.683Z [open] news 2026-10-20T10:59:01Z Tom Lee Predicts S&P 500 At 8,400 By Year-End, Says Midterm Elections Could Trigger ‘Risk-On’ Rally in Tech Stocks and Crypto: ‘We Are in an Unprecedented Time’
+2026-10-20T13:45:27.683Z [open] news 2026-10-20T06:36:15Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-20T13:50:47.324Z [open] DT3 data: SIP 09:30-09:34 [[715.27,715.52,714.35,714.74],[714.75,715.28,713.79,713.82],[713.72,714.27,713.3901,713.8099],[713.76,713.9078,713.01,713.29],[713.23,714.1,713.23,713.78]]; IEX bars since 09:35: 15; QQQ now 712.92
+2026-10-20T13:50:47.325Z [open] DT3 plan {"side":"sell","qty":194,"stop":715.52,"target":686.92}
+2026-10-20T13:50:47.325Z [open] ORDER {"symbol":"QQQ","qty":"194","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"686.92"},"stop_loss":{"stop_price":"715.52"},"client_order_id":"dt3-2026-10-20"}
