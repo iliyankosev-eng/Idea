@@ -7,3 +7,7 @@
 2026-10-21T13:45:21.846Z [open] news 2026-10-21T07:17:24Z Stock Market: Will S&P 500 Open Up or Down Today?
 2026-10-21T13:50:45.257Z [open] DT3 data: SIP 09:30-09:34 [[722.2,723.065,722.18,722.43],[722.46,722.76,721.64,722.07],[722.05,722.39,721.25,721.4508],[721.54,721.88,721.04,721.75],[721.79,722.48,721.6,722.3]]; IEX bars since 09:35: 15; QQQ now 722.265
 2026-10-21T13:50:45.257Z [open] DT3: no trade, stop 721.04 already touched after 09:35
+2026-10-21T19:35:18.992Z [close] start, PAPER trading
+2026-10-21T19:35:19.087Z [close] session 09:30-16:00; equity 100622.14, high-water 101224.19
+2026-10-21T19:40:00.697Z [close] DT8: 289 daily closes (last 2026-10-20), SPY now 772.92, in position false, decision none
+2026-10-21T19:55:00.360Z [close] no QQQ position to close
