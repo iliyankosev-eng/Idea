@@ -1,0 +1,9 @@
+2026-10-21T13:45:21.261Z [open] start, PAPER trading
+2026-10-21T13:45:21.419Z [open] session 09:30-16:00; equity 100623.47, high-water 101224.19
+2026-10-21T13:45:21.661Z [open] WARNING: 39 SPY left after dt8-sell-2026-10-20 (partial fill), selling them now
+2026-10-21T13:45:21.661Z [open] ORDER {"symbol":"SPY","qty":"39","side":"sell","type":"market","time_in_force":"day","client_order_id":"dt8-fix-2026-10-21"}
+2026-10-21T13:45:21.846Z [open] news 2026-10-21T13:04:54Z Larry Fink Warns Data Center Slowdown Could Push US Into ‘Recession’ as Trump Orders Facilities to Generate Their Own Power and ‘Make Deals’
+2026-10-21T13:45:21.846Z [open] news 2026-10-21T12:27:24Z Stock Market Today: S&P 500, Nasdaq 100, Dow Jones Futures Gains as Iran Prolongs US Talks Ahead of Midterms— NFLX, SPCX, SMCI in Focus (UPDATED)
+2026-10-21T13:45:21.846Z [open] news 2026-10-21T07:17:24Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-21T13:50:45.257Z [open] DT3 data: SIP 09:30-09:34 [[722.2,723.065,722.18,722.43],[722.46,722.76,721.64,722.07],[722.05,722.39,721.25,721.4508],[721.54,721.88,721.04,721.75],[721.79,722.48,721.6,722.3]]; IEX bars since 09:35: 15; QQQ now 722.265
+2026-10-21T13:50:45.257Z [open] DT3: no trade, stop 721.04 already touched after 09:35
