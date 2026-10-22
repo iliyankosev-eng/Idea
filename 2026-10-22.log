@@ -9,3 +9,19 @@
 2026-10-22T19:35:23.182Z [close] session 09:30-16:00; equity 100621.51, high-water 101224.19
 2026-10-22T19:40:00.785Z [close] DT8: 289 daily closes (last 2026-10-21), SPY now 762.11, in position false, decision none
 2026-10-22T19:55:00.970Z [close] no QQQ position to close
+2026-10-22T20:06:21.316Z [check] start, DRY RUN (no orders are sent)
+2026-10-22T20:06:21.416Z [check] session 09:30-16:00; equity 100000.00, high-water 101224.19
+2026-10-22T20:06:21.427Z [check] paper account: status ACTIVE, equity 100621.51, cash 100621.51, buying power 402486.04, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-22T20:06:21.456Z [check] open positions: none
+2026-10-22T20:06:21.486Z [check] fill 2026-10-14T19:59:56.705144Z SPY buy 65 @ 769.64 (market, dt8-buy-2026-10-14)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-16T13:50:48.892733Z QQQ sell 118 @ 721.750509 (market, dt3-2026-10-16)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-16T19:55:15.227373Z QQQ buy 118 @ 709.89017 (market)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-19T13:50:46.595225Z QQQ sell 281 @ 719.57 (market, dt3-2026-10-19)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-20T13:50:48.127232Z QQQ sell 194 @ 712.61 (market, dt3-2026-10-20)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-20T13:58:37.076215Z QQQ buy 194 @ 715.562577 (stop)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-20T19:59:57.128568Z SPY sell 26 @ 768.53 (market, dt8-sell-2026-10-20)
+2026-10-22T20:06:21.487Z [check] fill 2026-10-21T13:45:30.300143Z SPY sell 39 @ 770.295898 (market, dt8-fix-2026-10-21)
+2026-10-22T20:06:21.749Z [check] DT3 data: SIP 09:30-09:34 [[713.61,713.92,712.45,713.36],[713.29,713.6,712.7,713.4899],[713.45,714.07,712.66,712.79],[712.74,714.32,712.69,714.32],[714.3,714.74,714.13,714.18]]; IEX bars since 09:35: 384; QQQ now 704.56
+2026-10-22T20:06:21.749Z [check] DT3 now: no trade, doji first 5 minutes or the price is already beyond the stop
+2026-10-22T20:06:21.816Z [check] DT8: 289 daily closes (last 2026-10-21), SPY now 764.03, in position false, decision none
