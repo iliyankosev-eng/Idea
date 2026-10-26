@@ -1,0 +1,10 @@
+2026-10-26T13:45:26.981Z [open] start, PAPER trading
+2026-10-26T13:45:27.299Z [open] session 09:30-16:00; equity 100621.51, high-water 101224.19
+2026-10-26T13:45:27.624Z [open] news 2026-10-26T12:58:39Z Top Economist Warns 'Oil at 150' Could Deal a 'Significant Blow' to the Global Economy if Iran Conflict Widens: 'We Don't Have These Two Other Things That We Had Before...'
+2026-10-26T13:45:27.624Z [open] news 2026-10-26T12:31:16Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Rise After Trump Rules Out Iran Strike — ITUB, NON, CLS in Focus (UPDATED)
+2026-10-26T13:45:27.624Z [open] news 2026-10-26T10:50:47Z Trump Says Canada Is ‘Willing to Give Us Anything’ as Michigan GOP Rep Raises Alarm Over Auto Tariffs — Predicts Quick End to Trade Fight
+2026-10-26T13:45:27.624Z [open] news 2026-10-26T08:15:18Z Michael Burry Backs Ken Griffin on AI Bubble Concerns, Says GPU Overcapacity Warning Is Obvious to Anyone With a ‘Working Brain Cell’
+2026-10-26T13:45:27.625Z [open] news 2026-10-26T05:52:05Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-26T13:50:46.133Z [open] DT3 data: SIP 09:30-09:34 [[707.07,707.45,706.53,707.1099],[707.085,707.41,706.11,706.12],[706.05,706.83,705.58,706.79],[706.815,707.84,706.7,707.84],[707.86,707.93,706.99,707.47]]; IEX bars since 09:35: 15; QQQ now 707.84
+2026-10-26T13:50:46.133Z [open] DT3 plan {"side":"buy","qty":222,"stop":705.58,"target":730.44}
+2026-10-26T13:50:46.134Z [open] ORDER {"symbol":"QQQ","qty":"222","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"730.44"},"stop_loss":{"stop_price":"705.58"},"client_order_id":"dt3-2026-10-26"}
