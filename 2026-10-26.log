@@ -13,3 +13,21 @@
 2026-10-26T19:40:00.979Z [close] DT8: 289 daily closes (last 2026-10-23), SPY now 765.7, in position false, decision none
 2026-10-26T19:55:00.682Z [close] CANCEL 83102a86-705f-435f-8262-567580346922 sell limit
 2026-10-26T19:55:04.095Z [close] CLOSE QQQ
+2026-10-26T20:08:21.343Z [check] start, DRY RUN (no orders are sent)
+2026-10-26T20:08:21.596Z [check] session 09:30-16:00; equity 100000.00, high-water 101844.69
+2026-10-26T20:08:21.651Z [check] paper account: status ACTIVE, equity 101625.17, cash 101625.17, buying power 406500.68, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-26T20:08:21.844Z [check] open positions: none
+2026-10-26T20:08:21.911Z [check] fill 2026-10-14T19:59:56.705144Z SPY buy 65 @ 769.64 (market, dt8-buy-2026-10-14)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-16T13:50:48.892733Z QQQ sell 118 @ 721.750509 (market, dt3-2026-10-16)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-16T19:55:15.227373Z QQQ buy 118 @ 709.89017 (market)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-19T13:50:46.595225Z QQQ sell 281 @ 719.57 (market, dt3-2026-10-19)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-20T13:50:48.127232Z QQQ sell 194 @ 712.61 (market, dt3-2026-10-20)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-20T13:58:37.076215Z QQQ buy 194 @ 715.562577 (stop)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-20T19:59:57.128568Z SPY sell 26 @ 768.53 (market, dt8-sell-2026-10-20)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-21T13:45:30.300143Z SPY sell 39 @ 770.295898 (market, dt8-fix-2026-10-21)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-26T13:50:48.128789Z QQQ buy 222 @ 707.84018 (market, dt3-2026-10-26)
+2026-10-26T20:08:21.911Z [check] fill 2026-10-26T19:55:17.890914Z QQQ sell 222 @ 712.361171 (market)
+2026-10-26T20:08:22.348Z [check] DT3 data: SIP 09:30-09:34 [[707.07,707.45,706.53,707.1099],[707.085,707.41,706.11,706.12],[706.05,706.83,705.58,706.79],[706.815,707.84,706.7,707.84],[707.86,707.93,706.99,707.47]]; IEX bars since 09:35: 378; QQQ now 712.33
+2026-10-26T20:08:22.349Z [check] DT3 now: {"side":"buy","qty":74,"stop":705.58,"target":779.83}
+2026-10-26T20:08:22.676Z [check] DT8: 289 daily closes (last 2026-10-23), SPY now 765.225, in position false, decision none
