@@ -1,0 +1,10 @@
+2026-10-27T13:45:24.039Z [open] start, PAPER trading
+2026-10-27T13:45:24.424Z [open] session 09:30-16:00; equity 101621.90, high-water 101844.69
+2026-10-27T13:45:24.593Z [open] news 2026-10-27T13:32:21Z Michael Burry: Today's Market Mirrors the Eve of the Dot-Com Crash
+2026-10-27T13:45:24.593Z [open] news 2026-10-27T12:46:40Z Tom Lee’s Top 6 Reasons for ‘Conviction About the AI Trade’: ‘I’m Buying This AI Dip’
+2026-10-27T13:45:24.593Z [open] news 2026-10-27T12:45:13Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 10 Futures Gain as Fed Begins Its Two-Day Meet— Novartis, HSBC, Welltower in Focus (UPDATED)
+2026-10-27T13:45:24.593Z [open] news 2026-10-27T08:57:52Z US 'Flashing the Same Warning Signs,' Wall Street Commentator Warns as China’s AI Stock Crash Wipes Out $480 Billion in Under Four Months
+2026-10-27T13:45:24.593Z [open] news 2026-10-27T06:04:37Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-27T13:50:46.082Z [open] DT3 data: SIP 09:30-09:34 [[715.11,715.74,714.61,714.9099],[714.93,716.07,714.89,715.475],[715.52,715.83,715.03,715.51],[715.565,716.31,715.47,716.185],[716.15,716.7696,716,716.69]]; IEX bars since 09:35: 15; QQQ now 715.15
+2026-10-27T13:50:46.083Z [open] DT3 plan {"side":"buy","qty":284,"stop":714.61,"target":720.55}
+2026-10-27T13:50:46.083Z [open] ORDER {"symbol":"QQQ","qty":"284","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"720.55"},"stop_loss":{"stop_price":"714.61"},"client_order_id":"dt3-2026-10-27"}
