@@ -12,3 +12,25 @@
 2026-10-29T19:35:21.146Z [close] session 09:30-16:00; equity 100952.98, high-water 101844.69
 2026-10-29T19:40:00.911Z [close] DT8: 290 daily closes (last 2026-10-28), SPY now 768.265, in position false, decision none
 2026-10-29T19:55:00.650Z [close] no QQQ position to close
+2026-10-29T20:06:59.267Z [check] start, DRY RUN (no orders are sent)
+2026-10-29T20:06:59.565Z [check] session 09:30-16:00; equity 100000.00, high-water 101844.69
+2026-10-29T20:06:59.574Z [check] paper account: status ACTIVE, equity 100952.98, cash 100952.98, buying power 403811.92, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-29T20:06:59.597Z [check] open positions: none
+2026-10-29T20:06:59.625Z [check] fill 2026-10-14T19:59:56.705144Z SPY buy 65 @ 769.64 (market, dt8-buy-2026-10-14)
+2026-10-29T20:06:59.625Z [check] fill 2026-10-16T13:50:48.892733Z QQQ sell 118 @ 721.750509 (market, dt3-2026-10-16)
+2026-10-29T20:06:59.625Z [check] fill 2026-10-16T19:55:15.227373Z QQQ buy 118 @ 709.89017 (market)
+2026-10-29T20:06:59.625Z [check] fill 2026-10-19T13:50:46.595225Z QQQ sell 281 @ 719.57 (market, dt3-2026-10-19)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-20T13:50:48.127232Z QQQ sell 194 @ 712.61 (market, dt3-2026-10-20)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-20T13:58:37.076215Z QQQ buy 194 @ 715.562577 (stop)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-20T19:59:57.128568Z SPY sell 26 @ 768.53 (market, dt8-sell-2026-10-20)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-21T13:45:30.300143Z SPY sell 39 @ 770.295898 (market, dt8-fix-2026-10-21)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-26T13:50:48.128789Z QQQ buy 222 @ 707.84018 (market, dt3-2026-10-26)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-26T19:55:17.890914Z QQQ sell 222 @ 712.361171 (market)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-27T13:50:49.049181Z QQQ buy 284 @ 715.152711 (market, dt3-2026-10-27)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-27T13:51:17.521377Z QQQ sell 284 @ 714.57 (stop)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-29T13:50:46.417915653Z QQQ sell 129 @ 713.17 (market, dt3-2026-10-29)
+2026-10-29T20:06:59.626Z [check] fill 2026-10-29T15:30:14.367676649Z QQQ buy 129 @ 717.04 (stop)
+2026-10-29T20:06:59.853Z [check] DT3 data: SIP 09:30-09:34 [[716.55,717.01,715.215,715.755],[715.7,716.24,715.05,715.43],[715.43,715.565,713.69,713.88],[713.85,714.07,712.9,713.22],[713.27,713.32,712.25,712.32]]; IEX bars since 09:35: 370; QQQ now 715.42
+2026-10-29T20:06:59.853Z [check] DT3 now: no trade, stop 717.01 already touched after 09:35
+2026-10-29T20:07:00.205Z [check] DT8: 290 daily closes (last 2026-10-28), SPY now 769.49, in position false, decision none
