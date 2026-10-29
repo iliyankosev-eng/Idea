@@ -1,0 +1,10 @@
+2026-10-29T13:45:21.756Z [open] start, PAPER trading
+2026-10-29T13:45:21.979Z [open] session 09:30-16:00; equity 101452.21, high-water 101844.69
+2026-10-29T13:45:22.160Z [open] news 2026-10-29T13:16:13Z Alphabet Stock Set for Worst Day Since March 2020: Search Slowdown Overshadows Cloud Boom
+2026-10-29T13:45:22.160Z [open] news 2026-10-29T13:01:50Z US Economy Grew 3.4% in the Third Quarter, Fed's Favorite Inflation Gauge Matches Forecasts (UPDATED)
+2026-10-29T13:45:22.160Z [open] news 2026-10-29T12:41:48Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Drop After Fed Keeps Rates Unchanged — MSFT, GOOG, TMUS in Focus (UPDATED)
+2026-10-29T13:45:22.160Z [open] news 2026-10-29T12:25:16Z Scott Bessent Brushes Off Concerns Over AI Debt Amid CoreWeave Slump, Calls Neoclouds a ‘Small Component’
+2026-10-29T13:45:22.160Z [open] news 2026-10-29T08:51:08Z Tom Lee Sees 'Big Beats' Ahead, Says Kevin Warsh-Led Fed Won't Slow AI Growth Despite Inflation: 'Good News Is Good News'
+2026-10-29T13:50:45.477Z [open] DT3 data: SIP 09:30-09:34 [[716.55,717.01,715.215,715.755],[715.7,716.24,715.05,715.43],[715.43,715.565,713.69,713.88],[713.85,714.07,712.9,713.22],[713.27,713.32,712.25,712.32]]; IEX bars since 09:35: 15; QQQ now 713.08
+2026-10-29T13:50:45.477Z [open] DT3 plan {"side":"sell","qty":129,"stop":717.01,"target":673.78}
+2026-10-29T13:50:45.478Z [open] ORDER {"symbol":"QQQ","qty":"129","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"673.78"},"stop_loss":{"stop_price":"717.01"},"client_order_id":"dt3-2026-10-29"}
