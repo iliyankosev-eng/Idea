@@ -89,6 +89,10 @@ async function main() {
       const flat = (os: O[]): O[] => os.flatMap((o) => [o, ...flat(o.legs ?? [])]);
       const fills = flat((await api.closedOrders(new Date(Date.now() - 30 * 86400_000).toISOString())) as O[]).filter((o) => Number(o.filled_qty) > 0).sort((a, b) => (a.filled_at! < b.filled_at! ? -1 : 1));
       for (const o of fills) log(`fill ${o.filled_at} ${o.symbol} ${o.side} ${o.filled_qty} @ ${o.filled_avg_price} (${o.type}${o.client_order_id.startsWith("dt") ? ", " + o.client_order_id : ""})`);
+      type A = { activity_type: string; date?: string; transaction_time?: string; net_amount?: string; description?: string; symbol?: string };
+      const acts = ((await api.activities(new Date(Date.now() - 30 * 86400_000).toISOString())) as A[]).filter((x) => x.activity_type !== "FILL");
+      for (const x of acts) log(`activity ${x.date ?? x.transaction_time} ${x.activity_type} ${x.net_amount ?? ""}${x.symbol ? " " + x.symbol : ""}${x.description ? " (" + x.description + ")" : ""}`);
+      if (!acts.length) log("activity: no non-trade activities in the last 30 days");
     } catch (e) { log(`paper account not readable with these keys: ${e}`); }
     const t = ny();
     if (t.min >= openMin + 21) { const r = await dt3Plan(openMin, 0.5 * equity); log(`DT3 now: ${r.plan ? JSON.stringify(r.plan) : "no trade, " + r.why}${fomc.has(today) ? " (FOMC day: would be skipped)" : ""}`); }
