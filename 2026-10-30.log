@@ -36,3 +36,50 @@
 2026-10-30T20:06:44.702Z [check] DT3 data: SIP 09:30-09:34 [[697.21,697.43,696,696.445],[696.44,696.61,695.7,695.94],[695.91,696,695.06,695.11],[695.15,695.59,695.05,695.45],[695.4,695.48,694.46,694.63]]; IEX bars since 09:35: 390; QQQ now 690.82
 2026-10-30T20:06:44.702Z [check] DT3 now: no trade, stop 697.43 already touched after 09:35
 2026-10-30T20:06:45.135Z [check] DT8: 290 daily closes (last 2026-10-29), SPY now 755.72, in position false, decision buy
+2026-10-30T20:18:10.777Z [check] start, DRY RUN (no orders are sent)
+2026-10-30T20:18:11.075Z [check] session 09:30-16:00; equity 100000.00, high-water 101844.69
+2026-10-30T20:18:11.136Z [check] paper account: status ACTIVE, equity 100600.32, cash 100600.32, buying power 402401.28, multiplier 4, shorting true, pattern day trader undefined, trading blocked false
+2026-10-30T20:18:11.309Z [check] open positions: none
+2026-10-30T20:18:11.402Z [check] fill 2026-10-14T19:59:56.705144Z SPY buy 65 @ 769.64 (market, dt8-buy-2026-10-14)
+2026-10-30T20:18:11.402Z [check] fill 2026-10-16T13:50:48.892733Z QQQ sell 118 @ 721.750509 (market, dt3-2026-10-16)
+2026-10-30T20:18:11.402Z [check] fill 2026-10-16T19:55:15.227373Z QQQ buy 118 @ 709.89017 (market)
+2026-10-30T20:18:11.402Z [check] fill 2026-10-19T13:50:46.595225Z QQQ sell 281 @ 719.57 (market, dt3-2026-10-19)
+2026-10-30T20:18:11.402Z [check] fill 2026-10-19T14:14:55.945243Z QQQ buy 281 @ 720.253523 (stop)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-20T13:50:48.127232Z QQQ sell 194 @ 712.61 (market, dt3-2026-10-20)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-20T13:58:37.076215Z QQQ buy 194 @ 715.562577 (stop)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-20T19:59:57.128568Z SPY sell 26 @ 768.53 (market, dt8-sell-2026-10-20)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-21T13:45:30.300143Z SPY sell 39 @ 770.295898 (market, dt8-fix-2026-10-21)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-26T13:50:48.128789Z QQQ buy 222 @ 707.84018 (market, dt3-2026-10-26)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-26T19:55:17.890914Z QQQ sell 222 @ 712.361171 (market)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-27T13:50:49.049181Z QQQ buy 284 @ 715.152711 (market, dt3-2026-10-27)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-27T13:51:17.521377Z QQQ sell 284 @ 714.57 (stop)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-29T13:50:46.417916Z QQQ sell 129 @ 713.17 (market, dt3-2026-10-29)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-29T15:30:14.367677Z QQQ buy 129 @ 717.04 (stop)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-30T13:50:47.908596Z QQQ sell 289 @ 696.343114 (market, dt3-2026-10-30)
+2026-10-30T20:18:11.403Z [check] fill 2026-10-30T13:58:39.72653Z QQQ buy 289 @ 697.556782 (stop)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-26T13:50:48.13803Z QQQ sell limit status canceled (038bead5-c5ba-447f-9b8e-3a6dd1a3e0ea)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-26T13:50:46.234428Z QQQ sell stop status canceled (89872ea0-5dab-4d93-9f4d-64d57d6a9435)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-27T13:50:49.501611Z QQQ sell limit status canceled (83c589c0-7f25-4c0c-bf0e-cf913a7c34ca)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-29T13:50:46.423886Z QQQ buy limit status canceled (7aa638df-0d1b-406f-a02f-4f5a73edb516)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-30T13:50:47.918066Z QQQ buy limit status canceled (25599ac8-e35c-4cc4-8221-94c97137781e)
+2026-10-30T20:18:11.471Z [check] order not filled 2026-10-30T19:40:02.20668Z SPY buy market status expired (dt8-buy-2026-10-30)
+2026-10-30T20:18:11.531Z [check] open orders: none
+2026-10-30T20:18:11.619Z [check] activity 2026-10-09 JNLC 100000
+2026-10-30T20:18:11.619Z [check] activity 2026-10-14 FEE -0.01 (CAT fee for proceed of 1 trades on 2026-10-14 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-16 FEE -0.01 (CAT fee for proceed of 8 trades on 2026-10-16 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-16 FEE -1.76 (REG fee for proceed of $85166.56 on 2026-10-16 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-19 FEE -0.01 (CAT fee for proceed of 4 trades on 2026-10-19 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-19 FEE -4.17 (REG fee for proceed of $202199.17 on 2026-10-19 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-20 FEE -0.01 (CAT fee for proceed of 4 trades on 2026-10-20 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-20 FEE -3.26 (REG fee for proceed of $158228.12 on 2026-10-20 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-21 FEE -0.01 (CAT fee for proceed of 4 trades on 2026-10-21 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-21 FEE -0.62 (REG fee for proceed of $30041.54 on 2026-10-21 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-26 FEE -0.01 (CAT fee for proceed of 7 trades on 2026-10-26 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-26 FEE -3.26 (REG fee for proceed of $158144.18 on 2026-10-26 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-27 FEE -4.19 (REG fee for proceed of $202937.88 on 2026-10-27 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-27 FEE -0.01 (CAT fee for proceed of 6 trades on 2026-10-27 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-29 FEE -1.9 (REG fee for proceed of $91998.93 on 2026-10-29 by PA3F08BQ3OY3)
+2026-10-30T20:18:11.619Z [check] activity 2026-10-29 FEE -0.01 (CAT fee for proceed of 2 trades on 2026-10-29 by PA3F08BQ3OY3)
+2026-10-30T20:18:12.149Z [check] DT3 data: SIP 09:30-09:34 [[697.21,697.43,696,696.445],[696.44,696.61,695.7,695.94],[695.91,696,695.06,695.11],[695.15,695.59,695.05,695.45],[695.4,695.48,694.46,694.63]]; IEX bars since 09:35: 395; QQQ now 691.27
+2026-10-30T20:18:12.149Z [check] DT3 now: no trade, stop 697.43 already touched after 09:35
+2026-10-30T20:18:12.506Z [check] DT8: 290 daily closes (last 2026-10-29), SPY now 756, in position false, decision buy
