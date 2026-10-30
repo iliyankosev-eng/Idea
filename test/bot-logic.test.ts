@@ -92,3 +92,18 @@ describe("DT8 leftover after a partial fill", () => {
     expect(dt8Leftover(undefined, 10)).toBe(0);
   });
 });
+
+describe("fillAction (DT8 follow-up)", () => {
+  it("done, wait, resend, give up", async () => {
+    const { fillAction } = await import("../src/bot/logic.js");
+    expect(fillAction({ status: "filled", qty: 66, filled: 66 }, 200, 0)).toEqual({ act: "done" });
+    expect(fillAction({ status: "partially_filled", qty: 66, filled: 26 }, 200, 0)).toEqual({ act: "wait" });
+    expect(fillAction({ status: "new", qty: 66, filled: 0 }, 200, 0)).toEqual({ act: "wait" });
+    expect(fillAction({ status: "expired", qty: 66, filled: 0 }, 200, 0)).toEqual({ act: "resend", qty: 66 });
+    expect(fillAction({ status: "canceled", qty: 65, filled: 26 }, 200, 1)).toEqual({ act: "resend", qty: 39 });
+    expect(fillAction({ status: "canceled", qty: 65, filled: 26 }, 200, 3)).toEqual({ act: "give-up", missing: 39 });
+    expect(fillAction({ status: "partially_filled", qty: 65, filled: 26 }, 44, 0)).toEqual({ act: "give-up", missing: 39 });
+    expect(fillAction({ status: "expired", qty: 66, filled: 0 }, 45, 0)).toEqual({ act: "resend", qty: 66 });
+    expect(fillAction({ status: "canceled", qty: 10, filled: 10 }, 10, 5)).toEqual({ act: "done" });
+  });
+});

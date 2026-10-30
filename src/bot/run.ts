@@ -5,8 +5,9 @@
  *         15-minute delay, so it is known at 09:50), entry at ~09:50 with a bracket order (stop at the range extreme, 10R target),
  *         no trade if the stop was already touched 09:35-09:50 (IEX real-time bars). Also logs, without trading, what the
  *         09:35 plan from the real-time IEX feed would have been (shadow, for comparison).
- *  close: ~15:40 (20 minutes before the close; earlier on half days): DT8 decision with a market-on-close order (cutoff 15:50);
- *         5 minutes before the close: cancels the QQQ orders and closes the QQQ position (DT3 never holds overnight).
+ *  close: 5 minutes before the close: cancels the QQQ orders and closes the QQQ position (DT3 never holds overnight);
+ *         then the DT8 decision with a plain market order, followed until it is filled (paper fills market-on-close orders
+ *         only partly or not at all, see followDt8).
  *  check: no waiting and no orders: fetches the data both jobs need and prints the decisions they would take now (smoke test).
  * Safety: the trading endpoint is fixed to PAPER; without keys (or with DRY_RUN=1, or in check mode)
  * nothing is sent, orders are only logged; no new trades after a 20% drawdown from the equity high-water mark;
@@ -15,7 +16,7 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { Alpaca } from "./alpaca.js";
-import { dt8Leftover, halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
+import { dt8Leftover, fillAction, halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
 
 const mode = process.argv[2] ?? "";
 const LOGDIR = process.env.BOT_LOG_DIR ?? "botlog";
@@ -95,7 +96,7 @@ async function main() {
       log(`open orders: ${open.length ? open.map((o) => `${o.symbol} ${o.side} ${o.qty} ${o.type}/${o.time_in_force} ${o.status} (${o.client_order_id})`).join(", ") : "none"}`);
       type A = { activity_type: string; date?: string; transaction_time?: string; net_amount?: string; description?: string; symbol?: string };
       const acts = ((await api.activities(new Date(Date.now() - 30 * 86400_000).toISOString())) as A[]).filter((x) => x.activity_type !== "FILL");
-      for (const x of acts) log(`activity ${x.date ?? x.transaction_time} ${x.activity_type} ${x.net_amount ?? ""}${x.symbol ? " " + x.symbol : ""}${x.description ? " (" + x.description + ")" : ""}`);
+      for (const x of acts) log(`activity ${x.date ?? x.transaction_time} ${x.activity_type} ${x.net_amount ?? ""}${x.symbol ? " " + x.symbol : ""}${x.description ? " (" + x.description.replace(/ by \S+$/, "") + ")" : ""}`);
       if (!acts.length) log("activity: no non-trade activities in the last 30 days");
     } catch (e) { log(`paper account not readable with these keys: ${e}`); }
     const t = ny();
@@ -140,15 +141,21 @@ async function main() {
   if (mode === "close") {
     const t = ny();
     if (t.min < closeMin - 50 || t.min > closeMin - 8) { log(`not the close window (New York ${hhmm(t.min)}, close ${cal.close}), exit`); return; }
-    // DT8 at close-20 (15:40), at the latest 15:48: market-on-close orders are refused after 15:50
-    if (await waitUntil(closeMin - 20, 0, 8 * 60)) { try { await dt8(equity, stop, true); } catch (e) { log(`DT8 ERROR ${e}`); process.exitCode = 1; } }
-    else log("missed the DT8 decision window");
     // DT3 never holds overnight: flatten QQQ 5 minutes before the close
     if (await waitUntil(closeMin - 5, 0, 240)) {
       await api.cancelOpenOrders("QQQ");
       const q = paper ? await api.position("QQQ") : null;
       if (q) { await sleep(3000); await api.closePosition("QQQ"); } else log("no QQQ position to close");
     } else { log("missed the QQQ flatten window"); process.exitCode = 1; }
+    // DT8 right after, with a plain market order (paper fills market-on-close orders only partly or not at all:
+    // 20.10 26 of 65, 30.10 0 of 66 expired); partial fills are followed up until 45 s before the close
+    const t2 = ny();
+    if (t2.min * 60 + t2.sec <= (closeMin - 2) * 60) {
+      try {
+        const o = await dt8(equity, stop, true);
+        if (o && paper) await followDt8(o, closeMin);
+      } catch (e) { log(`DT8 ERROR ${e}`); process.exitCode = 1; }
+    } else log("missed the DT8 decision window");
     return;
   }
   log(`unknown mode "${mode}" (use open, close or check)`);
@@ -156,7 +163,7 @@ async function main() {
 }
 
 /** DT8: RSI(2) < 10 and above SMA(200) -> buy at the close; in position and above SMA(5) -> sell at the close. */
-async function dt8(equity: number, stop: boolean, trade: boolean) {
+async function dt8(equity: number, stop: boolean, trade: boolean): Promise<{ id: string; side: "buy" | "sell"; qty: number } | null> {
   const hist = (await api.bars("SPY", "1Day", new Date(Date.now() - 420 * 86400_000).toISOString().slice(0, 10), `${today}T00:00:00Z`, "sip", "all")) as RawBar[];
   const closes = hist.filter((b) => b.t.slice(0, 10) < today).map((b) => b.c);
   const px = Number((await api.latestTrade("SPY")).p);
@@ -164,9 +171,31 @@ async function dt8(equity: number, stop: boolean, trade: boolean) {
   const inPos = !!pos && Number(pos.qty) > 0;
   const d = rsiDecision([...closes, px], inPos);
   log(`DT8: ${closes.length} daily closes (last ${hist.at(-1)?.t?.slice(0, 10)}), SPY now ${px}, in position ${inPos}, decision ${d}`);
-  if (!trade) return;
-  if (d === "buy" && !stop) await api.order({ symbol: "SPY", qty: String(Math.floor((0.5 * equity) / px)), side: "buy", type: "market", time_in_force: "cls", client_order_id: `dt8-buy-${today}` });
-  if (d === "sell" && pos) await api.order({ symbol: "SPY", qty: pos.qty, side: "sell", type: "market", time_in_force: "cls", client_order_id: `dt8-sell-${today}` });
+  if (!trade) return null;
+  const o = d === "buy" && !stop ? { id: `dt8-buy-${today}`, side: "buy" as const, qty: Math.floor((0.5 * equity) / px) }
+    : d === "sell" && pos ? { id: `dt8-sell-${today}`, side: "sell" as const, qty: Number(pos.qty) } : null;
+  if (!o || !(o.qty > 0)) return null;
+  await api.order({ symbol: "SPY", qty: String(o.qty), side: o.side, type: "market", time_in_force: "day", client_order_id: o.id });
+  return o;
+}
+
+/** Follow a DT8 order until it is filled; send the rest again if paper cancels/expires it partly filled (see fillAction). */
+async function followDt8(first: { id: string; side: "buy" | "sell"; qty: number }, closeMin: number) {
+  let cur = first, resends = 0;
+  for (;;) {
+    await sleep(15_000);
+    const o = await api.orderByClientId(cur.id);
+    const t = ny(), a = fillAction({ status: o.status, qty: cur.qty, filled: Number(o.filled_qty) }, closeMin * 60 - (t.min * 60 + t.sec), resends);
+    if (a.act === "done") { log(`DT8 ${cur.id}: ${o.status} ${o.filled_qty} @ ${o.filled_avg_price}`); return; }
+    if (a.act === "give-up") { log(`WARNING: DT8 ${cur.id} ${o.status}: ${a.missing} of ${cur.qty} not filled${first.side === "sell" ? " (the open job sells the rest)" : ""}`); return; }
+    if (a.act === "resend") {
+      resends++;
+      const id = `${first.id}-r${resends}`;
+      log(`DT8 ${cur.id} ${o.status} with ${a.qty} unfilled -> sending the rest again`);
+      await api.order({ symbol: "SPY", qty: String(a.qty), side: first.side, type: "market", time_in_force: "day", client_order_id: id });
+      cur = { id, side: first.side, qty: a.qty };
+    }
+  }
 }
 
 main().catch((e) => { log(`ERROR ${e?.message ?? e}`); process.exitCode = 1; });

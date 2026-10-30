@@ -40,3 +40,14 @@ export function stopTouched(bars: readonly Bar[], side: "buy" | "sell", stop: nu
 export function dt8Leftover(lastDt8Id: string | undefined, heldQty: number): number {
   return lastDt8Id?.startsWith("dt8-sell-") && heldQty > 0 ? heldQty : 0;
 }
+
+/** What to do with a DT8 market order near the close. Paper accounts add random partial fills; a canceled/expired/rejected
+ * order with shares missing is sent again for the rest (at most `maxResends` times) while at least 45 s are left. */
+export function fillAction(o: { status: string; qty: number; filled: number }, secsToClose: number, resends: number, maxResends = 3):
+  { act: "done" } | { act: "wait" } | { act: "resend"; qty: number } | { act: "give-up"; missing: number } {
+  const missing = o.qty - o.filled;
+  if (o.status === "filled" || missing <= 0) return { act: "done" };
+  const final = ["canceled", "expired", "rejected", "done_for_day"].includes(o.status);
+  if (secsToClose < 45 || (final && resends >= maxResends)) return { act: "give-up", missing };
+  return final ? { act: "resend", qty: missing } : { act: "wait" };
+}
