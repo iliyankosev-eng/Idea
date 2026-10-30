@@ -89,6 +89,10 @@ async function main() {
       const flat = (os: O[]): O[] => os.flatMap((o) => [o, ...flat(o.legs ?? [])]);
       const fills = flat((await api.closedOrders(new Date(Date.now() - 30 * 86400_000).toISOString())) as O[]).filter((o) => Number(o.filled_qty) > 0).sort((a, b) => (a.filled_at! < b.filled_at! ? -1 : 1));
       for (const o of fills) log(`fill ${o.filled_at} ${o.symbol} ${o.side} ${o.filled_qty} @ ${o.filled_avg_price} (${o.type}${o.client_order_id.startsWith("dt") ? ", " + o.client_order_id : ""})`);
+      const allClosed = flat((await api.closedOrders(new Date(Date.now() - 7 * 86400_000).toISOString())) as (O & { status: string; submitted_at: string })[]) as (O & { status: string; submitted_at: string })[];
+      for (const o of allClosed.filter((x) => Number(x.filled_qty) === 0)) log(`order not filled ${o.submitted_at} ${o.symbol} ${o.side} ${o.type} status ${o.status} (${o.client_order_id})`);
+      const open = (await api.openOrders()) as { symbol: string; side: string; type: string; qty: string; status: string; time_in_force: string; client_order_id: string }[];
+      log(`open orders: ${open.length ? open.map((o) => `${o.symbol} ${o.side} ${o.qty} ${o.type}/${o.time_in_force} ${o.status} (${o.client_order_id})`).join(", ") : "none"}`);
       type A = { activity_type: string; date?: string; transaction_time?: string; net_amount?: string; description?: string; symbol?: string };
       const acts = ((await api.activities(new Date(Date.now() - 30 * 86400_000).toISOString())) as A[]).filter((x) => x.activity_type !== "FILL");
       for (const x of acts) log(`activity ${x.date ?? x.transaction_time} ${x.activity_type} ${x.net_amount ?? ""}${x.symbol ? " " + x.symbol : ""}${x.description ? " (" + x.description + ")" : ""}`);

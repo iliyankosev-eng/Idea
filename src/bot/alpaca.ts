@@ -37,6 +37,8 @@ export class Alpaca {
   positions() { return this.req(PAPER, "/v2/positions"); }
   /** Closed orders since `afterIso` (oldest first), legs nested. Read-only. */
   closedOrders(afterIso: string) { return this.req(PAPER, `/v2/orders?status=closed&after=${afterIso}&limit=500&direction=asc&nested=true`); }
+  /** Open orders (read-only). */
+  openOrders() { return this.req(PAPER, "/v2/orders?status=open&limit=100"); }
   /** Account activities since `afterIso` (oldest first, up to 100). Read-only. */
   activities(afterIso: string) { return this.req(PAPER, `/v2/account/activities?after=${afterIso}&direction=asc&page_size=100`); }
   async position(sym: string): Promise<{ qty: string; side: string } | null> {
