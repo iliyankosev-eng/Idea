@@ -1,0 +1,9 @@
+2026-10-30T13:45:21.326Z [open] start, PAPER trading
+2026-10-30T13:45:21.631Z [open] session 09:30-16:00; equity 100951.07, high-water 101844.69
+2026-10-30T13:45:22.275Z [open] news 2026-10-30T13:16:53Z Trump Claims Inflation Is 'Way Down' Ahead of Midterms, But Fed Chair Kevin Warsh Warns Prices Remain 'Too High' After Holding Rates Steady
+2026-10-30T13:45:22.275Z [open] news 2026-10-30T12:43:13Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Trade Mixed as AMZN, INTC Slide After Q3 Earnings—DELL, LLY, AZN in Focus (UPDATED)
+2026-10-30T13:45:22.275Z [open] news 2026-10-30T12:30:27Z Alphabet's $482B Wipeout Sparks AI Spending Fears: Is QQQ's Big Tech Exposure Becoming a Risk?
+2026-10-30T13:45:22.275Z [open] news 2026-10-30T06:21:23Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-10-30T13:50:46.465Z [open] DT3 data: SIP 09:30-09:34 [[697.21,697.43,696,696.445],[696.44,696.61,695.7,695.94],[695.91,696,695.06,695.11],[695.15,695.59,695.05,695.45],[695.4,695.48,694.46,694.63]]; IEX bars since 09:35: 15; QQQ now 696.395
+2026-10-30T13:50:46.465Z [open] DT3 plan {"side":"sell","qty":289,"stop":697.43,"target":686.05}
+2026-10-30T13:50:46.466Z [open] ORDER {"symbol":"QQQ","qty":"289","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"686.05"},"stop_loss":{"stop_price":"697.43"},"client_order_id":"dt3-2026-10-30"}
