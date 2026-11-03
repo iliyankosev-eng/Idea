@@ -8,3 +8,8 @@
 2026-11-03T14:50:45.947Z [open] DT3 data: SIP 09:30-09:34 [[684.41,684.93,683.18,684.26],[684.26,684.67,683.595,684.618],[684.61,684.81,683.91,684.49],[684.5,685.04,684.34,684.53],[684.5,685.63,684.44,685.54]]; IEX bars since 09:35: 15; QQQ now 686.19
 2026-11-03T14:50:45.948Z [open] DT3 plan {"side":"buy","qty":167,"stop":683.18,"target":716.29}
 2026-11-03T14:50:45.948Z [open] ORDER {"symbol":"QQQ","qty":"167","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"716.29"},"stop_loss":{"stop_price":"683.18"},"client_order_id":"dt3-2026-11-03"}
+2026-11-03T20:35:31.464Z [close] start, PAPER trading
+2026-11-03T20:35:31.939Z [close] session 09:30-16:00; equity 100566.44, high-water 101844.69
+2026-11-03T20:55:00.908Z [close] CANCEL 9b088016-960c-442b-a908-349c5be54126 sell limit
+2026-11-03T20:55:04.320Z [close] CLOSE QQQ
+2026-11-03T20:55:04.386Z [close] ERROR DELETE /v2/positions/QQQ: HTTP 403 {"available":"0","code":40310000,"existing_qty":"167","held_for_orders":"167","message":"insufficient qty available for order (requested: 167, available: 0)","symbol":"QQQ"}
