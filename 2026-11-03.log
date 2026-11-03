@@ -1,0 +1,10 @@
+2026-11-03T14:45:27.430Z [open] start, PAPER trading
+2026-11-03T14:45:27.738Z [open] session 09:30-16:00; equity 100744.65, high-water 101844.69
+2026-11-03T14:45:28.195Z [open] news 2026-11-03T14:04:48Z Questcorp Mining Completes Acquisition of 100% Interest in North Island Copper Project
+2026-11-03T14:45:28.196Z [open] news 2026-11-03T13:23:41Z Stock Market Today: S&P 500, Nasdaq 100, Dow Jones Futures Mixed as Trump Touts Iran Settlement Hopes — AAPL, PLTR, AMD in Focus (UPDATED)
+2026-11-03T14:45:28.196Z [open] news 2026-11-03T10:54:49Z 'Marking Their Calendar': Tom Lee Says Investors Don't Have 'Conviction' to Buy the Dip Until After Midterms
+2026-11-03T14:45:28.196Z [open] news 2026-11-03T10:47:40Z Howard Marks Questions Anthropic's $1.5 Trillion-Plus Valuation: 'Can We Really Fool Ourselves Into Thinking We Know...'
+2026-11-03T14:45:28.196Z [open] news 2026-11-03T10:19:54Z $80 Billion Hedge Fund Braces for Bear Market
+2026-11-03T14:50:45.947Z [open] DT3 data: SIP 09:30-09:34 [[684.41,684.93,683.18,684.26],[684.26,684.67,683.595,684.618],[684.61,684.81,683.91,684.49],[684.5,685.04,684.34,684.53],[684.5,685.63,684.44,685.54]]; IEX bars since 09:35: 15; QQQ now 686.19
+2026-11-03T14:50:45.948Z [open] DT3 plan {"side":"buy","qty":167,"stop":683.18,"target":716.29}
+2026-11-03T14:50:45.948Z [open] ORDER {"symbol":"QQQ","qty":"167","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"716.29"},"stop_loss":{"stop_price":"683.18"},"client_order_id":"dt3-2026-11-03"}
