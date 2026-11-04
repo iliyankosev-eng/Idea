@@ -16,6 +16,7 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { Alpaca } from "./alpaca.js";
+import { flatten } from "./flatten.js";
 import { dt8Leftover, fillAction, halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
 
 const mode = process.argv[2] ?? "";
@@ -109,7 +110,7 @@ async function main() {
   if (mode === "open") {
     const t = ny();
     if (t.min < openMin - 60 || t.min > openMin + 19) { log(`not the open window (New York ${hhmm(t.min)}), exit`); return; }
-    if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await api.cancelOpenOrders("QQQ"); await sleep(3000); await api.closePosition("QQQ"); } }
+    if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await flatten(api, "QQQ", sleep, log); } }
     if (paper) { // DT8: the last DT8 order was a sell but SPY shares are still held (partial fill of the close order) -> sell the rest now
       const spy = await api.position("SPY");
       const last = ((await api.closedOrders(new Date(Date.now() - 60 * 86400_000).toISOString())) as { client_order_id: string; filled_qty: string }[]).filter((o) => o.client_order_id.startsWith("dt8-") && Number(o.filled_qty) > 0).at(-1);
@@ -143,9 +144,11 @@ async function main() {
     if (t.min < closeMin - 50 || t.min > closeMin - 8) { log(`not the close window (New York ${hhmm(t.min)}, close ${cal.close}), exit`); return; }
     // DT3 never holds overnight: flatten QQQ 5 minutes before the close
     if (await waitUntil(closeMin - 5, 0, 240)) {
-      await api.cancelOpenOrders("QQQ");
-      const q = paper ? await api.position("QQQ") : null;
-      if (q) { await sleep(3000); await api.closePosition("QQQ"); } else log("no QQQ position to close");
+      try { // an error here must not stop DT8 below (2026-11-03: the close failed and DT8 never ran)
+        const q = paper ? await api.position("QQQ") : null;
+        if (q) await flatten(api, "QQQ", sleep, log);
+        else { await api.cancelOpenOrders("QQQ"); log("no QQQ position to close"); }
+      } catch (e) { log(`QQQ flatten ERROR ${e}`); process.exitCode = 1; }
     } else { log("missed the QQQ flatten window"); process.exitCode = 1; }
     // DT8 right after, with a plain market order (paper fills market-on-close orders only partly or not at all:
     // 20.10 26 of 65, 30.10 0 of 66 expired); partial fills are followed up until 45 s before the close
