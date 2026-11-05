@@ -8,3 +8,11 @@
 2026-11-05T14:50:46.958Z [open] DT3 data: SIP 09:30-09:34 [[683.09,683.65,681.115,681.255],[681.23,681.23,679.1,679.975],[679.97,680.7,679.82,680.12],[680.12,680.44,678.89,679.3],[679.28,679.62,677.6,677.6]]; IEX bars since 09:35: 15; QQQ now 669.78
 2026-11-05T14:50:46.958Z [open] DT3 plan {"side":"sell","qty":37,"stop":683.65,"target":531.08}
 2026-11-05T14:50:46.959Z [open] ORDER {"symbol":"QQQ","qty":"37","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"531.08"},"stop_loss":{"stop_price":"683.65"},"client_order_id":"dt3-2026-11-05"}
+2026-11-05T20:35:20.608Z [close] start, PAPER trading
+2026-11-05T20:35:20.917Z [close] session 09:30-16:00; equity 104011.99, high-water 104011.99
+2026-11-05T20:55:01.471Z [close] CANCEL 445b51cf-17fe-4780-8d54-119ac9a7b588 buy limit
+2026-11-05T20:55:03.746Z [close] CLOSE QQQ
+2026-11-05T20:55:03.918Z [close] QQQ: shares still held for orders (attempt 1 of 6), retrying
+2026-11-05T20:55:03.991Z [close] CANCEL 445b51cf-17fe-4780-8d54-119ac9a7b588 buy limit
+2026-11-05T20:55:04.049Z [close] QQQ flatten ERROR Error: DELETE /v2/orders/445b51cf-17fe-4780-8d54-119ac9a7b588: HTTP 422 {"code":42210000,"message":"order pending cancel"}
+2026-11-05T20:55:04.851Z [close] DT8: 290 daily closes (last 2026-11-04), SPY now 734.925, in position false, decision none
