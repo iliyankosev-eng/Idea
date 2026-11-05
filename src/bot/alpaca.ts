@@ -52,7 +52,16 @@ export class Alpaca {
   }
   async cancelOpenOrders(sym: string) {
     const open = await this.req(PAPER, `/v2/orders?status=open&symbols=${sym}&nested=true`);
-    for (const o of open ?? []) { this.log(`CANCEL ${this.dryRun ? "(dry run) " : ""}${o.id} ${o.side} ${o.type}`); if (!this.dryRun) await this.req(PAPER, `/v2/orders/${o.id}`, { method: "DELETE" }); }
+    for (const o of open ?? []) {
+      if (o.status === "pending_cancel") { this.log(`CANCEL already pending: ${o.id} ${o.side} ${o.type}`); continue; }
+      this.log(`CANCEL ${this.dryRun ? "(dry run) " : ""}${o.id} ${o.side} ${o.type}`);
+      if (this.dryRun) continue;
+      try { await this.req(PAPER, `/v2/orders/${o.id}`, { method: "DELETE" }); }
+      catch (e) { // 422 "order pending cancel" / not cancelable, 404 already gone: the cancel is under way or done (2026-11-05)
+        if (!/HTTP (404|422)/.test(String(e))) throw e;
+        this.log(`CANCEL skipped (${String(e).slice(0, 120)})`);
+      }
+    }
   }
   async closePosition(sym: string) {
     this.log(`CLOSE ${this.dryRun ? "(dry run) " : ""}${sym}`);

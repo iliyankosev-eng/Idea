@@ -22,6 +22,14 @@ describe("flatten", () => {
     expect(f.sleeps).toEqual([2000, 4000]);
     expect(f.logs).toEqual(["QQQ: shares still held for orders (attempt 1 of 6), retrying"]);
   });
+  it("a failing cancel on the retry (HTTP 422 pending cancel, the 2026-11-05 failure) does not stop the close", async () => {
+    const f = fake([HELD]);
+    let n = 0;
+    const api: FlattenApi = { ...f.api, async cancelOpenOrders(s) { n++; f.calls.push(`cancel ${s}`); if (n === 2) throw new Error('DELETE /v2/orders/x: HTTP 422 {"code":42210000,"message":"order pending cancel"}'); } };
+    await expect(flatten(api, "QQQ", f.sleep, f.log)).resolves.toBe("closed");
+    expect(f.calls.filter((c) => c.startsWith("close"))).toHaveLength(2);
+    expect(f.logs.some((l) => l.includes("cancel failed"))).toBe(true);
+  });
   it("closes at once when nothing is held", async () => {
     const f = fake([]);
     await expect(flatten(f.api, "QQQ", f.sleep, f.log)).resolves.toBe("closed");
