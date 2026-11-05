@@ -1,0 +1,34 @@
+name: probe-files
+# One-off download of files shared by Iliyan (public Google Drive links) that the sandbox cannot reach.
+# Raw files go to the `probe-files` branch. Run: workflow_dispatch.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download
+        run: |
+          mkdir out && cd out
+          for id in 1gQGED6xM2rlz8Fvm-skJ7ifGAetYkGqf 1GJ_jBsXoP-1JeaswB9eykz7xgBapYiJn; do
+            curl -sSL --max-time 60 -o "$id.xlsx" "https://docs.google.com/spreadsheets/d/$id/export?format=xlsx" || true
+            if ! head -c 2 "$id.xlsx" | grep -q PK; then curl -sSL --max-time 60 -o "$id.xlsx" "https://drive.google.com/uc?export=download&id=$id" || true; fi
+            echo "$id $(wc -c < "$id.xlsx") bytes, starts: $(head -c 4 "$id.xlsx" | od -An -c | tr -d ' ')" >> LOG.txt
+          done
+          cat LOG.txt
+      - name: Push to the probe-files branch
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd out
+          git init --quiet -b probe-files
+          git config user.name "probe-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit --quiet -m "probe-files $(date -u +%FT%TZ)"
+          git push --force --quiet "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" probe-files
