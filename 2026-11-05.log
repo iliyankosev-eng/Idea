@@ -1,0 +1,10 @@
+2026-11-05T14:45:26.241Z [open] start, PAPER trading
+2026-11-05T14:45:26.584Z [open] session 09:30-16:00; equity 103354.48, high-water 103513.82
+2026-11-05T14:45:27.224Z [open] news 2026-11-05T13:46:42Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Trade Mixed After Post-Midterm Rally— TM, ARM, QCOM in Focus (UPDATED)
+2026-11-05T14:45:27.224Z [open] news 2026-11-05T13:14:35Z Trump Era Reaches ‘Beginning of The End’ Following ‘Blue Tsunami,’ Carson Strategist Says Divided Government Is ‘Good for Markets’
+2026-11-05T14:45:27.224Z [open] news 2026-11-05T12:23:29Z Politicians Fight Data Centers While Betting Your Retirement on Them
+2026-11-05T14:45:27.224Z [open] news 2026-11-05T09:08:34Z Dan Ives Warns Chip Stocks Aren't Done Falling, Sees Another 12% Drop — But Tom Lee Calls AI Selloff an 'Overreaction,' Predicts 20% Tech Rally
+2026-11-05T14:45:27.224Z [open] news 2026-11-05T06:34:09Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-11-05T14:50:46.958Z [open] DT3 data: SIP 09:30-09:34 [[683.09,683.65,681.115,681.255],[681.23,681.23,679.1,679.975],[679.97,680.7,679.82,680.12],[680.12,680.44,678.89,679.3],[679.28,679.62,677.6,677.6]]; IEX bars since 09:35: 15; QQQ now 669.78
+2026-11-05T14:50:46.958Z [open] DT3 plan {"side":"sell","qty":37,"stop":683.65,"target":531.08}
+2026-11-05T14:50:46.959Z [open] ORDER {"symbol":"QQQ","qty":"37","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"531.08"},"stop_loss":{"stop_price":"683.65"},"client_order_id":"dt3-2026-11-05"}
