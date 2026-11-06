@@ -1,0 +1,11 @@
+2026-11-06T14:45:21.778Z [open] start, PAPER trading
+2026-11-06T14:45:21.927Z [open] session 09:30-16:00; equity 103645.90, high-water 104011.99
+2026-11-06T14:45:21.939Z [open] WARNING: QQQ position left from before (-37), closing it
+2026-11-06T14:45:23.988Z [open] CLOSE QQQ
+2026-11-06T14:45:24.120Z [open] news 2026-11-06T14:36:14Z Micron, AMD, SanDisk Lead AI Stock Bounce as Investors Buy the Dip
+2026-11-06T14:45:24.120Z [open] news 2026-11-06T13:54:10Z October Payrolls Smash Estimates at 165K, Jobless Rate Falls to 4.1% (UPDATED)
+2026-11-06T14:45:24.120Z [open] news 2026-11-06T13:39:33Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Trade Mixed as October Jobs Rose by 165,000— Airbnb, Cloudflare, Lam Research in Focus (UPDATED)
+2026-11-06T14:45:24.120Z [open] news 2026-11-06T13:17:22Z Top Analyst Flags 'Golden Buying Opportunity' for AI Stocks, Comparing 'Massive Tech Sell-Off' to 2020 Crash
+2026-11-06T14:45:24.120Z [open] news 2026-11-06T12:33:06Z Tom Lee Says Wall Street’s AI Doom Predictions Have Gone Too Far — Fundstrat Bull Blames ‘Blue Tsunami’ Shock for Tech Stock Rout
+2026-11-06T14:50:45.732Z [open] DT3 data: SIP 09:30-09:34 [[658.37,658.75,657.18,658.11],[658.06,658.45,657.4,657.65],[657.71,658.42,656.525,656.92],[657.05,658.96,656.92,657.46],[657.48,657.72,655.71,656.422]]; IEX bars since 09:35: 15; QQQ now 662.71
+2026-11-06T14:50:45.732Z [open] DT3: no trade, doji first 5 minutes or the price is already beyond the stop
