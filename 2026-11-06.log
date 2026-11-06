@@ -9,3 +9,7 @@
 2026-11-06T14:45:24.120Z [open] news 2026-11-06T12:33:06Z Tom Lee Says Wall Street’s AI Doom Predictions Have Gone Too Far — Fundstrat Bull Blames ‘Blue Tsunami’ Shock for Tech Stock Rout
 2026-11-06T14:50:45.732Z [open] DT3 data: SIP 09:30-09:34 [[658.37,658.75,657.18,658.11],[658.06,658.45,657.4,657.65],[657.71,658.42,656.525,656.92],[657.05,658.96,656.92,657.46],[657.48,657.72,655.71,656.422]]; IEX bars since 09:35: 15; QQQ now 662.71
 2026-11-06T14:50:45.732Z [open] DT3: no trade, doji first 5 minutes or the price is already beyond the stop
+2026-11-06T20:35:18.370Z [close] start, PAPER trading
+2026-11-06T20:35:18.536Z [close] session 09:30-16:00; equity 103611.51, high-water 104011.99
+2026-11-06T20:55:00.689Z [close] no QQQ position to close
+2026-11-06T20:55:00.944Z [close] DT8: 290 daily closes (last 2026-11-05), SPY now 735.34, in position false, decision none
