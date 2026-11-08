@@ -1,12 +1,12 @@
-2026-11-07T11:49:10.163Z
-coinmetrics btc: 5956 days, 2010-07-18 .. 2026-11-06
-coinmetrics eth: 4109 days, 2015-08-08 .. 2026-11-06
-coinmetrics ltc: 4968 days, 2013-04-01 .. 2026-11-06
-coinmetrics xrp: 4467 days, 2014-08-15 .. 2026-11-06
-coinmetrics doge: 4671 days, 2014-01-23 .. 2026-11-06
-coinmetrics ada: 3263 days, 2017-12-01 .. 2026-11-06
-coinmetrics bnb: 3402 days, 2017-07-15 .. 2026-11-06
-coinmetrics sol: 2402 days, 2020-04-10 .. 2026-11-06
+2026-11-08T12:00:35.013Z
+coinmetrics btc: 5957 days, 2010-07-18 .. 2026-11-07
+coinmetrics eth: 4110 days, 2015-08-08 .. 2026-11-07
+coinmetrics ltc: 4969 days, 2013-04-01 .. 2026-11-07
+coinmetrics xrp: 4468 days, 2014-08-15 .. 2026-11-07
+coinmetrics doge: 4672 days, 2014-01-23 .. 2026-11-07
+coinmetrics ada: 3264 days, 2017-12-01 .. 2026-11-07
+coinmetrics bnb: 3403 days, 2017-07-15 .. 2026-11-07
+coinmetrics sol: 2403 days, 2020-04-10 .. 2026-11-07
 fred DGS10: 16918 rows, last 2026-11-05
 fred DTB3: 19004 rows, last 2026-11-05
 yahoo GLD: 5527 days, 2004-11-18 .. 2026-11-06, 0 empty skipped
