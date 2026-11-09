@@ -5,3 +5,11 @@
 2026-11-09T14:50:46.356Z [open] DT3 data: SIP 09:30-09:34 [[662.63,663.59,662.1616,662.445],[662.43,663.71,662.02,663.11],[663.08,664.3699,662.97,664.23],[664.3111,665.88,664.26,665.62],[665.59,665.91,665.02,665.46]]; IEX bars since 09:35: 15; QQQ now 671.49
 2026-11-09T14:50:46.356Z [open] DT3 plan {"side":"buy","qty":54,"stop":662.02,"target":766.19}
 2026-11-09T14:50:46.356Z [open] ORDER {"symbol":"QQQ","qty":"54","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"766.19"},"stop_loss":{"stop_price":"662.02"},"client_order_id":"dt3-2026-11-09"}
+2026-11-09T20:35:22.499Z [close] start, PAPER trading
+2026-11-09T20:35:22.898Z [close] session 09:30-16:00; equity 104121.49, high-water 104121.49
+2026-11-09T20:55:01.469Z [close] CANCEL 630ea399-b561-4c7a-91d1-c51390065982 sell limit
+2026-11-09T20:55:03.620Z [close] CLOSE QQQ
+2026-11-09T20:55:03.721Z [close] QQQ: shares still held for orders (attempt 1 of 6), retrying
+2026-11-09T20:55:03.799Z [close] CANCEL already pending: 630ea399-b561-4c7a-91d1-c51390065982 sell limit
+2026-11-09T20:55:08.006Z [close] CLOSE QQQ
+2026-11-09T20:55:08.768Z [close] DT8: 290 daily closes (last 2026-11-06), SPY now 753.15, in position false, decision none
