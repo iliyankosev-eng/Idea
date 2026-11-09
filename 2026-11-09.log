@@ -1,0 +1,7 @@
+2026-11-09T14:45:21.864Z [open] start, PAPER trading
+2026-11-09T14:45:22.082Z [open] session 09:30-16:00; equity 103611.50, high-water 104011.99
+2026-11-09T14:45:22.730Z [open] news 2026-11-09T14:39:34Z Nvidia’s $540 Billion ETF Empire Has a Jensen Huang Problem
+2026-11-09T14:45:22.730Z [open] news 2026-11-09T10:36:54Z Stock Market Today: Dow, S&P 500 Futures Rise Despite Nvidia Sell-Off Over Jensen Huang Controversy — NVDA, OXY, CEG In Focus (UPDATED)
+2026-11-09T14:50:46.356Z [open] DT3 data: SIP 09:30-09:34 [[662.63,663.59,662.1616,662.445],[662.43,663.71,662.02,663.11],[663.08,664.3699,662.97,664.23],[664.3111,665.88,664.26,665.62],[665.59,665.91,665.02,665.46]]; IEX bars since 09:35: 15; QQQ now 671.49
+2026-11-09T14:50:46.356Z [open] DT3 plan {"side":"buy","qty":54,"stop":662.02,"target":766.19}
+2026-11-09T14:50:46.356Z [open] ORDER {"symbol":"QQQ","qty":"54","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"766.19"},"stop_loss":{"stop_price":"662.02"},"client_order_id":"dt3-2026-11-09"}
