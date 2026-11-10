@@ -1,0 +1,10 @@
+2026-11-10T14:45:23.235Z [open] start, PAPER trading
+2026-11-10T14:45:23.516Z [open] session 09:30-16:00; equity 104037.66, high-water 104121.49
+2026-11-10T14:45:24.186Z [open] news 2026-11-10T14:18:07Z Why Is Bloom Energy Stock Falling on Tuesday?
+2026-11-10T14:45:24.186Z [open] news 2026-11-10T09:56:54Z Stock Market Today: Dow Futures Rise, S&P 500 and Nasdaq 100 Futures Fall as Trump Signals Iran War to End ‘Fairly Soon’ — CRWV, TTWO, BW In Focus (UPDATED)
+2026-11-10T14:45:24.186Z [open] news 2026-11-10T12:57:00Z QUICK SPARK: SPY, QQQ Attract $9B as ETF Investors Shrug Off Volatility Worries
+2026-11-10T14:45:24.186Z [open] news 2026-11-10T08:35:58Z 'This Is Not The Moment To Get Bearish': Morgan Stanley's Mike Wilson Sees Market Correction Nearing End, Stays Selective on Chip Stocks
+2026-11-10T14:45:24.186Z [open] news 2026-11-10T02:50:05Z Trump Sees 'Positive Momentum' to End Iran War After Qatar PM Meeting, But Tehran Tells Washington to 'Surrender'
+2026-11-10T14:50:45.847Z [open] DT3 data: SIP 09:30-09:34 [[672.54,673.6,670.82,671.31],[671.31,671.5,670.74,671.26],[671.295,671.59,669.92,670.72],[670.71,671.94,670.48,671.85],[671.85,673.54,671.81,673.4101]]; IEX bars since 09:35: 15; QQQ now 673.81
+2026-11-10T14:50:45.848Z [open] DT3 plan {"side":"buy","qty":133,"stop":669.92,"target":712.71}
+2026-11-10T14:50:45.848Z [open] ORDER {"symbol":"QQQ","qty":"133","side":"buy","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"712.71"},"stop_loss":{"stop_price":"669.92"},"client_order_id":"dt3-2026-11-10"}
