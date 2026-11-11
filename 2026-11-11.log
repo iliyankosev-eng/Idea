@@ -1,0 +1,10 @@
+2026-11-11T14:45:23.039Z [open] start, PAPER trading
+2026-11-11T14:45:23.353Z [open] session 09:30-16:00; equity 103484.99, high-water 104121.49
+2026-11-11T14:45:23.914Z [open] news 2026-11-11T13:36:01Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Rise as Bessent Urges US-China to ‘De-Risk’— Alcon, CoreWeave, Telefonica Brasil in Focus (UPDATED)
+2026-11-11T14:45:23.914Z [open] news 2026-11-11T12:46:58Z Retail Pours Billions Into ETFs As Hedge Funds Go Underweight AI
+2026-11-11T14:45:23.914Z [open] news 2026-11-11T07:45:22Z ‘Sinking Under Water’: Americans Feel the Inflation Squeeze as Prices Outpace Wage Growth, Economist Says — Warns 50-Basis-Point Fed Hike Is Back on the Table
+2026-11-11T14:45:23.914Z [open] news 2026-11-11T06:19:23Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-11-11T14:45:23.914Z [open] news 2026-11-10T21:00:21Z Semiconductor Rally Defies Nvidia Scandal; Hot CPI; CoreWeave Earnings Ahead
+2026-11-11T14:50:46.309Z [open] DT3 data: SIP 09:30-09:34 [[687.28,687.97,686.99,687.44],[687.47,687.98,687.27,687.855],[687.824,688.55,687.2,688.44],[688.39,689.02,688.1,688.215],[688.2382,688.38,686.81,687.17]]; IEX bars since 09:35: 15; QQQ now 684.3
+2026-11-11T14:50:46.310Z [open] DT3 plan {"side":"sell","qty":109,"stop":689.02,"target":637.1}
+2026-11-11T14:50:46.310Z [open] ORDER {"symbol":"QQQ","qty":"109","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"637.10"},"stop_loss":{"stop_price":"689.02"},"client_order_id":"dt3-2026-11-11"}
