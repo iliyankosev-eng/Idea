@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { halted, orbPlan, rsiDecision, stopTouched } from "../src/bot/logic.js";
+import { bilTarget, halted, nbLeverage, nbOrders, noiseBand, orbPlan, rsiDecision, stopTouched } from "../src/bot/logic.js";
 import { loadMinuteBars } from "../src/data/intraday.js";
 import { dt3, dt3Late } from "../src/daytrade/dt.js";
 import { dt8 } from "../src/daytrade/dt78.js";
@@ -105,5 +105,50 @@ describe("fillAction (DT8 follow-up)", () => {
     expect(fillAction({ status: "partially_filled", qty: 65, filled: 26 }, 44, 0)).toEqual({ act: "give-up", missing: 39 });
     expect(fillAction({ status: "expired", qty: 66, filled: 0 }, 45, 0)).toEqual({ act: "resend", qty: 66 });
     expect(fillAction({ status: "canceled", qty: 10, filled: 10 }, 10, 5)).toEqual({ act: "done" });
+  });
+});
+
+describe("bot v2 logic", () => {
+  it("orbPlan: the leverage cap binds on a tight stop", () => {
+    const f = [0, 1, 2, 3, 4].map((i) => ({ o: 100 + 0.01 * i, h: 100.2, l: 99.9, c: 100.05 + 0.01 * i }));
+    expect(orbPlan(f, 100, 25_000, 4)!.qty).toBe(1000); // 1% risk would be 2500 shares; 4x cap = 1000
+    expect(orbPlan(f, 100, 25_000, 2)!.qty).toBe(500);
+  });
+  it("noiseBand: bands from max/min(open, prev close) and the average past move; VWAP is the trailing stop", () => {
+    const pm = Array(14).fill(0.01);
+    const base = { open: 100, prevClose: 102, pastMoves: pm, vwap: 101 };
+    expect(noiseBand({ ...base, price: 103.03 })).toEqual({ want: 1, ub: 103.02, lb: 99 });
+    expect(noiseBand({ ...base, price: 103.02 })!.want).toBe(0); // must be strictly above
+    expect(noiseBand({ ...base, price: 98.99 })!.want).toBe(-1);
+    expect(noiseBand({ ...base, price: 103.5, vwap: 104 })!.want).toBe(0); // above the band but below VWAP
+    expect(noiseBand({ ...base, price: 98.5, vwap: 98 })!.want).toBe(0);
+    expect(noiseBand({ ...base, pastMoves: Array(9).fill(0.01), price: 110 })).toBeNull();
+    expect(noiseBand({ ...base, pastMoves: [...Array(7).fill(0.01), ...Array(7).fill(0.03)], price: 104.03 })!.want).toBe(0); // sigma 2% -> ub 104.04
+  });
+  it("nbLeverage: 2% / 14-day vol, capped", () => {
+    const alt = (step: number) => Array.from({ length: 15 }, (_, i) => 100 * (1 + (i % 2 ? step : 0)));
+    expect(nbLeverage(alt(0.0001))).toBe(2);
+    const c = alt(0.03), r = c.slice(1).map((x, i) => x / c[i]! - 1), m = r.reduce((a, b) => a + b, 0) / 14, sd = Math.sqrt(r.reduce((a, b) => a + (b - m) ** 2, 0) / 13);
+    expect(nbLeverage(c)).toBeCloseTo(0.02 / sd, 12);
+    expect(nbLeverage(c)).toBeLessThan(1);
+    expect(nbLeverage(c.slice(1))).toBe(0);
+    expect(nbLeverage(alt(0.0001), 4)).toBe(4);
+  });
+  it("nbOrders: nothing when the side is right, close then open on a flip", () => {
+    expect(nbOrders(0, 0, 50)).toEqual([]);
+    expect(nbOrders(40, 1, 50)).toEqual([]);
+    expect(nbOrders(0, 1, 50)).toEqual([50]);
+    expect(nbOrders(0, -1, 50)).toEqual([-50]);
+    expect(nbOrders(40, 0, 50)).toEqual([-40]);
+    expect(nbOrders(40, -1, 50)).toEqual([-40, -50]);
+    expect(nbOrders(-40, 1, 50)).toEqual([40, 50]);
+    expect(nbOrders(-40, 1, 0)).toEqual([40]);
+  });
+  it("bilTarget: half of equity when DT8 is out, zero when in, no small adjustments", () => {
+    expect(bilTarget(false, 100_000, 91.5, 0)).toEqual({ target: 546, delta: 546 });
+    expect(bilTarget(false, 100_000, 91.5, 540)).toEqual({ target: 546, delta: 0 }); // 6 shares = $549 < 2%
+    expect(bilTarget(false, 100_000, 91.5, 500)).toEqual({ target: 546, delta: 46 }); // $4,209 > 2%
+    expect(bilTarget(true, 100_000, 91.5, 546)).toEqual({ target: 0, delta: -546 });
+    expect(bilTarget(true, 100_000, 91.5, 3)).toEqual({ target: 0, delta: -3 });
   });
 });

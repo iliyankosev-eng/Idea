@@ -1,6 +1,10 @@
 /**
- * Paper-trading bot: DT3 (opening-range breakout on QQQ, skipped on FOMC days) + DT8 (RSI(2) on SPY), 50% of equity each.
- * Usage: npx tsx src/bot/run.ts open|close|check   (GitHub Actions: .github/workflows/bot.yml)
+ * Paper-trading bot v2 (reports/bot-v2.md): DT3 (opening-range breakout on QQQ, skipped on FOMC days) on 25% of equity,
+ * noise band (signal on QQQ, traded in QQQM so that it never mixes with DT3's QQQ position) on 25%, DT8 (RSI(2) on SPY) on 50%,
+ * whose idle cash sits in BIL. Each intraday strategy is capped at 2x its capital; no new trades after a 15% drawdown.
+ * Usage: npx tsx src/bot/run.ts open|nb|close|check   (GitHub Actions: .github/workflows/bot.yml)
+ *  nb   : noise band check at every :00 and :30 from 10:00 to 15:30 New York. Start the job 2 minutes early (09:58, 10:28, ...):
+ *         it waits for the exact minute, because a 2-minute delay costs a third of the edge in the backtest.
  *  open : DT3 as tested in reports/bot-reality.md: the 09:30-09:34 opening range from SIP (the free plan gets SIP with a
  *         15-minute delay, so it is known at 09:50), entry at ~09:50 with a bracket order (stop at the range extreme, 10R target),
  *         no trade if the stop was already touched 09:35-09:50 (IEX real-time bars). Also logs, without trading, what the
@@ -17,7 +21,9 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { Alpaca } from "./alpaca.js";
 import { flatten } from "./flatten.js";
-import { dt8Leftover, fillAction, halted, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
+import { bilTarget, dt8Leftover, fillAction, halted, nbLeverage, nbOrders, noiseBand, orbPlan, rsiDecision, stopTouched, type Bar } from "./logic.js";
+
+const CAP_DT3 = 0.25, CAP_NB = 0.25, MAX_LEV = 2, MAX_DD = 0.15, NB_SYM = "QQQM", CASH_SYM = "BIL";
 
 const mode = process.argv[2] ?? "";
 const LOGDIR = process.env.BOT_LOG_DIR ?? "botlog";
@@ -40,7 +46,7 @@ async function waitUntil(m: number, s = 0, grace = 600): Promise<boolean> {
   }
 }
 const toMin = (x: string) => +x.slice(0, 2) * 60 + +x.slice(3, 5);
-type RawBar = { t: string; o: number; h: number; l: number; c: number };
+type RawBar = { t: string; o: number; h: number; l: number; c: number; v?: number };
 const nyMin = (b: RawBar) => ny(new Date(b.t)).min;
 const bar = (b: RawBar): Bar => ({ o: b.o, h: b.h, l: b.l, c: b.c });
 
@@ -62,7 +68,7 @@ async function dt3Plan(openMin: number, cap: number) {
   const px = Number((await api.latestTrade("QQQ")).p);
   log(`DT3 data: SIP 09:30-09:34 ${JSON.stringify(first5.map((b) => [b.o, b.h, b.l, b.c]))}; IEX bars since 09:35: ${after.length}; QQQ now ${px}`);
   if (first5.length !== 5) return { plan: null, why: `only ${first5.length} SIP opening bars` };
-  const plan = orbPlan(first5, px, cap);
+  const plan = orbPlan(first5, px, cap, MAX_LEV);
   if (!plan) return { plan: null, why: "doji first 5 minutes or the price is already beyond the stop" };
   if (stopTouched(after, plan.side, plan.stop)) return { plan: null, why: `stop ${plan.stop} already touched after 09:35` };
   return { plan, why: "" };
@@ -77,8 +83,8 @@ async function main() {
   if (paper) equity = Number((await api.account()).equity);
   state.highWater = Math.max(state.highWater, equity);
   if (paper) writeFileSync(STATE, JSON.stringify(state));
-  const stop = halted(equity, state.highWater);
-  log(`session ${cal.open}-${cal.close}; equity ${equity.toFixed(2)}, high-water ${state.highWater.toFixed(2)}${stop ? " -> HALTED (drawdown > 20%): no new trades" : ""}`);
+  const stop = halted(equity, state.highWater, MAX_DD);
+  log(`session ${cal.open}-${cal.close}; equity ${equity.toFixed(2)}, high-water ${state.highWater.toFixed(2)}${stop ? " -> HALTED (drawdown > 15%): no new trades" : ""}`);
 
   if (mode === "check") {
     // read-only look at the paper account the bot will trade in (no account number is logged)
@@ -101,16 +107,18 @@ async function main() {
       if (!acts.length) log("activity: no non-trade activities in the last 30 days");
     } catch (e) { log(`paper account not readable with these keys: ${e}`); }
     const t = ny();
-    if (t.min >= openMin + 21) { const r = await dt3Plan(openMin, 0.5 * equity); log(`DT3 now: ${r.plan ? JSON.stringify(r.plan) : "no trade, " + r.why}${fomc.has(today) ? " (FOMC day: would be skipped)" : ""}`); }
+    if (t.min >= openMin + 21) { const r = await dt3Plan(openMin, CAP_DT3 * equity); log(`DT3 now: ${r.plan ? JSON.stringify(r.plan) : "no trade, " + r.why}${fomc.has(today) ? " (FOMC day: would be skipped)" : ""}`); }
     else log("DT3 check needs the time after 09:51 New York");
     await dt8(equity, stop, false);
+    for (const sym of [NB_SYM, CASH_SYM]) try { const a = await api.asset(sym); log(`asset ${sym}: tradable ${a.tradable}, shortable ${a.shortable}, easy to borrow ${a.easy_to_borrow}, marginable ${a.marginable}`); } catch (e) { log(`asset ${sym} not readable: ${e}`); }
+    if (t.min >= 600 && closeMin === 960) { const m = Math.min(930, Math.floor(t.min / 30) * 30); try { const d = await nbDecision(m, await nbHistory(), equity); log(`NB now (check ${hhmm(m)}): ${d ? JSON.stringify(d) : "no decision (not enough data)"}`); } catch (e) { log(`NB check failed: ${e}`); } }
     return;
   }
 
   if (mode === "open") {
     const t = ny();
     if (t.min < openMin - 60 || t.min > openMin + 19) { log(`not the open window (New York ${hhmm(t.min)}), exit`); return; }
-    if (paper) { const left = await api.position("QQQ"); if (left) { log(`WARNING: QQQ position left from before (${left.qty}), closing it`); await flatten(api, "QQQ", sleep, log); } }
+    if (paper) for (const sym of ["QQQ", NB_SYM]) { const left = await api.position(sym); if (left) { log(`WARNING: ${sym} position left from before (${left.qty}), closing it`); await flatten(api, sym, sleep, log); } }
     if (paper) { // DT8: the last DT8 order was a sell but SPY shares are still held (partial fill of the close order) -> sell the rest now
       const spy = await api.position("SPY");
       const last = ((await api.closedOrders(new Date(Date.now() - 60 * 86400_000).toISOString())) as { client_order_id: string; filled_qty: string }[]).filter((o) => o.client_order_id.startsWith("dt8-") && Number(o.filled_qty) > 0).at(-1);
@@ -127,15 +135,39 @@ async function main() {
         const iex = (await api.bars("QQQ", "1Min", `${today}T12:00:00Z`, new Date().toISOString(), "iex")) as RawBar[];
         const f5 = iex.filter((b) => { const m = nyMin(b); return m >= openMin && m < openMin + 5; }).map(bar);
         const px = Number((await api.latestTrade("QQQ")).p);
-        log(`shadow DT3 09:35 from IEX (not traded): ${f5.length === 5 ? JSON.stringify(orbPlan(f5, px, 0.5 * equity)) : `only ${f5.length} bars`}`);
+        log(`shadow DT3 09:35 from IEX (not traded): ${f5.length === 5 ? JSON.stringify(orbPlan(f5, px, CAP_DT3 * equity, MAX_LEV)) : `only ${f5.length} bars`}`);
       } catch (e) { log(`shadow failed: ${e}`); }
     }
     if (!(await waitUntil(openMin + 20, 45, 240))) { log("too late for the 09:50 entry, DT3 skipped today"); return; }
-    const r = await dt3Plan(openMin, 0.5 * equity);
+    const r = await dt3Plan(openMin, CAP_DT3 * equity);
     if (!r.plan) { log(`DT3: no trade, ${r.why}`); return; }
     log(`DT3 plan ${JSON.stringify(r.plan)}`);
     await api.order({ symbol: "QQQ", qty: String(r.plan.qty), side: r.plan.side, type: "market", time_in_force: "day", order_class: "bracket",
       take_profit: { limit_price: r.plan.target.toFixed(2) }, stop_loss: { stop_price: r.plan.stop.toFixed(2) }, client_order_id: `dt3-${today}` });
+    return;
+  }
+
+  if (mode === "nb") {
+    const t = ny(), sec = t.min * 60 + t.sec, m = Math.round(sec / 1800) * 30;
+    if (m < 600 || m > 930 || Math.abs(sec - m * 60) > 240) { log(`not a noise-band check time (New York ${hhmm(t.min)}), exit`); return; }
+    if (closeMin !== 16 * 60) { log(`early close at ${cal.close} -> noise band skipped`); return; }
+    const hist = await nbHistory(); // before the wait: the slow part
+    if (!(await waitUntil(m, 1, 200))) { log(`too late for the ${hhmm(m)} check, skipped`); return; }
+    const d = await nbDecision(m, hist, equity);
+    if (!d) { log(`NB ${hhmm(m)}: no decision (not enough data)`); return; }
+    const cur = paper ? Number((await api.position(NB_SYM))?.qty ?? 0) : 0;
+    const want = stop && Math.sign(cur) !== d.want ? 0 : d.want; // halted: exits only
+    const orders = nbOrders(cur, want, d.qty);
+    log(`NB ${hhmm(m)}: ${JSON.stringify(d)}; ${NB_SYM} position ${cur}${stop ? " (halted: exits only)" : ""} -> orders ${JSON.stringify(orders)}`);
+    for (let k = 0; k < orders.length; k++) {
+      const q = orders[k]!;
+      await api.order({ symbol: NB_SYM, qty: String(Math.abs(q)), side: q > 0 ? "buy" : "sell", type: "market", time_in_force: "day", client_order_id: `nb-${today}-${hhmm(m).replace(":", "")}-${k}` });
+      if (paper && k < orders.length - 1) { // wait until the closing order is filled before opening the other side
+        let flat = false;
+        for (let i = 0; i < 20 && !flat; i++) { await sleep(1500); flat = Number((await api.position(NB_SYM))?.qty ?? 0) === 0; }
+        if (!flat) { log(`ERROR: ${NB_SYM} not flat after the closing order, the new side is not opened`); process.exitCode = 1; return; }
+      }
+    }
     return;
   }
 
@@ -149,16 +181,30 @@ async function main() {
         if (q) await flatten(api, "QQQ", sleep, log);
         else { await api.cancelOpenOrders("QQQ"); log("no QQQ position to close"); }
       } catch (e) { log(`QQQ flatten ERROR ${e}`); process.exitCode = 1; }
+      try { // noise band: also flat overnight
+        const q = paper ? await api.position(NB_SYM) : null;
+        if (q) await flatten(api, NB_SYM, sleep, log); else log(`no ${NB_SYM} position to close`);
+      } catch (e) { log(`${NB_SYM} flatten ERROR ${e}`); process.exitCode = 1; }
     } else { log("missed the QQQ flatten window"); process.exitCode = 1; }
     // DT8 right after, with a plain market order (paper fills market-on-close orders only partly or not at all:
     // 20.10 26 of 65, 30.10 0 of 66 expired); partial fills are followed up until 45 s before the close
     const t2 = ny();
     if (t2.min * 60 + t2.sec <= (closeMin - 2) * 60) {
       try {
-        const o = await dt8(equity, stop, true);
-        if (o && paper) await followDt8(o, closeMin);
+        const r = await dt8(equity, stop, true);
+        if (r.order && paper) await followDt8(r.order, closeMin);
+        try { // idle DT8 cash -> BIL
+          const px = Number((await api.latestTrade(CASH_SYM)).p), held = paper ? Number((await api.position(CASH_SYM))?.qty ?? 0) : 0;
+          const b = bilTarget(r.inSpy, equity, px, held);
+          log(`${CASH_SYM}: price ${px}, held ${held}, target ${b.target}, order ${b.delta}`);
+          if (b.delta !== 0) await api.order({ symbol: CASH_SYM, qty: String(Math.abs(b.delta)), side: b.delta > 0 ? "buy" : "sell", type: "market", time_in_force: "day", client_order_id: `bil-${today}` });
+        } catch (e) { log(`${CASH_SYM} ERROR ${e}`); process.exitCode = 1; }
       } catch (e) { log(`DT8 ERROR ${e}`); process.exitCode = 1; }
     } else log("missed the DT8 decision window");
+    if (paper) { // alarm: nothing intraday may stay open (a failed run opens a GitHub issue, see bot.yml)
+      await sleep(5000);
+      for (const sym of ["QQQ", NB_SYM]) { const left = await api.position(sym); if (left && Number(left.qty) !== 0) { log(`ALARM: ${sym} ${left.qty} still open after the close job`); process.exitCode = 1; } }
+    }
     return;
   }
   log(`unknown mode "${mode}" (use open, close or check)`);
@@ -166,7 +212,7 @@ async function main() {
 }
 
 /** DT8: RSI(2) < 10 and above SMA(200) -> buy at the close; in position and above SMA(5) -> sell at the close. */
-async function dt8(equity: number, stop: boolean, trade: boolean): Promise<{ id: string; side: "buy" | "sell"; qty: number } | null> {
+async function dt8(equity: number, stop: boolean, trade: boolean): Promise<{ order: { id: string; side: "buy" | "sell"; qty: number } | null; inSpy: boolean }> {
   const hist = (await api.bars("SPY", "1Day", new Date(Date.now() - 420 * 86400_000).toISOString().slice(0, 10), `${today}T00:00:00Z`, "sip", "all")) as RawBar[];
   const closes = hist.filter((b) => b.t.slice(0, 10) < today).map((b) => b.c);
   const px = Number((await api.latestTrade("SPY")).p);
@@ -174,12 +220,43 @@ async function dt8(equity: number, stop: boolean, trade: boolean): Promise<{ id:
   const inPos = !!pos && Number(pos.qty) > 0;
   const d = rsiDecision([...closes, px], inPos);
   log(`DT8: ${closes.length} daily closes (last ${hist.at(-1)?.t?.slice(0, 10)}), SPY now ${px}, in position ${inPos}, decision ${d}`);
-  if (!trade) return null;
+  if (!trade) return { order: null, inSpy: inPos };
   const o = d === "buy" && !stop ? { id: `dt8-buy-${today}`, side: "buy" as const, qty: Math.floor((0.5 * equity) / px) }
     : d === "sell" && pos ? { id: `dt8-sell-${today}`, side: "sell" as const, qty: Number(pos.qty) } : null;
-  if (!o || !(o.qty > 0)) return null;
+  if (!o || !(o.qty > 0)) return { order: null, inSpy: inPos };
   await api.order({ symbol: "SPY", qty: String(o.qty), side: o.side, type: "market", time_in_force: "day", client_order_id: o.id });
-  return o;
+  return { order: o, inSpy: o.side === "buy" };
+}
+
+// ---------------- noise band ----------------
+type MinBar = { min: number; o: number; h: number; l: number; c: number; v: number };
+/** SIP minute bars of the last weeks (regular session), by New York date. SIP is delayed 15 minutes on the free plan. */
+async function nbHistory(): Promise<Map<string, MinBar[]>> {
+  const raw = (await api.bars("QQQ", "1Min", new Date(Date.now() - 32 * 86400_000).toISOString(), new Date(Date.now() - 15.5 * 60_000).toISOString(), "sip")) as RawBar[];
+  const by = new Map<string, MinBar[]>();
+  for (const b of raw) { const t = ny(new Date(b.t)); if (t.min < 570 || t.min >= 960) continue; if (!by.has(t.date)) by.set(t.date, []); by.get(t.date)!.push({ min: t.min, o: b.o, h: b.h, l: b.l, c: b.c, v: b.v ?? 0 }); }
+  return by;
+}
+/** The decision of the check at minute m: bands from the last 14 sessions, today's open from SIP, VWAP from SIP + (scaled) IEX bars, price = latest trade. */
+async function nbDecision(m: number, hist: Map<string, MinBar[]>, equity: number) {
+  const past = [...hist.entries()].filter(([d, bs]) => d < today && bs[0]!.min === 570).sort(([a], [b]) => (a < b ? -1 : 1)).slice(-15);
+  const sipToday = hist.get(today) ?? [];
+  if (past.length < 15 || sipToday[0]?.min !== 570) return null;
+  const closes = past.map(([, bs]) => bs[bs.length - 1]!.c);
+  const pastMoves = past.slice(1).flatMap(([, bs]) => { const b = bs.find((x) => x.min === m - 1); return b ? [Math.abs(b.c / bs[0]!.o - 1)] : []; });
+  const iex = ((await api.bars("QQQ", "1Min", `${today}T12:00:00Z`, new Date().toISOString(), "iex")) as RawBar[]).map((b) => ({ min: ny(new Date(b.t)).min, o: b.o, h: b.h, l: b.l, c: b.c, v: b.v ?? 0 })).filter((b) => b.min >= 570 && b.min < m);
+  const sipMin = new Set(sipToday.map((b) => b.min));
+  const overlapIex = iex.filter((b) => sipMin.has(b.min)).reduce((a, b) => a + b.v, 0), overlapSip = sipToday.filter((b) => b.min < m).reduce((a, b) => a + b.v, 0);
+  const scale = overlapIex > 0 ? overlapSip / overlapIex : 1; // IEX carries a few percent of the volume
+  let pv = 0, v = 0;
+  for (const b of sipToday) if (b.min < m) { pv += ((b.h + b.l + b.c) / 3) * b.v; v += b.v; }
+  for (const b of iex) if (!sipMin.has(b.min)) { pv += ((b.h + b.l + b.c) / 3) * b.v * scale; v += b.v * scale; }
+  const price = Number((await api.latestTrade("QQQ")).p), px = Number((await api.latestTrade(NB_SYM)).p);
+  const nb = noiseBand({ open: sipToday[0]!.o, prevClose: closes[closes.length - 1]!, pastMoves, price, vwap: v > 0 ? pv / v : NaN });
+  if (!nb) return null;
+  const lev = nbLeverage(closes, MAX_LEV);
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  return { want: nb.want, price, ub: r2(nb.ub), lb: r2(nb.lb), vwap: r2(pv / v), lev: r2(lev), qty: px > 0 ? Math.floor((lev * CAP_NB * equity) / px) : 0, days: pastMoves.length };
 }
 
 /** Follow a DT8 order until it is filled; send the rest again if paper cancels/expires it partly filled (see fillAction). */
