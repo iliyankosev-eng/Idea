@@ -135,3 +135,9 @@
 2026-11-12T20:55:08.600Z [close] BIL: price 91.5, held 0, target 563, order 563
 2026-11-12T20:55:08.601Z [close] ORDER {"symbol":"BIL","qty":"563","side":"buy","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-12"}
 2026-11-12T20:55:13.899Z [close] ALARM: QQQ 48 still open after the close job
+2026-11-12T20:55:31.977Z [close] start, PAPER trading
+2026-11-12T20:55:32.081Z [close] session 09:30-16:00; equity 103074.94, high-water 104121.49
+2026-11-12T20:55:32.141Z [close] no QQQ position to close
+2026-11-12T20:55:32.152Z [close] no QQQM position to close
+2026-11-12T20:55:32.492Z [close] DT8: 290 daily closes (last 2026-11-11), SPY now 756.315, in position false, decision none
+2026-11-12T20:55:32.573Z [close] BIL: price 91.5, held 563, target 563, order 0
