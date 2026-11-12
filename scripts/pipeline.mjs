@@ -168,7 +168,7 @@ async function binanceMonths() {
 
 // ---------- Alpaca US stocks ----------
 // Indices, large caps, gold/silver ETFs, and four large caps that did poorly in 2016-2026 (against survivorship bias).
-const ALPACA = { tickers: ["SPY", "QQQ", "IWM", "DIA", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AMD", "GLD", "SLV", "INTC", "BA", "XOM", "PFE"], from: "2016-01" };
+const ALPACA = { tickers: ["SPY", "QQQ", "IWM", "DIA", "BIL", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AMD", "GLD", "SLV", "INTC", "BA", "XOM", "PFE"], from: "2016-01" };
 const ALPACA_HEADERS = { "APCA-API-KEY-ID": process.env.ALPACA_KEY_ID ?? "", "APCA-API-SECRET-KEY": process.env.ALPACA_SECRET_KEY ?? "" };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
