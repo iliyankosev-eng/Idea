@@ -27,7 +27,7 @@ const sd = (xs: readonly number[]) => { const m = xs.reduce((a, b) => a + b, 0) 
 const linked = (ss: readonly Session[], d: number) => d > 0 && ss[d]!.minute[0] === 570 && (!ss[d]!.prevDate || ss[d]!.prevDate === ss[d - 1]!.date);
 
 // ---------------- DT1: Noise Area intraday momentum ----------------
-export interface DT1Opts { readonly dynamic: boolean; readonly execNextOpen: boolean; readonly cost: number; /** leverage cap (default 4) */ readonly maxLev?: number; /** flatten at the open of this minute instead of the close (e.g. 955) */ readonly exitMin?: number }
+export interface DT1Opts { readonly dynamic: boolean; readonly execNextOpen: boolean; readonly cost: number; /** leverage cap (default 4) */ readonly maxLev?: number; /** flatten at the open of this minute instead of the close (e.g. 955) */ readonly exitMin?: number; /** the check sees the price `delay` minutes late and trades one minute after that (bot latency) */ readonly delay?: number }
 export function dt1(ss: readonly Session[], o: DT1Opts): DayRet[] {
   const out: DayRet[] = [];
   // per session: minute -> |close/open - 1|
@@ -54,11 +54,12 @@ export function dt1(ss: readonly Session[], o: DT1Opts): DayRet[] {
       if (vals.length < 10) continue;
       const sigma = vals.reduce((a, b) => a + b, 0) / vals.length;
       const ub = Math.max(open, prevClose) * (1 + sigma), lb = Math.min(open, prevClose) * (1 - sigma);
-      const i = barBefore(s, m);
+      const md = m + (o.delay ?? 0);
+      const i = barBefore(s, md);
       if (i < 0) continue;
       const p = s.c[i]!;
-      const vw = vwapBefore(s, m);
-      const exec = o.execNextOpen ? (() => { const j = barAtOrAfter(s, m); return j >= 0 ? s.o[j]! : p; })() : p;
+      const vw = vwapBefore(s, md);
+      const exec = o.execNextOpen ? (() => { const j = barAtOrAfter(s, md); return j >= 0 ? s.o[j]! : p; })() : p;
       // Entry above UB / below LB, trailing stop max(UB, VWAP) / min(LB, VWAP). Applied together at each check, the stop
       // overrides the entry, so the position is: long if p > max(UB, VWAP), short if p < min(LB, VWAP), else flat.
       const want = p > Math.max(ub, vw) ? 1 : p < Math.min(lb, vw) ? -1 : 0;
