@@ -123,3 +123,15 @@
 2026-11-12T20:28:16.750Z [nb] start, PAPER trading
 2026-11-12T20:28:16.856Z [nb] session 09:30-16:00; equity 103095.27, high-water 104121.49
 2026-11-12T20:30:02.895Z [nb] NB 15:30: {"want":0,"price":687.25,"ub":697.74,"lb":673.04,"vwap":688.36,"lev":0.81,"qty":73,"days":14}; QQQM position 0 -> orders []
+2026-11-12T20:50:28.585Z [close] start, PAPER trading
+2026-11-12T20:50:29.132Z [close] session 09:30-16:00; equity 103092.51, high-water 104121.49
+2026-11-12T20:55:00.884Z [close] CANCEL 316d4a52-6e4f-4c8e-bd35-cfcfb6799d4e sell limit
+2026-11-12T20:55:03.053Z [close] CLOSE QQQ
+2026-11-12T20:55:03.288Z [close] QQQ: shares still held for orders (attempt 1 of 6), retrying
+2026-11-12T20:55:03.540Z [close] CANCEL already pending: 316d4a52-6e4f-4c8e-bd35-cfcfb6799d4e sell limit
+2026-11-12T20:55:07.734Z [close] CLOSE QQQ
+2026-11-12T20:55:08.037Z [close] no QQQM position to close
+2026-11-12T20:55:08.461Z [close] DT8: 290 daily closes (last 2026-11-11), SPY now 756.585, in position false, decision none
+2026-11-12T20:55:08.600Z [close] BIL: price 91.5, held 0, target 563, order 563
+2026-11-12T20:55:08.601Z [close] ORDER {"symbol":"BIL","qty":"563","side":"buy","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-12"}
+2026-11-12T20:55:13.899Z [close] ALARM: QQQ 48 still open after the close job
