@@ -72,3 +72,6 @@
 2026-11-12T09:04:35.620Z [check] DT8: 290 daily closes (last 2026-11-11), SPY now 760.13, in position false, decision none
 2026-11-12T09:04:35.647Z [check] asset QQQM: tradable true, shortable true, easy to borrow true, marginable true
 2026-11-12T09:04:35.674Z [check] asset BIL: tradable true, shortable true, easy to borrow true, marginable true
+2026-11-12T14:28:17.854Z [nb] start, PAPER trading
+2026-11-12T14:28:17.959Z [nb] session 09:30-16:00; equity 102990.63, high-water 104121.49
+2026-11-12T14:28:17.960Z [nb] not a noise-band check time (New York 09:28), exit
