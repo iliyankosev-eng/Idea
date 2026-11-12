@@ -138,7 +138,7 @@ async function main() {
         log(`shadow DT3 09:35 from IEX (not traded): ${f5.length === 5 ? JSON.stringify(orbPlan(f5, px, CAP_DT3 * equity, MAX_LEV)) : `only ${f5.length} bars`}`);
       } catch (e) { log(`shadow failed: ${e}`); }
     }
-    if (!(await waitUntil(openMin + 20, 45, 240))) { log("too late for the 09:50 entry, DT3 skipped today"); return; }
+    if (!(await waitUntil(openMin + 20, 35, 240))) { log("too late for the 09:50 entry, DT3 skipped today"); return; }
     const r = await dt3Plan(openMin, CAP_DT3 * equity);
     if (!r.plan) { log(`DT3: no trade, ${r.why}`); return; }
     log(`DT3 plan ${JSON.stringify(r.plan)}`);

@@ -67,6 +67,15 @@ out.push("## T2 и T5: дневната част", "", ...HEAD, line("I0: сам
   `- **T5 (таван 2×):** ${t5 ? "ПРИЕТО" : "НЕ Е ПРИЕТО"} (Sharpe ${fmt(P(I2).sharpe, 2)} срещу ${fmt(P(I1).sharpe, 2)}; допустим спад 0.05).`, "");
 const INTRA = t2 ? (t5 ? I2 : I1) : (t5 ? mix([[1, d2]]) : I0);
 
+// ---------- cost sensitivity of the intraday sleeve ----------
+out.push("### Чувствителност към разходите (дневната част I2, описателно)", "", "В първите 7 реални сделки на бота стоповете се изпълниха средно с около 5 цента по-лошо от нивото (`reports/tracking.md`); това отговаря на около $0.015–0.02 на акция и страна.", "", "| Разход на акция и страна | DT3 (2×) | Noise band (2×) | ½ + ½: год. · Sharpe · макс. спад |", "| --- | --- | --- | --- |");
+for (const c of [0.0045, 0.01, 0.02, 0.03]) {
+  const a = ser(dt3Late(qqq, c, 20, 2).map((x) => (fomc.has(x.day) ? { ...x, r: 0 } : x))), b = ser(dt1(qqq, { dynamic: true, execNextOpen: true, cost: c, maxLev: 2, exitMin: 955 }));
+  const pa = P(mix([[1, a]])), pb = P(mix([[1, b]])), pm = P(mix([[0.5, a], [0.5, b]]));
+  out.push(`| $${c} | ${fmt(100 * pa.cagr, 1)}% | ${fmt(100 * pb.cagr, 1)}% | ${fmt(100 * pm.cagr, 1)}% · ${fmt(pm.sharpe, 2)} · ${fmt(100 * pm.mdd, 1)}% |`);
+}
+out.push("");
+
 // ---------- T6: DT8 on QQQ ----------
 const e5spy = dt8At("SPY", spy, 5), e5qqq = dt8At("QQQ", qqq, 5), e20spy = dt8At("SPY", spy, 20);
 const E0 = mix([[1, e5spy.r]]), EQ = mix([[1, e5qqq.r]]), E1 = mix([[0.5, e5spy.r], [0.5, e5qqq.r]]);

@@ -239,6 +239,15 @@ async function alpaca() {
       if (added % 20 === 0) write("intraday/alpaca/manifest.json", JSON.stringify(manifest, null, 1) + "\n"); // progress is never lost
     }
     if (stopped) break;
+    if (PM_TICKERS.has(tk)) { // the current month so far, refreshed every run (weekly bot-vs-backtest report); not in the manifest,
+      const cur = yesterday.slice(0, 7); // so the complete month is downloaded again by the loop above once it is over
+      if (cur > months[months.length - 1]) {
+        const raw = await alpacaBars(tk, "1Min", monthBoundsUtc(cur).start, `${yesterday}T23:59:59Z`, "raw");
+        const r = normalizeAlpacaBars(raw, cur);
+        if (r.rows > 0) write(`intraday/alpaca/${tk}/1m/${cur}.csv.gz`, gzipSync(r.csv, { level: 9 }));
+        summary.push(`alpaca ${tk} ${cur} (partial): ${r.rows} rows, ${r.days} days`);
+      }
+    }
   }
   const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
   write("intraday/alpaca/manifest.json", JSON.stringify(sorted, null, 1) + "\n");
