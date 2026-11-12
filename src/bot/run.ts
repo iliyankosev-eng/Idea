@@ -203,8 +203,12 @@ async function main() {
       } catch (e) { log(`DT8 ERROR ${e}`); process.exitCode = 1; }
     } else log("missed the DT8 decision window");
     if (paper) { // alarm: nothing intraday may stay open (a failed run opens a GitHub issue, see bot.yml)
-      await sleep(5000);
-      for (const sym of ["QQQ", NB_SYM]) { const left = await api.position(sym); if (left && Number(left.qty) !== 0) { log(`ALARM: ${sym} ${left.qty} still open after the close job`); process.exitCode = 1; } }
+      // poll up to ~60 s: on 12.11 a market close filled later than 5 s after it was sent and the alarm fired although nothing stayed open
+      for (const sym of ["QQQ", NB_SYM]) {
+        let left = await api.position(sym);
+        for (let k = 0; k < 12 && left && Number(left.qty) !== 0; k++) { await sleep(5000); left = await api.position(sym); }
+        if (left && Number(left.qty) !== 0) { log(`ALARM: ${sym} ${left.qty} still open after the close job`); process.exitCode = 1; }
+      }
     }
     return;
   }
