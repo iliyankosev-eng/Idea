@@ -173,7 +173,8 @@ async function main() {
 
   if (mode === "close") {
     const t = ny();
-    if (t.min < closeMin - 50 || t.min > closeMin - 8) { log(`not the close window (New York ${hhmm(t.min)}, close ${cal.close}), exit`); return; }
+    // a backup start at 15:55 (cron-job.org) must still flatten and run DT8, so the job may start until close - 4
+    if (t.min < closeMin - 50 || t.min > closeMin - 4) { log(`not the close window (New York ${hhmm(t.min)}, close ${cal.close}), exit`); return; }
     // DT3 never holds overnight: flatten QQQ 5 minutes before the close
     if (await waitUntil(closeMin - 5, 0, 240)) {
       try { // an error here must not stop DT8 below (2026-11-03: the close failed and DT8 never ran)
