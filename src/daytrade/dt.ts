@@ -27,7 +27,7 @@ const sd = (xs: readonly number[]) => { const m = xs.reduce((a, b) => a + b, 0) 
 const linked = (ss: readonly Session[], d: number) => d > 0 && ss[d]!.minute[0] === 570 && (!ss[d]!.prevDate || ss[d]!.prevDate === ss[d - 1]!.date);
 
 // ---------------- DT1: Noise Area intraday momentum ----------------
-export interface DT1Opts { readonly dynamic: boolean; readonly execNextOpen: boolean; readonly cost: number }
+export interface DT1Opts { readonly dynamic: boolean; readonly execNextOpen: boolean; readonly cost: number; /** leverage cap (default 4) */ readonly maxLev?: number; /** flatten at the open of this minute instead of the close (e.g. 955) */ readonly exitMin?: number }
 export function dt1(ss: readonly Session[], o: DT1Opts): DayRet[] {
   const out: DayRet[] = [];
   // per session: minute -> |close/open - 1|
@@ -39,7 +39,7 @@ export function dt1(ss: readonly Session[], o: DT1Opts): DayRet[] {
     const open = s.o[0]!, prevClose = closes[d - 1]!;
     const rets: number[] = [];
     for (let k = d - 14; k < d; k++) rets.push(closes[k]! / closes[k - 1]! - 1);
-    const lev = o.dynamic ? Math.min(4, 0.02 / sd(rets)) : 1;
+    const lev = o.dynamic ? Math.min(o.maxLev ?? 4, 0.02 / sd(rets)) : 1;
     const q = lev / open; // shares per unit of capital
     const last = s.minute[s.minute.length - 1]!;
     let pos = 0, entry = 0, pnl = 0, n = 0;
@@ -64,7 +64,7 @@ export function dt1(ss: readonly Session[], o: DT1Opts): DayRet[] {
       const want = p > Math.max(ub, vw) ? 1 : p < Math.min(lb, vw) ? -1 : 0;
       if (want !== pos) trade(want, exec);
     }
-    if (pos !== 0) trade(0, s.c[s.c.length - 1]!);
+    if (pos !== 0) { const j = o.exitMin !== undefined ? s.minute.indexOf(o.exitMin) : -1; trade(0, j >= 0 ? s.o[j]! : s.c[s.c.length - 1]!); }
     out.push({ day: s.date, r: pnl, trades: n });
   }
   return out;
@@ -122,7 +122,7 @@ export function dt3(ss: readonly Session[], cost: number): DayRet[] {
  * so the opening range 09:30-09:34 from SIP is known at 09:50. Entry at the open of minute 09:30 + e; the day is skipped
  * if the stop was already touched between 09:35 and the entry. e = 5 is exactly dt3().
  */
-export function dt3Late(ss: readonly Session[], cost: number, e: number): DayRet[] {
+export function dt3Late(ss: readonly Session[], cost: number, e: number, maxLev = 4): DayRet[] {
   return ss.map((s) => {
     const none = { day: s.date, r: 0, trades: 0 };
     if (s.minute[0] !== 570 || s.minute[4] !== 574) return none;
@@ -135,7 +135,7 @@ export function dt3Late(ss: readonly Session[], cost: number, e: number): DayRet
     for (let i = 5; i < i0; i++) if (dir === 1 ? s.l[i]! <= stop : s.h[i]! >= stop) return none;
     const entry = s.o[i0]!, risk = dir * (entry - stop);
     if (!(risk > 0)) return none;
-    const target = entry + dir * 10 * risk, q = Math.min(0.01 / risk, 4 / entry);
+    const target = entry + dir * 10 * risk, q = Math.min(0.01 / risk, maxLev / entry);
     let exit = s.c[s.c.length - 1]!;
     for (let i = i0; i < s.minute.length; i++) {
       if (dir * (s.o[i]! - stop) <= 0 && i > i0) { exit = s.o[i]!; break; }
