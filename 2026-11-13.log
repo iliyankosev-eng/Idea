@@ -52,3 +52,16 @@
 2026-11-13T20:28:21.374Z [nb] start, PAPER trading
 2026-11-13T20:28:21.678Z [nb] session 09:30-16:00; equity 103294.90, high-water 104121.49
 2026-11-13T20:30:02.374Z [nb] NB 15:30: {"want":0,"price":678.84,"ub":696.17,"lb":680.54,"vwap":677.58,"lev":0.81,"qty":74,"days":14}; QQQM position 0 -> orders []
+2026-11-13T20:50:24.898Z [close] start, PAPER trading
+2026-11-13T20:50:25.606Z [close] session 09:30-16:00; equity 103234.57, high-water 104121.49
+2026-11-13T20:55:01.668Z [close] CANCEL a974ed5a-6677-4a47-a52b-86e0a324f988 buy limit
+2026-11-13T20:55:03.830Z [close] CLOSE QQQ
+2026-11-13T20:55:03.919Z [close] QQQ: shares still held for orders (attempt 1 of 6), retrying
+2026-11-13T20:55:03.993Z [close] CANCEL already pending: a974ed5a-6677-4a47-a52b-86e0a324f988 buy limit
+2026-11-13T20:55:08.220Z [close] CLOSE QQQ
+2026-11-13T20:55:08.460Z [close] QQQ: shares still held for orders (attempt 2 of 6), retrying
+2026-11-13T20:55:08.536Z [close] CANCEL already pending: a974ed5a-6677-4a47-a52b-86e0a324f988 buy limit
+2026-11-13T20:55:14.759Z [close] CLOSE QQQ
+2026-11-13T20:55:15.063Z [close] no QQQM position to close
+2026-11-13T20:55:15.510Z [close] DT8: 290 daily closes (last 2026-11-12), SPY now 753.815, in position false, decision none
+2026-11-13T20:55:15.662Z [close] BIL: price 91.53, held 563, target 563, order 0
