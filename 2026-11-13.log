@@ -1,3 +1,13 @@
 2026-11-13T14:28:22.128Z [nb] start, PAPER trading
 2026-11-13T14:28:22.343Z [nb] session 09:30-16:00; equity 103085.68, high-water 104121.49
 2026-11-13T14:28:22.343Z [nb] not a noise-band check time (New York 09:28), exit
+2026-11-13T14:45:22.147Z [open] start, PAPER trading
+2026-11-13T14:45:22.324Z [open] session 09:30-16:00; equity 103080.05, high-water 104121.49
+2026-11-13T14:45:22.622Z [open] news 2026-11-13T14:37:28Z Nvidia Crisis Fails to Stop ETF Buying Frenzy: VOO, QQQ, SOXL Leads $37.5B ETF Inflow Surge
+2026-11-13T14:45:22.622Z [open] news 2026-11-13T13:40:44Z Stock Market Today: Dow Jones, S&P 500, Nasdaq 100  Futures Rise as Nvidia CEO Exit Remains in Focus— CSCO, AMAT, NU in Focus(UPDATED)
+2026-11-13T14:45:22.622Z [open] news 2026-11-13T06:26:11Z Stock Market: Will S&P 500 Open Up or Down Today?
+2026-11-13T14:45:22.622Z [open] news 2026-11-12T22:56:23Z TQQQ ETF Barely Outpaces QQQ Despite Its 3X Leverage
+2026-11-13T14:45:22.622Z [open] news 2026-11-12T22:30:18Z AOC Says Five Guys in Tuxedos Shouldn’t Control the Economy: ‘We Need to Check These Guys Power’
+2026-11-13T14:50:36.296Z [open] DT3 data: SIP 09:30-09:34 [[688.51,688.75,686.24,686.25],[686.25,688.24,686.2,687.925],[688.02,688.38,687.515,688.02],[688.04,688.2892,687.56,688.27],[688.3,688.33,686.35,686.385]]; IEX bars since 09:35: 15; QQQ now 682.61
+2026-11-13T14:50:36.296Z [open] DT3 plan {"side":"sell","qty":41,"stop":688.75,"target":621.21}
+2026-11-13T14:50:36.297Z [open] ORDER {"symbol":"QQQ","qty":"41","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"621.21"},"stop_loss":{"stop_price":"688.75"},"client_order_id":"dt3-2026-11-13"}
