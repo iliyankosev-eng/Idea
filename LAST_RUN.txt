@@ -1,20 +1,20 @@
-2026-11-13T13:15:34.931Z
-coinmetrics btc: 5962 days, 2010-07-18 .. 2026-11-12
-coinmetrics eth: 4115 days, 2015-08-08 .. 2026-11-12
-coinmetrics ltc: 4974 days, 2013-04-01 .. 2026-11-12
-coinmetrics xrp: 4473 days, 2014-08-15 .. 2026-11-12
-coinmetrics doge: 4677 days, 2014-01-23 .. 2026-11-12
-coinmetrics ada: 3269 days, 2017-12-01 .. 2026-11-12
-coinmetrics bnb: 3408 days, 2017-07-15 .. 2026-11-12
-coinmetrics sol: 2408 days, 2020-04-10 .. 2026-11-12
-fred DGS10: 16921 rows, last 2026-11-10
-fred DTB3: 19007 rows, last 2026-11-10
-yahoo GLD: 5531 days, 2004-11-18 .. 2026-11-12, 0 empty skipped
-yahoo SLV: 5169 days, 2006-04-28 .. 2026-11-12, 0 empty skipped
-yahoo SPY: 8506 days, 1993-01-29 .. 2026-11-12, 0 empty skipped
+2026-11-14T12:19:52.720Z
+coinmetrics btc: 5963 days, 2010-07-18 .. 2026-11-13
+coinmetrics eth: 4116 days, 2015-08-08 .. 2026-11-13
+coinmetrics ltc: 4975 days, 2013-04-01 .. 2026-11-13
+coinmetrics xrp: 4474 days, 2014-08-15 .. 2026-11-13
+coinmetrics doge: 4678 days, 2014-01-23 .. 2026-11-13
+coinmetrics ada: 3270 days, 2017-12-01 .. 2026-11-13
+coinmetrics bnb: 3409 days, 2017-07-15 .. 2026-11-13
+coinmetrics sol: 2409 days, 2020-04-10 .. 2026-11-13
+fred DGS10: 16923 rows, last 2026-11-12
+fred DTB3: 19009 rows, last 2026-11-12
+yahoo GLD: 5532 days, 2004-11-18 .. 2026-11-13, 0 empty skipped
+yahoo SLV: 5170 days, 2006-04-28 .. 2026-11-13, 0 empty skipped
+yahoo SPY: 8507 days, 1993-01-29 .. 2026-11-13, 0 empty skipped
 binance: not available: PAXGUSDT/1m/2020-01, PAXGUSDT/1m/2020-02, PAXGUSDT/1m/2020-03, PAXGUSDT/1m/2020-04, PAXGUSDT/1m/2020-05, PAXGUSDT/1m/2020-06, PAXGUSDT/1m/2020-07
 binance: 0 new months, 239 total; months with missing minutes: BTCUSDT/1m/2020-02: 414; BTCUSDT/1m/2020-03: 128; BTCUSDT/1m/2020-04: 150; BTCUSDT/1m/2020-06: 210; BTCUSDT/1m/2020-11: 60; BTCUSDT/1m/2020-12: 290; BTCUSDT/1m/2021-02: 79; BTCUSDT/1m/2021-03: 90; BTCUSDT/1m/2021-04: 434; BTCUSDT/1m/2021-08: 270; BTCUSDT/1m/2021-09: 120; BTCUSDT/1m/2023-03: 80; ETHUSDT/1m/2020-02: 414; ETHUSDT/1m/2020-03: 128; ETHUSDT/1m/2020-04: 150; ETHUSDT/1m/2020-06: 210; ETHUSDT/1m/2020-11: 60; ETHUSDT/1m/2020-12: 291; ETHUSDT/1m/2021-02: 79; ETHUSDT/1m/2021-03: 90; ETHUSDT/1m/2021-04: 434; ETHUSDT/1m/2021-08: 270; ETHUSDT/1m/2021-09: 120; ETHUSDT/1m/2023-03: 80; PAXGUSDT/1m/2020-08: 39600; PAXGUSDT/1m/2020-11: 60; PAXGUSDT/1m/2020-12: 291; PAXGUSDT/1m/2021-02: 79; PAXGUSDT/1m/2021-03: 90; PAXGUSDT/1m/2021-04: 434; PAXGUSDT/1m/2021-08: 270; PAXGUSDT/1m/2021-09: 120; PAXGUSDT/1m/2023-03: 80
-alpaca calendar: 2732 sessions, 21 early closes
-alpaca SPY 2026-11 (partial): 3510 rows, 9 days
-alpaca QQQ 2026-11 (partial): 3510 rows, 9 days
+alpaca calendar: 2733 sessions, 21 early closes
+alpaca SPY 2026-11 (partial): 3900 rows, 10 days
+alpaca QQQ 2026-11 (partial): 3900 rows, 10 days
 alpaca: 0 new months, 2730 of 2470
