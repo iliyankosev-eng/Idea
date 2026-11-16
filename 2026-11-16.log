@@ -45,3 +45,6 @@
 2026-11-16T19:58:19.559Z [nb] start, PAPER trading
 2026-11-16T19:58:19.911Z [nb] session 09:30-16:00; equity 103083.77, high-water 104121.49
 2026-11-16T20:00:02.889Z [nb] NB 15:00: {"want":0,"price":664.08,"ub":687,"lb":664.04,"vwap":665.86,"lev":0.81,"qty":76,"days":14}; QQQM position 0 -> orders []
+2026-11-16T20:13:56.761Z [nb] start, PAPER trading
+2026-11-16T20:13:56.939Z [nb] session 09:30-16:00; equity 103083.77, high-water 104121.49
+2026-11-16T20:13:56.939Z [nb] not a noise-band check time (New York 15:13), exit
