@@ -69,3 +69,6 @@
 2026-11-16T20:55:36.422Z [close] BIL: price 91.545, held 563, target 0, order -563
 2026-11-16T20:55:36.422Z [close] ORDER {"symbol":"BIL","qty":"563","side":"sell","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-16"}
 2026-11-16T20:55:36.445Z [close] BIL ERROR Error: POST /v2/orders: HTTP 422 {"code":40010001,"message":"client_order_id must be unique"}
+2026-11-16T20:58:19.756Z [nb] start, PAPER trading
+2026-11-16T20:58:20.366Z [nb] session 09:30-16:00; equity 103110.27, high-water 104121.49
+2026-11-16T20:58:20.367Z [nb] not a noise-band check time (New York 15:58), exit
