@@ -8,3 +8,6 @@
 2026-11-16T14:45:26.465Z [open] news 2026-11-16T06:27:59Z Stock Market: Will S&P 500 Open Up or Down Today?
 2026-11-16T14:50:36.153Z [open] DT3 data: SIP 09:30-09:34 [[671.04,671.19,668.56,668.61],[668.6,668.795,667.09,667.35],[667.33,669.92,667.32,668.59],[668.63,669.75,668.2,669.2205],[669.34,669.63,667.9,667.95]]; IEX bars since 09:35: 15; QQQ now 670.24
 2026-11-16T14:50:36.153Z [open] DT3: no trade, stop 671.19 already touched after 09:35
+2026-11-16T14:50:53.910Z [open] start, PAPER trading
+2026-11-16T14:50:54.168Z [open] session 09:30-16:00; equity 103262.73, high-water 104121.49
+2026-11-16T14:50:54.169Z [open] not the open window (New York 09:50), exit
