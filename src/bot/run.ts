@@ -199,7 +199,12 @@ async function main() {
           const b = bilTarget(r.inSpy, equity, px, held);
           log(`${CASH_SYM}: price ${px}, held ${held}, target ${b.target}, order ${b.delta}`);
           if (b.delta !== 0) await api.order({ symbol: CASH_SYM, qty: String(Math.abs(b.delta)), side: b.delta > 0 ? "buy" : "sell", type: "market", time_in_force: "day", client_order_id: `bil-${today}` });
-        } catch (e) { log(`${CASH_SYM} ERROR ${e}`); process.exitCode = 1; }
+        } catch (e) {
+          // a backup close run (15:55) sees the main run's BIL order still unfilled and repeats it; the unique client id
+          // makes Alpaca refuse the copy (16.11) - that is the protection working, not an error
+          if (String(e).includes("client_order_id must be unique")) log(`${CASH_SYM}: today's order bil-${today} was already sent, nothing to do`);
+          else { log(`${CASH_SYM} ERROR ${e}`); process.exitCode = 1; }
+        }
       } catch (e) { log(`DT8 ERROR ${e}`); process.exitCode = 1; }
     } else log("missed the DT8 decision window");
     if (paper) { // alarm: nothing intraday may stay open (a failed run opens a GitHub issue, see bot.yml)
