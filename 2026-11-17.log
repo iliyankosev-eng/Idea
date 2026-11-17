@@ -1,3 +1,7 @@
 2026-11-17T14:28:19.403Z [nb] start, PAPER trading
 2026-11-17T14:28:19.734Z [nb] session 09:30-16:00; equity 103067.90, high-water 104121.49
 2026-11-17T14:28:19.735Z [nb] not a noise-band check time (New York 09:28), exit
+2026-11-17T14:45:23.016Z [open] start, PAPER trading
+2026-11-17T14:45:23.117Z [open] session 09:30-16:00; equity 103056.93, high-water 104121.49
+2026-11-17T14:50:35.718Z [open] DT3 data: SIP 09:30-09:34 [[663.06,663.17,661.65,662.27],[662.27,662.68,661.78,662],[662.03,662.65,661.7,662.02],[661.97,662.79,661.66,661.87],[661.87,662.11,660.83,660.85]]; IEX bars since 09:35: 15; QQQ now 659.89
+2026-11-17T14:50:35.719Z [open] DT3: no trade, stop 663.17 already touched after 09:35
