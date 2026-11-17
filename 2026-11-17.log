@@ -49,3 +49,9 @@
 2026-11-17T20:28:17.357Z [nb] start, PAPER trading
 2026-11-17T20:28:17.649Z [nb] session 09:30-16:00; equity 102284.76, high-water 104121.49
 2026-11-17T20:30:02.171Z [nb] NB 15:30: {"want":-1,"price":653.375,"ub":670.93,"lb":653.96,"vwap":654.95,"lev":0.8,"qty":76,"days":14}; QQQM position -76 -> orders []
+2026-11-17T20:50:27.485Z [close] start, PAPER trading
+2026-11-17T20:50:28.378Z [close] session 09:30-16:00; equity 102295.21, high-water 104121.49
+2026-11-17T20:55:01.361Z [close] no QQQ position to close
+2026-11-17T20:55:03.740Z [close] CLOSE QQQM
+2026-11-17T20:55:04.515Z [close] DT8: 290 daily closes (last 2026-11-16), SPY now 730.53, in position true, decision hold
+2026-11-17T20:55:04.829Z [close] BIL: price 91.55, held 0, target 0, order 0
