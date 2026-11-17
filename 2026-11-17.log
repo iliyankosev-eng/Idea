@@ -5,3 +5,6 @@
 2026-11-17T14:45:23.117Z [open] session 09:30-16:00; equity 103056.93, high-water 104121.49
 2026-11-17T14:50:35.718Z [open] DT3 data: SIP 09:30-09:34 [[663.06,663.17,661.65,662.27],[662.27,662.68,661.78,662],[662.03,662.65,661.7,662.02],[661.97,662.79,661.66,661.87],[661.87,662.11,660.83,660.85]]; IEX bars since 09:35: 15; QQQ now 659.89
 2026-11-17T14:50:35.719Z [open] DT3: no trade, stop 663.17 already touched after 09:35
+2026-11-17T14:50:52.138Z [open] start, PAPER trading
+2026-11-17T14:50:52.487Z [open] session 09:30-16:00; equity 103047.20, high-water 104121.49
+2026-11-17T14:50:52.488Z [open] not the open window (New York 09:50), exit
