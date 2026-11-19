@@ -8,3 +8,6 @@
 2026-11-19T14:50:49.706Z [open] start, PAPER trading
 2026-11-19T14:50:49.816Z [open] session 09:30-16:00; equity 102647.92, high-water 104121.49
 2026-11-19T14:50:49.817Z [open] not the open window (New York 09:50), exit
+2026-11-19T14:58:21.072Z [nb] start, PAPER trading
+2026-11-19T14:58:22.124Z [nb] session 09:30-16:00; equity 102456.10, high-water 104121.49
+2026-11-19T15:00:01.955Z [nb] NB 10:00: {"want":0,"price":671.545,"ub":675.97,"lb":654.81,"vwap":672.96,"lev":0.81,"qty":74,"days":14}; QQQM position 0 -> orders []
