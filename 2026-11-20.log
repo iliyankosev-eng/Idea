@@ -1,3 +1,8 @@
 2026-11-20T14:28:26.588Z [nb] start, PAPER trading
 2026-11-20T14:28:26.719Z [nb] session 09:30-16:00; equity 100952.71, high-water 104121.49
 2026-11-20T14:28:26.720Z [nb] not a noise-band check time (New York 09:28), exit
+2026-11-20T14:45:22.198Z [open] start, PAPER trading
+2026-11-20T14:45:22.522Z [open] session 09:30-16:00; equity 100949.95, high-water 104121.49
+2026-11-20T14:50:35.535Z [open] DT3 data: SIP 09:30-09:34 [[638.82,638.88,636.06,636.28],[636.29,637.55,636.06,637.08],[636.94,637.45,635.55,635.99],[635.95,636.42,635.3,635.53],[635.54,635.78,634.97,635.01]]; IEX bars since 09:35: 15; QQQ now 635.975
+2026-11-20T14:50:35.536Z [open] DT3 plan {"side":"sell","qty":79,"stop":638.88,"target":606.93}
+2026-11-20T14:50:35.536Z [open] ORDER {"symbol":"QQQ","qty":"79","side":"sell","type":"market","time_in_force":"day","order_class":"bracket","take_profit":{"limit_price":"606.93"},"stop_loss":{"stop_price":"638.88"},"client_order_id":"dt3-2026-11-20"}
