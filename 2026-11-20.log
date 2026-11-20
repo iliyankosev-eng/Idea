@@ -16,3 +16,6 @@
 2026-11-20T15:28:18.597Z [nb] session 09:30-16:00; equity 100452.77, high-water 104121.49
 2026-11-20T15:30:01.632Z [nb] NB 10:30: {"want":-1,"price":632.075,"ub":651.57,"lb":632.41,"vwap":636.67,"lev":0.84,"qty":80,"days":14}; QQQM position 0 -> orders [-80]
 2026-11-20T15:30:01.633Z [nb] ORDER {"symbol":"QQQM","qty":"80","side":"sell","type":"market","time_in_force":"day","client_order_id":"nb-2026-11-20-1030-0"}
+2026-11-20T15:58:16.560Z [nb] start, PAPER trading
+2026-11-20T15:58:16.676Z [nb] session 09:30-16:00; equity 100415.13, high-water 104121.49
+2026-11-20T16:00:01.227Z [nb] NB 11:00: {"want":-1,"price":628.66,"ub":652.6,"lb":631.39,"vwap":635.02,"lev":0.84,"qty":81,"days":14}; QQQM position -80 -> orders []
