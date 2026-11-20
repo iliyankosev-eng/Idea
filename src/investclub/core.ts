@@ -41,13 +41,17 @@ export function dvol50(s: Stock): Float64Array { return sma(Array.from(s.c, (c, 
 
 // ---------------------------------------------------------------- portfolio engine
 export interface Trade { sym: string; entryDay: number; exitDay: number; entry: number; exit: number; ret: number }
-export interface Result { equity: Float64Array; trades: Trade[] }
+export interface Result { equity: Float64Array; trades: Trade[]; held?: number }
 interface Pos { s: number; shares: number; entry: number; entryDay: number; stop: number; cost: number; day3done: boolean; proceeds: number }
 
 /** Last known close of stock s at or before global day d (NaN if none). */
 function lastClose(m: Market, s: number, d: number): number {
-  for (let k = d; k >= 0; k--) { const i = m.at[s]![k]!; if (i >= 0) return m.stocks[s]!.c[i]!; if (d - k > 400) break; }
-  return NaN;
+  const i = m.at[s]![d]!;
+  if (i >= 0) return m.stocks[s]!.c[i]!;
+  const g = m.stocks[s]!.g; // binary search: last bar on or before d (a halt can last for months)
+  let lo = 0, hi = g.length - 1, k = -1;
+  while (lo <= hi) { const mid = (lo + hi) >> 1; if (g[mid]! <= d) { k = mid; lo = mid + 1; } else hi = mid - 1; }
+  return k >= 0 ? m.stocks[s]!.c[k]! : NaN;
 }
 /** true if global day d is after the stock's last bar */
 const ended = (m: Market, s: number, d: number) => { const st = m.stocks[s]!; return st.g[st.g.length - 1]! < d; };
@@ -106,7 +110,7 @@ export function s1Prepare(m: Market, liqMin = 20e6) {
 
 export function runS1(m: Market, P: ReturnType<typeof s1Prepare>, cost: number, start: number, pick?: (w: number, n: number) => number[]): Result {
   const { W } = P, nD = m.days.length, eq = new Float64Array(nD).fill(NaN), trades: Trade[] = [];
-  let cash = 1;
+  let cash = 1, held = 0;
   const pos: Pos[] = [], pendingExit = new Set<Pos>();
   let pendingEntry: number[] = [];
   const sell = (p: Pos, px: number, d: number) => { cash += p.shares * px * (1 - cost); trades.push({ sym: m.stocks[p.s]!.sym, entryDay: p.entryDay, exitDay: d, entry: p.entry, exit: px, ret: (p.shares * px * (1 - cost)) / p.cost - 1 }); pos.splice(pos.indexOf(p), 1); pendingExit.delete(p); };
@@ -131,7 +135,7 @@ export function runS1(m: Market, P: ReturnType<typeof s1Prepare>, cost: number, 
     // 4) mark to market
     let v = cash;
     for (const p of pos) v += p.shares * lastClose(m, p.s, d);
-    eq[d] = v;
+    eq[d] = v; held += pos.length;
     // 5) week end: decide exits and entries for the next day
     const w = W.id[d]!;
     if (W.last[w] === d) {
@@ -141,7 +145,7 @@ export function runS1(m: Market, P: ReturnType<typeof s1Prepare>, cost: number, 
       pendingEntry = pick ? (real.length ? pick(w, real.length) : []) : real;
     }
   }
-  return { equity: eq, trades };
+  return { equity: eq, trades, held: held / (nD - start) };
 }
 
 // ---------------------------------------------------------------- S2 Kullamägi
@@ -149,6 +153,7 @@ export interface S2Prep { sig: { s: number; level: number; adr: number; r63: num
 export function s2Prepare(m: Market, liqMin = 20e6): S2Prep {
   const nD = m.days.length;
   const cand: { s: number; r63: number; adr: number; ok: boolean; level: number }[][] = Array.from({ length: nD }, () => []);
+  const allR: number[][] = Array.from({ length: nD }, () => []); // R63 of every liquid stock (for the top-3% cut)
   const sma10s: Float64Array[] = [];
   m.stocks.forEach((st, s) => {
     const n = st.c.length, dv = dvol50(st), s10 = sma(st.c, 10), s20 = sma(st.c, 20), adr = sma(Array.from(st.h, (h, i) => h / st.l[i]! - 1), 20);
@@ -156,6 +161,8 @@ export function s2Prepare(m: Market, liqMin = 20e6): S2Prep {
     for (let i = 63; i < n; i++) {
       if (!(dv[i]! >= liqMin)) continue;
       const r63 = st.c[i]! / st.c[i - 63]! - 1;
+      allR[st.g[i]!]!.push(r63);
+      if (!(r63 >= 0.3 && adr[i]! >= 0.04)) continue; // cannot be in the pool or a signal
       let hi = -Infinity, lo = Infinity;
       for (let j = i - 9; j <= i; j++) { hi = Math.max(hi, st.h[j]!); lo = Math.min(lo, st.l[j]!); }
       const ok = adr[i]! >= 0.04 && r63 >= 0.3 && st.c[i]! > s10[i]! && s10[i]! > s20[i]! && (hi - lo) / st.c[i]! <= 3 * adr[i]!;
@@ -166,7 +173,7 @@ export function s2Prepare(m: Market, liqMin = 20e6): S2Prep {
   for (let d = 0; d < nD; d++) {
     const a = cand[d]!;
     if (!a.length) { sig.push([]); pool.push([]); continue; }
-    const r = a.map((x) => x.r63).sort((x, y) => x - y), thr = r[Math.min(r.length - 1, Math.floor(0.97 * r.length))]!;
+    const r = allR[d]!.sort((x, y) => x - y), thr = r[Math.min(r.length - 1, Math.floor(0.97 * r.length))]!;
     const top = a.filter((x) => x.r63 >= thr && x.r63 >= 0.3 && x.adr >= 0.04);
     pool.push(top.map((x) => ({ s: x.s, adr: x.adr, r63: x.r63 })));
     sig.push(top.filter((x) => x.ok).sort((x, y) => y.r63 - x.r63).map((x) => ({ s: x.s, level: x.level, adr: x.adr, r63: x.r63 })));
@@ -175,9 +182,10 @@ export function s2Prepare(m: Market, liqMin = 20e6): S2Prep {
 }
 
 /** pick: random control - returns stocks to enter at the next open (no breakout condition). */
-export function runS2(m: Market, P: S2Prep, cost: number, start: number, pick?: (d: number, n: number) => { s: number; adr: number }[]): Result {
+/** entryDayStop = false: optimistic bound - the entry day's low is assumed to have come before the entry (no stop that day). */
+export function runS2(m: Market, P: S2Prep, cost: number, start: number, pick?: (d: number, n: number) => { s: number; adr: number }[], entryDayStop = true): Result {
   const nD = m.days.length, eq = new Float64Array(nD).fill(NaN), trades: Trade[] = [];
-  let cash = 1;
+  let cash = 1, held = 0;
   const pos: (Pos & { sharesNow: number })[] = [];
   const close = (p: (typeof pos)[number], px: number, d: number, frac: number) => {
     const sh = p.sharesNow * frac;
@@ -220,16 +228,16 @@ export function runS2(m: Market, P: S2Prep, cost: number, start: number, pick?: 
       cash -= val; invested += val;
       const p = { s: x.s, shares, sharesNow: shares, entry, entryDay: d, stop, cost: val, day3done: false, proceeds: 0 };
       pos.push(p);
-      if (st.l[i]! <= stop) close(p, stop, d, 1); // conservative: the low may have come after the entry
+      if ((entryDayStop || Number.isNaN(x.level)) && st.l[i]! <= stop) close(p, stop, d, 1); // conservative: the low may have come after the entry (exact for open entries)
     }
     pending = [];
     let v = cash;
     for (const p of pos) v += p.sharesNow * lastClose(m, p.s, d);
-    eq[d] = v;
+    eq[d] = v; held += pos.length;
     const real = P.sig[d]!;
     pending = pick ? (real.length ? pick(d, real.length).map((x) => ({ s: x.s, level: NaN, adr: x.adr })) : []) : real;
   }
-  return { equity: eq, trades };
+  return { equity: eq, trades, held: held / (nD - start) };
 }
 
 // ---------------------------------------------------------------- measures
@@ -241,4 +249,17 @@ export function perfOf(eq: ArrayLike<number>, from: number, to: number) {
   for (let d = from; d <= to; d++) { const x = eq[d]!; if (!Number.isFinite(x)) continue; peak = Math.max(peak, x); dd = Math.min(dd, x / peak - 1); }
   const years = r.length / 252, total = eq[to]! / eq[from]!;
   return { cagr: total ** (1 / years) - 1, sharpe: (mean / sd) * Math.sqrt(252), maxDD: dd, rets: r };
+}
+
+/** Splits a symbol's history where the close jumps more than `k`x up or down in one day (unadjusted reverse splits,
+ * spin-offs, a ticker reused by another company): each piece becomes its own "stock"; a position held across the
+ * break leaves at the last close before it, as if the stock were delisted. */
+export function splitAtJumps<T extends { sym: string; d: string[]; o: number[]; h: number[]; l: number[]; c: number[]; v: number[] }>(r: T, k = 5): T[] {
+  const cuts = [0];
+  for (let i = 1; i < r.c.length; i++) { const q = r.c[i]! / r.c[i - 1]!; if (q > k || q < 1 / k) cuts.push(i); }
+  cuts.push(r.c.length);
+  if (cuts.length === 2) return [r];
+  const out: T[] = [];
+  for (let j = 0; j + 1 < cuts.length; j++) { const a = cuts[j]!, b = cuts[j + 1]!; out.push({ ...r, sym: j ? `${r.sym}#${j}` : r.sym, d: r.d.slice(a, b), o: r.o.slice(a, b), h: r.h.slice(a, b), l: r.l.slice(a, b), c: r.c.slice(a, b), v: r.v.slice(a, b) }); }
+  return out;
 }

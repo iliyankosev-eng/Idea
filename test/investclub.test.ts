@@ -117,6 +117,7 @@ describe("S2 Kullamägi", () => {
     const t = runS2(m, P, 0, 150).trades[0]!;
     expect(t.exitDay).toBe(173);
     expect(t.ret).toBeCloseTo(-0.04, 12);
+    expect(runS2(m, P, 0, 150, undefined, false).trades.filter((x) => x.exitDay === 173).length).toBe(0); // optimistic bound
     const g = bars.slice(0, 173);
     g.push([14.2, 15, 14.1, 14.9, 1e7], [13.0, 13.2, 12.9, 13.1, 1e7]);
     for (let i = g.length; i < N; i++) g.push([13, 13.1, 12.9, 13, 1e7]);
@@ -157,5 +158,15 @@ describe("measures", () => {
     const p = perfOf(eq, 0, 252);
     expect(p.maxDD).toBeCloseTo(eq[252]! / 2 - 1, 12);
     expect(p.cagr).toBeCloseTo(eq[252]! - 1, 12);
+  });
+});
+
+describe("data cleaning and the optimistic S2 bound", () => {
+  it("splitAtJumps cuts at a >5x move", async () => {
+    const { splitAtJumps } = await import("../src/investclub/core.js");
+    const r = { sym: "X", d: ["a", "b", "c", "d"], o: [1, 1, 7, 7], h: [1, 1, 7, 7], l: [1, 1, 7, 7], c: [1, 1, 7, 7], v: [1, 1, 1, 1] };
+    const p = splitAtJumps(r);
+    expect(p.map((x) => [x.sym, x.c])).toEqual([["X", [1, 1]], ["X#1", [7, 7]]]);
+    expect(splitAtJumps({ ...r, c: [1, 1, 4, 4] }).length).toBe(1);
   });
 });
