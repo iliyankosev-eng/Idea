@@ -1,0 +1,9 @@
+assets: 9668 (active 8273, inactive 1395); fetching 6592 non-ETF-like symbols 2015-06-01..2026-11-19
+batch 1/66: kept 77, empty 0, rows 143711, calls 20, 0.1 min
+batch 11/66: kept 856, empty 0, rows 1887934, calls 240, 1.6 min
+batch 21/66: kept 1613, empty 0, rows 3552129, calls 452, 3.0 min
+batch 31/66: kept 2207, empty 3, rows 4750374, calls 621, 4.1 min
+batch 41/66: kept 2859, empty 3, rows 6095895, calls 802, 5.4 min
+batch 51/66: kept 3525, empty 3, rows 7506934, calls 999, 6.7 min
+batch 61/66: kept 4132, empty 20, rows 8634844, calls 1167, 7.8 min
+done: kept 4375 liquid symbols, 8889543 rows; 47 symbols without data; 1213 calls in 8.1 min
