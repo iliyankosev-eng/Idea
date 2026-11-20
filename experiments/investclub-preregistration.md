@@ -21,8 +21,8 @@ Trading Mastery 2.0 cannot be tested (no fundamental data) — said plainly in t
 Weekly bars = last trading day of each week. MA30 = 30-week SMA of weekly closes. RS = close / SPY close,
 MRS = RS / SMA52(RS) - 1 (Mansfield relative strength).
 - Signal at the close of week w (stock liquid at w):
-  close > MA30, MA30(w) > MA30(w-1), close > max(weekly high, weeks w-26 .. w-1), close(w-1) <= that same max
-  (fresh breakout), weekly volume >= 2 x average of weeks w-10 .. w-1, MRS > 0,
+  close > MA30, MA30(w) > MA30(w-1), close > max(weekly high, weeks w-26 .. w-1), close(w-1) <= max(weekly high,
+  weeks w-27 .. w-2) (fresh breakout: last week had not broken out yet), weekly volume >= 2 x average of weeks w-10 .. w-1, MRS > 0,
   and SPY weekly close > SPY MA30 (market in stage 2).
 - Entry: open of the first day of week w+1. Exit: a weekly close < MA30 -> open of the next trading day.
 - Portfolio: at most 20 positions, 5% of equity each at entry, no rebalancing; more signals than free slots ->
@@ -57,3 +57,9 @@ ADR20 = 20-day average of (high/low - 1). SMA10, SMA20 of closes. R63 = close / 
 GO only if ALL hold: annual return and Sharpe above SPY over the full period at 0.10%; better Sharpe than the
 random control in >= 95 of 100 repeats; positive in both sub-periods; still above SPY's annual return at 0.30%.
 Otherwise STOP.
+
+## Amendment (20.11.2026, before any run on real data)
+The first wording of the fresh-breakout rule compared close(w-1) with a maximum that includes week w-1's own
+high, which is always true. Unit tests caught it; the rule now compares last week's close with last week's own base
+top (weeks w-27 .. w-2), as intended. In S2 the "close below SMA10" exit applies from the 3rd day after the entry
+(the same day as the half sale); before that only the stop can end the trade.
