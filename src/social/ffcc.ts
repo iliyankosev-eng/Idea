@@ -108,7 +108,7 @@ export function sessionTrades(s: Session, o: FOpts): FTrade[] {
     }
     // random direction: mirror stop and target around the entry
     if (open && open.k === k && o.flip && o.flip()) {
-      const d = open.entry;
+      const d: number = open.entry;
       open = { dir: (open.dir === 1 ? -1 : 1) as 1 | -1, entry: d, stop: 2 * d - open.stop, target: 2 * d - open.target, k };
     }
     bodies.push(Math.abs(c.c - c.o));
