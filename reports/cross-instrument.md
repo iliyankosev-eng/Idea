@@ -190,24 +190,24 @@ Original: SPY, QQQ. New instruments together: -0.5%/y, Sharpe -0.12, bootstrap 3
 
 Original: SPY, QQQ. New instruments together: -0.022R, bootstrap 0%, 2016–2020 -0.036R, 2021–2026 -0.011R; positive on 2 of 16. **Does not hold.**
 
-- SPY (original): -0.026R · 4152 trades · bootstrap 59% · halves -0.030R / -0.024R
-- QQQ (original): -0.018R · 3774 trades · bootstrap 92% · halves -0.045R / +0.004R
-- DIA: -0.022R · 3816 trades · bootstrap 83% · halves -0.042R / -0.006R
-- IWM: -0.024R · 3707 trades · bootstrap 88% · halves -0.035R / -0.014R
-- GLD: -0.004R · 3643 trades · bootstrap 100% · halves +0.004R / -0.012R
+- SPY (original): -0.026R · 4152 trades · bootstrap 7% · halves -0.030R / -0.024R
+- QQQ (original): -0.018R · 3774 trades · bootstrap 15% · halves -0.045R / +0.004R
+- DIA: -0.022R · 3816 trades · bootstrap 11% · halves -0.042R / -0.006R
+- IWM: -0.024R · 3707 trades · bootstrap 9% · halves -0.035R / -0.014R
+- GLD: -0.004R · 3643 trades · bootstrap 39% · halves +0.004R / -0.012R
 - SLV: -0.143R · 3245 trades · bootstrap 0% · halves -0.209R / -0.087R
-- AAPL: -0.003R · 3245 trades · bootstrap 99% · halves +0.009R / -0.012R
-- MSFT: -0.005R · 3299 trades · bootstrap 90% · halves -0.011R / -0.001R
-- NVDA: -0.028R · 3088 trades · bootstrap 92% · halves -0.025R / -0.030R
-- AMZN: -0.001R · 3162 trades · bootstrap 94% · halves -0.021R / +0.016R
-- GOOGL: -0.016R · 3281 trades · bootstrap 99% · halves -0.015R / -0.017R
-- META: +0.017R · 3220 trades · bootstrap 100% · halves +0.026R / +0.010R
-- TSLA: +0.011R · 2985 trades · bootstrap 99% · halves +0.029R / -0.003R
-- AMD: -0.006R · 2854 trades · bootstrap 95% · halves -0.072R / +0.044R
-- INTC: -0.032R · 3180 trades · bootstrap 87% · halves -0.062R / -0.006R
-- BA: -0.001R · 3227 trades · bootstrap 99% · halves -0.023R / +0.019R
-- XOM: -0.014R · 3389 trades · bootstrap 96% · halves -0.035R / +0.005R
-- PFE: -0.085R · 3269 trades · bootstrap 4% · halves -0.094R / -0.076R
+- AAPL: -0.003R · 3245 trades · bootstrap 45% · halves +0.009R / -0.012R
+- MSFT: -0.005R · 3299 trades · bootstrap 38% · halves -0.011R / -0.001R
+- NVDA: -0.028R · 3088 trades · bootstrap 7% · halves -0.025R / -0.030R
+- AMZN: -0.001R · 3162 trades · bootstrap 49% · halves -0.021R / +0.016R
+- GOOGL: -0.016R · 3281 trades · bootstrap 22% · halves -0.015R / -0.017R
+- META: +0.017R · 3220 trades · bootstrap 81% · halves +0.026R / +0.010R
+- TSLA: +0.011R · 2985 trades · bootstrap 74% · halves +0.029R / -0.003R
+- AMD: -0.006R · 2854 trades · bootstrap 38% · halves -0.072R / +0.044R
+- INTC: -0.032R · 3180 trades · bootstrap 5% · halves -0.062R / -0.006R
+- BA: -0.001R · 3227 trades · bootstrap 48% · halves -0.023R / +0.019R
+- XOM: -0.014R · 3389 trades · bootstrap 23% · halves -0.035R / +0.005R
+- PFE: -0.085R · 3269 trades · bootstrap 0% · halves -0.094R / -0.076R
 
 ## Range A
 
@@ -257,7 +257,7 @@ Original: QQQ. New instruments together: -0.066R, bootstrap 0%, 2016–2020 -0.0
 
 ## Silvio
 
-Original: QQQ, DIA. New instruments together: -0.015R, bootstrap 38%, 2016–2020 +0.008R, 2021–2026 -0.033R; positive on 5 of 16. **Does not hold.**
+Original: QQQ, DIA. New instruments together: -0.015R, bootstrap 33%, 2016–2020 +0.008R, 2021–2026 -0.033R; positive on 5 of 16. **Does not hold.**
 
 - SPY: +0.154R · 72 trades · bootstrap 89% · halves +0.315R / +0.046R
 - QQQ (original): -0.152R · 78 trades · bootstrap 6% · halves -0.161R / -0.146R
@@ -280,7 +280,7 @@ Original: QQQ, DIA. New instruments together: -0.015R, bootstrap 38%, 2016–202
 
 ## Fib
 
-Original: QQQ, GLD. New instruments together: +0.010R, bootstrap 39%, 2016–2020 +0.026R, 2021–2026 -0.004R; positive on 7 of 16. **Does not hold.**
+Original: QQQ, GLD. New instruments together: +0.010R, bootstrap 58%, 2016–2020 +0.026R, 2021–2026 -0.004R; positive on 7 of 16. **Does not hold.**
 
 - SPY: -0.152R · 50 trades · bootstrap 13% · halves -0.175R / -0.139R
 - QQQ (original): -0.124R · 68 trades · bootstrap 14% · halves -0.034R / -0.172R
@@ -337,8 +337,8 @@ Original: SPY, QQQ, IWM, GLD. New instruments together: -0.126R, bootstrap 0%, 2
 - **FFCC**: NO — new instruments together -0.022R (bootstrap 0%; 2016–2020 -0.036R, 2021–2026 -0.011R); positive on 2 of 16
 - **Range A**: NO — new instruments together -0.106R (bootstrap 0%; 2016–2020 -0.142R, 2021–2026 -0.075R); positive on 0 of 17
 - **Range B**: NO — new instruments together -0.066R (bootstrap 0%; 2016–2020 -0.088R, 2021–2026 -0.047R); positive on 0 of 17
-- **Silvio**: NO — new instruments together -0.015R (bootstrap 38%; 2016–2020 +0.008R, 2021–2026 -0.033R); positive on 5 of 16
-- **Fib**: NO — new instruments together +0.010R (bootstrap 39%; 2016–2020 +0.026R, 2021–2026 -0.004R); positive on 7 of 16
+- **Silvio**: NO — new instruments together -0.015R (bootstrap 33%; 2016–2020 +0.008R, 2021–2026 -0.033R); positive on 5 of 16
+- **Fib**: NO — new instruments together +0.010R (bootstrap 58%; 2016–2020 +0.026R, 2021–2026 -0.004R); positive on 7 of 16
 - **First candle**: NO — new instruments together -0.126R (bootstrap 0%; 2016–2020 -0.167R, 2021–2026 -0.089R); positive on 5 of 14
 
 Single results that survive the Holm correction and are positive in both halves:
@@ -388,3 +388,6 @@ Sharpe 0.70 (earlier 4.2%, 0.70), DT7 SPY Sharpe 0.66 (earlier 0.67), FFCC SPY -
   every long-biased or trend-following idea (DT7, DT8, DT1, DT3). Single-stock leads need a fresh test on stocks picked
   without hindsight before they mean anything.
 - DT2 is very cost-sensitive: cheap stocks (INTC, PFE, XOM) pay far more per trade in % than NVDA or TSLA.
+- 23.11.2026: for per-trade (R) strategies the bootstrap now counts each day with the sum of its trades
+  (bootstrapTotal). Before, it averaged within each day first, which could show ~100% for a negative mean (FFCC GLD
+  -0.004R). No verdict changed; Fib's pooled bootstrap moved 39%→58%, Silvio's 38%→33%.

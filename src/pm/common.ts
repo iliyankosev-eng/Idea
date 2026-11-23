@@ -49,6 +49,14 @@ export function bootstrapByDay(trades: readonly Trade[], block = 5, reps = 2000,
   return pos / reps;
 }
 
+/** Like bootstrapByDay, but each day counts with the SUM of its trades, so the tested sign is the sign of the
+ *  per-trade mean (bootstrapByDay averages within a day first, which can disagree when days have many trades). */
+export function bootstrapTotal(trades: readonly Trade[], block = 5, reps = 2000, seed = 42): number {
+  const by = new Map<string, number>();
+  for (const t of trades) by.set(t.day, (by.get(t.day) ?? 0) + t.r);
+  return bootstrapByDay([...by.entries()].map(([day, r]) => ({ day, r }) as Trade), block, reps, seed);
+}
+
 /** GO / weak / STOP by the two pre-registered criteria. */
 export function verdict(m: number, boot: number, beats: number): string {
   const c1 = m > 0 && boot >= 0.95, c2 = beats >= 95;

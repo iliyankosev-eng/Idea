@@ -8,7 +8,7 @@ import { n1 } from "../../src/daytrade/new3.js";
 import { fibTrades, type Bars } from "../../src/fib/confluence.js";
 import { costR, firstCandleTrade } from "../../src/ict/firstCandle.js";
 import type { Session } from "../../src/intraday/sessions.js";
-import { bootstrapByDay } from "../../src/pm/common.js";
+import { bootstrapByDay, bootstrapTotal } from "../../src/pm/common.js";
 import { sessionTrades } from "../../src/social/ffcc.js";
 import { rangeTrade } from "../../src/social/rangebot.js";
 import { silvioTrades, V2 } from "../../src/social/silvio.js";
@@ -86,7 +86,7 @@ for (const sym of Object.keys(SCALE)) {
 // ---- analysis (same rules as the cross-instrument test)
 const mean = (a: number[]) => a.reduce((p, q) => p + q, 0) / Math.max(1, a.length);
 const sd = (a: number[]) => { const m = mean(a); return Math.sqrt(a.reduce((p, q) => p + (q - m) ** 2, 0) / Math.max(1, a.length - 1)); };
-const stat = (st: string, x: Pt[]) => { const r = x.map((p) => p.r), e = x.filter((p) => p.day < "2021").map((p) => p.r), l = x.filter((p) => p.day >= "2021").map((p) => p.r), k = DAILY.has(st) ? 252 : 1; return { main: k * mean(r), sharpe: DAILY.has(st) ? (mean(r) / sd(r)) * Math.sqrt(252) : NaN, boot: x.length ? bootstrapByDay(x) : NaN, e: k * mean(e), l: k * mean(l), n: DAILY.has(st) ? r.filter((v) => v !== 0).length : r.length }; };
+const stat = (st: string, x: Pt[]) => { const r = x.map((p) => p.r), e = x.filter((p) => p.day < "2021").map((p) => p.r), l = x.filter((p) => p.day >= "2021").map((p) => p.r), k = DAILY.has(st) ? 252 : 1; return { main: k * mean(r), sharpe: DAILY.has(st) ? (mean(r) / sd(r)) * Math.sqrt(252) : NaN, boot: x.length ? (DAILY.has(st) ? bootstrapByDay(x) : bootstrapTotal(x)) : NaN, e: k * mean(e), l: k * mean(l), n: DAILY.has(st) ? r.filter((v) => v !== 0).length : r.length }; };
 const f = (st: string, v: number) => (DAILY.has(st) ? `${(100 * v).toFixed(1)}%/y` : `${v >= 0 ? "+" : ""}${v.toFixed(3)}R`);
 const all: { st: string; key: string; s: ReturnType<typeof stat>; p: number; holm?: boolean }[] = [];
 for (const [st, by] of Object.entries(res)) for (const [key, x] of Object.entries(by)) { const s = stat(st, x); all.push({ st, key, s, p: 1 - s.boot }); }

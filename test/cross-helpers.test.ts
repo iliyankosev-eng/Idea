@@ -3,6 +3,7 @@ import type { Session } from "../src/intraday/sessions.js";
 import { segments, splitDays } from "../src/intraday/splits.js";
 import { rangeTrade } from "../src/social/rangebot.js";
 import { COST_PER_SHARE as C } from "../src/daytrade/dt.js";
+import { bootstrapByDay, bootstrapTotal } from "../src/pm/common.js";
 
 const sess = (date: string, bars: [number, number, number, number][]): Session => ({ symbol: "T", date, minute: bars.map((_, i) => 570 + i), o: bars.map((b) => b[0]), h: bars.map((b) => b[1]), l: bars.map((b) => b[2]), c: bars.map((b) => b[3]) });
 describe("split days and segments", () => {
@@ -26,4 +27,16 @@ describe("range bot (moved to src)", () => {
     expect(rangeTrade(sess("l", [...base, [100.9, 101.02, 100.9, 101], [101, 101.8, 101, 101.7], ...fill(101.7, 380)]), 0.25, 0.75)!.r).toBeCloseTo((-0.75 - 2 * C) / 0.75, 12);
     expect(rangeTrade(sess("t", [...base, [100.9, 101.02, 100.9, 101], ...fill(100.9, 390)]), 0.25, 0.75)!.r).toBeCloseTo((0.1 - 2 * C) / 0.75, 12);
   });
+});
+
+it("bootstrapTotal follows the sign of the per-trade mean, bootstrapByDay the mean of day means", () => {
+  // a +1R day alone, then a day with four -0.5R trades -> mean of day means +0.25, per-trade mean -0.2
+  const tr: { day: string; r: number }[] = [];
+  const d = (k: number) => `d${String(k).padStart(4, "0")}`;
+  for (let i = 0; i < 200; i++) {
+    tr.push({ day: d(2 * i), r: 1 });
+    for (let j = 0; j < 4; j++) tr.push({ day: d(2 * i + 1), r: -0.5 });
+  }
+  expect(bootstrapByDay(tr)).toBeGreaterThan(0.95);
+  expect(bootstrapTotal(tr)).toBeLessThan(0.05);
 });

@@ -1,6 +1,6 @@
 // Analysis for experiments/cross-instrument-preregistration.md (reads reports/cross-instrument.json).
 import { readFileSync, writeFileSync } from "node:fs";
-import { bootstrapByDay } from "../../src/pm/common.js";
+import { bootstrapByDay, bootstrapTotal } from "../../src/pm/common.js";
 
 type Pt = { day: string; r: number };
 const { res, notes } = JSON.parse(readFileSync("reports/cross-instrument.json", "utf8")) as { res: Record<string, Record<string, Pt[]>>; notes: string[] };
@@ -10,7 +10,7 @@ const mean = (a: number[]) => a.reduce((p, q) => p + q, 0) / Math.max(1, a.lengt
 const sd = (a: number[]) => { const m = mean(a); return Math.sqrt(a.reduce((p, q) => p + (q - m) ** 2, 0) / Math.max(1, a.length - 1)); };
 const half = (x: Pt[], early: boolean) => x.filter((p) => (p.day < "2021-01-01") === early);
 const stat = (st: string, x: Pt[]) => {
-  const r = x.map((p) => p.r), boot = x.length ? bootstrapByDay(x) : NaN;
+  const r = x.map((p) => p.r), boot = x.length ? (DAILY.has(st) ? bootstrapByDay(x) : bootstrapTotal(x)) : NaN; // R: day sums, so the sign matches the per-trade mean
   if (DAILY.has(st)) return { main: 252 * mean(r), sharpe: (mean(r) / sd(r)) * Math.sqrt(252), boot, e: 252 * mean(half(x, true).map((p) => p.r)), l: 252 * mean(half(x, false).map((p) => p.r)), n: r.filter((v) => v !== 0).length };
   return { main: mean(r), sharpe: NaN, boot, e: mean(half(x, true).map((p) => p.r)), l: mean(half(x, false).map((p) => p.r)), n: r.length };
 };
