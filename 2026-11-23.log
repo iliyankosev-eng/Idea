@@ -30,3 +30,11 @@
 2026-11-23T20:55:15.530Z [close] DT8 dt8-sell-2026-11-23: filled 69 @ 721.47
 2026-11-23T20:55:15.560Z [close] BIL: price 91.61, held 0, target 556, order 556
 2026-11-23T20:55:15.560Z [close] ORDER {"symbol":"BIL","qty":"556","side":"buy","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-23"}
+2026-11-23T20:55:28.647Z [close] start, PAPER trading
+2026-11-23T20:55:28.888Z [close] session 09:30-16:00; equity 101834.23, high-water 104121.49
+2026-11-23T20:55:29.080Z [close] no QQQ position to close
+2026-11-23T20:55:29.124Z [close] no QQQM position to close
+2026-11-23T20:55:29.388Z [close] DT8: 290 daily closes (last 2026-11-20), SPY now 721.75, in position false, decision none
+2026-11-23T20:55:29.495Z [close] BIL: price 91.605, held 0, target 555, order 555
+2026-11-23T20:55:29.495Z [close] ORDER {"symbol":"BIL","qty":"555","side":"buy","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-23"}
+2026-11-23T20:55:29.540Z [close] BIL: today's order bil-2026-11-23 was already sent, nothing to do
