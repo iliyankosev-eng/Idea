@@ -38,3 +38,6 @@
 2026-11-23T20:55:29.495Z [close] BIL: price 91.605, held 0, target 555, order 555
 2026-11-23T20:55:29.495Z [close] ORDER {"symbol":"BIL","qty":"555","side":"buy","type":"market","time_in_force":"day","client_order_id":"bil-2026-11-23"}
 2026-11-23T20:55:29.540Z [close] BIL: today's order bil-2026-11-23 was already sent, nothing to do
+2026-11-23T20:58:14.929Z [nb] start, PAPER trading
+2026-11-23T20:58:15.017Z [nb] session 09:30-16:00; equity 101831.45, high-water 104121.49
+2026-11-23T20:58:15.017Z [nb] not a noise-band check time (New York 15:58), exit
