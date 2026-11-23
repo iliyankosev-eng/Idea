@@ -1,0 +1,16 @@
+alpaca SPY: 2738 days 2016-01-04 .. 2026-11-20
+alpaca EFA: 2738 days 2016-01-04 .. 2026-11-20
+alpaca TLT: 2738 days 2016-01-04 .. 2026-11-20
+alpaca IEF: 2738 days 2016-01-04 .. 2026-11-20
+alpaca GLD: 2738 days 2016-01-04 .. 2026-11-20
+alpaca DBC: 2738 days 2016-01-04 .. 2026-11-20
+alpaca UUP: 2738 days 2016-01-04 .. 2026-11-20
+alpaca BIL: 2738 days 2016-01-04 .. 2026-11-20
+stooq SPY: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq EFA: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq TLT: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq IEF: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq GLD: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq DBC: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq UUP: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
+stooq BIL: FAILED Error: HTTP 403: <meta charset=utf-8><title>Stooq</title><center style=font-family:arial;margin-top:50px><p><a href=/><img src=//static.s
