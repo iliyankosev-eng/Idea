@@ -24,3 +24,16 @@ Per strategy, all gold/FX tests together (daily-return strategies: equal-weight 
 trades): "works on gold/FX" only if pooled mean > 0 with bootstrap >= 95%, positive in 2016-2020 and 2021-2026,
 and positive in at least 2/3 of the symbol-session pairs. Gold alone is reported separately (XAUUSD NY + London);
 for gold alone the same rule with "both sessions positive" instead of 2/3.
+
+## Amendment (23.11.2026, before any gold/FX minute data was seen)
+Dukascopy throttles GitHub's machines: after 2.5 hours not one symbol-year had finished, so the download was cancelled
+(it was also using a lot of the account's GitHub Actions minutes). New source: HistData.com free 1-minute BID bars,
+2016-01 .. 2026-10, same four symbols (fxdata branch, folder histdata/; scripts/histdata-fetch.py). Its clock is
+New York standard time without daylight saving (UTC-5 all year); converted to UTC.
+HistData has no ask price and no volume, so two rules change:
+- Cost per side is fixed instead of measured: XAUUSD $0.15, EURUSD 0.000045, GBPUSD 0.00006, USDJPY 0.0055, plus 0.001%
+  of the price as before. That is about the round trip of a raw-spread account with commission (gold ~$0.30, EURUSD
+  ~0.9 pip, GBPUSD ~1.2 pip, USDJPY ~1.1 pip). Ordinary retail accounts are roughly twice as expensive.
+- Volume-weighted steps (VWAP in DT1/DT3) use equal weights per minute.
+For information only (not part of the verdict): the same tests with zero cost, to show whether there is any edge
+before costs.

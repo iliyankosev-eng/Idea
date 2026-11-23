@@ -1,0 +1,32 @@
+name: histdata
+# HistData.com 1-minute gold/FX (BID only) -> `fxdata` branch, folder histdata/. Second data source for
+# experiments/fx-gold-preregistration.md (Dukascopy throttles GitHub runners). One short job; hard time limit.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download
+        run: python3 scripts/histdata-fetch.py out 2016 2025 2026 10 XAUUSD,EURUSD,GBPUSD,USDJPY || true
+      - name: Push to fxdata
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git clone --quiet --depth 1 --branch fxdata "$URL" fxdata
+          mkdir -p fxdata/histdata && cp -r out/* fxdata/histdata/
+          cd fxdata
+          git config user.name "data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "nothing new"; exit 0; }
+          git commit --quiet -m "histdata $(date -u +%FT%TZ)"
+          git push --quiet origin fxdata
+          cat histdata/LOG.txt

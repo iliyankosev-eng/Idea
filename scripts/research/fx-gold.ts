@@ -13,7 +13,10 @@ import { sessionTrades } from "../../src/social/ffcc.js";
 import { rangeTrade } from "../../src/social/rangebot.js";
 import { silvioTrades, V2 } from "../../src/social/silvio.js";
 
-const FX = "data/fx";
+const FX = process.env.FXDIR ?? "data/fx";
+// fixed cost per side (price units) when the data has no ask price (HistData) - see the amendment
+const FIXED: Record<string, number> = { XAUUSD: 0.15, EURUSD: 0.000045, GBPUSD: 0.00006, USDJPY: 0.0055 };
+const GROSS = process.env.GROSS === "1";
 // price scale so that the $0.01 steps in the strategy code are a sensible fraction of the instrument's daily range
 const SCALE: Record<string, number> = { XAUUSD: 1, EURUSD: 1000, GBPUSD: 1000, USDJPY: 10 };
 const SESS = { NY: { tz: "America/New_York", start: 570 }, London: { tz: "Europe/London", start: 480 } } as const;
@@ -54,8 +57,9 @@ const fomc = new Set((JSON.parse(readFileSync("scripts/fomc-dates.json", "utf8")
 for (const sym of Object.keys(SCALE)) {
   if (!existsSync(`${FX}/${sym}`)) { notes.push(`${sym}: no data`); continue; }
   const rows = load(sym);
-  const ny = sessions(sym, rows, "NY"), spread = median(ny.spreads), price = median(ny.ss.map((s) => s.c[s.c.length - 1]!));
-  const C = spread / 2 + 1e-5 * price; // per side, scaled units
+  const ny = sessions(sym, rows, "NY"), price = median(ny.ss.map((s) => s.c[s.c.length - 1]!));
+  const spread = ny.spreads.length ? median(ny.spreads) : 2 * FIXED[sym]! * SCALE[sym]!;
+  const C = GROSS ? 0 : spread / 2 + 1e-5 * price; // per side, scaled units
   notes.push(`${sym}: ${rows.length} minutes ${new Date(rows[0]!.ms).toISOString().slice(0, 10)}..${new Date(rows.at(-1)!.ms).toISOString().slice(0, 10)}; median NY spread ${(spread / SCALE[sym]!).toPrecision(3)} (${(1e4 * spread / price).toFixed(2)} bp); cost per side ${(1e4 * C / price).toFixed(2)} bp`);
   for (const which of ["NY", "London"] as const) {
     const ss = which === "NY" ? ny.ss : sessions(sym, rows, which).ss, key = `${sym} ${which}`;
@@ -93,7 +97,7 @@ const pool = (st: string, keys: string[]): Pt[] => {
   const by = new Map<string, number[]>(); for (const k of keys) for (const p of res[st]![k]!) (by.get(p.day) ?? by.set(p.day, []).get(p.day)!).push(p.r);
   return [...by.entries()].sort().map(([day, v]) => ({ day, r: mean(v) }));
 };
-const out = ["# Every earlier strategy on gold and the dollar (Dukascopy)", "", `Rules: experiments/fx-gold-preregistration.md. ${all.length} single tests, Holm at 5%.`, ""];
+const out = [`# Every earlier strategy on gold and the dollar (${FX.includes("histdata") ? "HistData" : "Dukascopy"}${GROSS ? ", ZERO cost - information only" : ""})`, "", `Rules: experiments/fx-gold-preregistration.md. ${all.length} single tests, Holm at 5%.`, ""];
 const verdicts: string[] = [];
 for (const st of Object.keys(res)) {
   const keys = Object.keys(res[st]!), P = stat(st, pool(st, keys)), pos = keys.filter((k) => stat(st, res[st]![k]!).main > 0).length;
@@ -106,5 +110,5 @@ for (const st of Object.keys(res)) {
   out.push("");
 }
 out.push("## Verdict", "", ...verdicts, "", "Single results surviving Holm and positive in both halves:", ...(all.filter((r) => r.holm && r.s.e > 0 && r.s.l > 0).map((r) => `- ${r.st} ${r.key}: ${f(r.st, r.s.main)}`)), "", "## Data notes", "", ...notes.map((n) => `- ${n}`));
-writeFileSync("reports/fx-gold.md", out.join("\n") + "\n");
+writeFileSync(GROSS ? "reports/fx-gold-gross.md" : "reports/fx-gold.md", out.join("\n") + "\n");
 console.log(verdicts.join("\n"));
