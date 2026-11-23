@@ -22,3 +22,16 @@ Checks of the code: 11 unit tests (every rule; mutation check - each rule change
 re-implementation written from the pre-registration (scripts/research/xcheck_ffcc.py) gives identical trades on
 40 random QQQ sessions (51 trades). Not tested: the Asia (Globex) session (needs futures data) and the course's
 "full rules" (paid).
+
+## Other symbols (main version, same rules)
+
+| Symbol | Trades | Winners | Mean R | 95% interval | 2016–2020 | 2021–2026 | Better than random direction |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| DIA | 3816 | 42% | -0.022 | -0.058 … 0.013 | -0.042 | -0.006 | 15/100 |
+| IWM | 3707 | 43% | -0.024 | -0.059 … 0.011 | -0.035 | -0.014 | 26/100 |
+| GLD | 3643 | 45% | -0.004 | -0.038 … 0.029 | 0.004 | -0.012 | 80/100 |
+| SLV | 3245 | 41% | -0.143 | -0.178 … -0.108 | -0.209 | -0.087 | 16/100 |
+| AAPL | 3245 | 44% | -0.003 | -0.040 … 0.035 | 0.009 | -0.012 | 47/100 |
+| MSFT | 3299 | 44% | -0.005 | -0.043 … 0.032 | -0.011 | -0.001 | 84/100 |
+| NVDA | 3088 | 43% | -0.028 | -0.067 … 0.011 | -0.025 | -0.030 | 28/100 |
+| TSLA | 2985 | 44% | 0.011 | -0.028 … 0.050 | 0.029 | -0.003 | 46/100 |
