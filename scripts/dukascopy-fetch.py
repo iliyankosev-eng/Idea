@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dukascopy 1-minute candles (BID and ASK) -> <out>/<SYMBOL>/<YYYY>.csv.gz with rows: utc_minute_iso,o,h,l,c (BID) + ask close.
+"""Dukascopy 1-minute candles (BID and ASK) -> <out>/<SYMBOL>/<YYYY>.csv.gz with rows: utc_minute_iso,o,h,l,c (BID) + ask close + tick volume.
 Runs in GitHub Actions (the sandbox cannot reach datafeed.dukascopy.com). Stdlib only.
 Usage: dukascopy-fetch.py OUT START(YYYY-MM-DD) END(YYYY-MM-DD) SYMBOL[,SYMBOL...]   or   dukascopy-fetch.py OUT probe
 Format of BID_candles_min_1.bi5 (LZMA): 24-byte records, big-endian: int32 seconds from day start (UTC), int32 open, close, low, high
@@ -50,7 +50,7 @@ def day_rows(sym, day):
             continue
         a = askc.get(t)
         ts = (base + dt.timedelta(seconds=t)).strftime("%Y-%m-%dT%H:%M")
-        rows.append(f"{ts},{o * p:.6g},{h * p:.6g},{l * p:.6g},{c * p:.6g},{'' if a is None else f'{a * p:.6g}'}")
+        rows.append(f"{ts},{o * p:.6g},{h * p:.6g},{l * p:.6g},{c * p:.6g},{'' if a is None else f'{a * p:.6g}'},{v:.6g}")
     return day, rows, False
 
 def main():
@@ -73,7 +73,7 @@ def main():
                 path = f"{out}/{sym}/{year}.csv.gz"
                 if os.path.exists(path):
                     continue
-                if time.time() - t0 > 250 * 60:  # leave time to push; the next run resumes here
+                if time.time() - t0 > int(os.environ.get("BUDGET_MIN", "250")) * 60:  # leave time to push; the next run resumes here
                     log.append(f"time budget used, stopping before {sym} {year}")
                     break
                 days = [d for d in (dt.date(year, 1, 1) + dt.timedelta(n) for n in range(366)) if d.year == year and a <= d <= b and d.weekday() != 5]
@@ -84,7 +84,7 @@ def main():
                     except Exception:
                         failed.append(d.isoformat())
                         return d, [], False
-                with cf.ThreadPoolExecutor(4) as ex:
+                with cf.ThreadPoolExecutor(int(os.environ.get("THREADS", "4"))) as ex:
                     for d, rows, _ in ex.map(safe, days):
                         res[d] = rows
                 if len(failed) > 5:  # do not save a year with holes; the next run retries it
@@ -94,7 +94,7 @@ def main():
                 rows = [r for d in sorted(res) for r in res[d]]
                 os.makedirs(f"{out}/{sym}", exist_ok=True)
                 with gzip.open(path, "wt") as f:
-                    f.write("t,o,h,l,c,ask_c\n" + "\n".join(rows) + "\n")
+                    f.write("t,o,h,l,c,ask_c,v\n" + "\n".join(rows) + "\n")
                 log.append(f"{sym} {year}: {len(rows)} minutes, {sum(1 for d in res if res[d])} days with data, failed days {failed}; first {rows[0] if rows else '-'}; last {rows[-1] if rows else '-'}")
                 print(log[-1], flush=True)
     with open(f"{out}/LOG.txt", "a") as f:
