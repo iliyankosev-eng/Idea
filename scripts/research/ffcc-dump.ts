@@ -1,0 +1,10 @@
+import { writeFileSync } from "node:fs";
+import { loadMinuteBars } from "../../src/data/intraday.ts";
+import { mulberry32 } from "../../src/evaluate.ts";
+import { completeSessions, loadCalendar, toSessions } from "../../src/intraday/sessions.ts";
+import { sessionTrades } from "../../src/social/ffcc.ts";
+process.chdir("/home/claude/idea");
+const D = "data/branch", cal = loadCalendar(`${D}/daily/alpaca/calendar.csv`);
+const ss = completeSessions(toSessions(loadMinuteBars(D, "QQQ", "2016-01", "2026-11", "alpaca"), cal), cal).kept;
+const r = mulberry32(5), pick = Array.from({ length: 40 }, () => ss[Math.floor(r() * ss.length)]!);
+writeFileSync(process.argv[2]!, JSON.stringify(pick.map((s) => ({ s: { minute: s.minute, o: s.o, h: s.h, l: s.l, c: s.c, v: s.v }, t: sessionTrades(s, { len: 5, target: "1.5R", stop: "extreme", cost: 0.0045 }) }))));
