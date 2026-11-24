@@ -1,6 +1,6 @@
 # Noise band: live bot vs backtest replay
 
-Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20 (SIP minute bars available up to 2026-11-20).
+Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23 (SIP minute bars available up to 2026-11-23).
 
 | Day | Checks | Same decision | Live trades | Live $ | Live % of NB capital | Backtest % (same rules, no costs) | Backtest – live |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -11,6 +11,7 @@ Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 20
 | 2026-11-18 | 12 | 12/12 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
 | 2026-11-19 | 12 | 11/12 | 2 | 78 | 0.31% | 0.33% | 0.03 pts |
 | 2026-11-20 | 12 | 12/12 | 1 | 797 | 3.19% | 2.91% | -0.28 pts |
+| 2026-11-23 | 4 | 4/4 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
 
 Total: live 2.49% of NB capital, backtest replay 2.41% (before costs).
 Timing: the bot's decision price (QQQ last trade at HH:MM:00) vs the backtest's execution price (open of minute HH:MM), signed so that positive = worse for the bot: average -0.1 bp over 13 orders.
@@ -31,3 +32,9 @@ Notes (23.11.2026, rerun with 19-20.11):
 - 23.11: GitHub stopped starting runs from 10:28 to 13:58 New York time (the account's free Actions minutes ran out; the
   repository was made public at ~14:15). 8 noise-band checks were skipped; the checks that ran (10:00, 14:30, 15:00, 15:30)
   all said "no position". Rerun with 23.11 once its minute bars are on the data branch.
+
+Notes (24.11.2026, rerun with 23.11):
+- 23.11: the replay walks all 12 checks of the day, including the 8 that GitHub skipped, and stays flat all day (0.00%).
+  So the outage did not cost a noise-band trade. The 4 checks that ran match 4/4.
+- 24.11: the 15:00 check ran and decided "flat", but GitHub refused the log push (Internal Server Error), so that line
+  is missing from botlog; issue #3 was opened by the alarm. Harmless.
