@@ -53,3 +53,6 @@
 2026-11-24T20:55:19.232Z [close] no QQQM position to close
 2026-11-24T20:55:19.591Z [close] DT8: 290 daily closes (last 2026-11-23), SPY now 717.845, in position false, decision none
 2026-11-24T20:55:19.703Z [close] BIL: price 91.62, held 556, target 555, order 0
+2026-11-24T20:58:17.737Z [nb] start, PAPER trading
+2026-11-24T20:58:18.036Z [nb] session 09:30-16:00; equity 101838.39, high-water 104121.49
+2026-11-24T20:58:18.036Z [nb] not a noise-band check time (New York 15:58), exit
