@@ -41,3 +41,6 @@
 2026-11-25T19:58:23.030Z [nb] start, PAPER trading
 2026-11-25T19:58:23.745Z [nb] session 09:30-16:00; equity 101578.22, high-water 104121.49
 2026-11-25T20:00:02.920Z [nb] NB 15:00: {"want":0,"price":631.89,"ub":647.91,"lb":607.63,"vwap":618.65,"lev":0.59,"qty":57,"days":14}; QQQM position 0 -> orders []
+2026-11-25T20:28:27.109Z [nb] start, PAPER trading
+2026-11-25T20:28:27.500Z [nb] session 09:30-16:00; equity 101576.55, high-water 104121.49
+2026-11-25T20:30:02.135Z [nb] NB 15:30: {"want":0,"price":631.82,"ub":648.8,"lb":606.77,"vwap":619.2,"lev":0.59,"qty":57,"days":14}; QQQM position 0 -> orders []
