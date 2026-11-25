@@ -1,6 +1,6 @@
 # Noise band: live bot vs backtest replay
 
-Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23 (SIP minute bars available up to 2026-11-23).
+Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24 (SIP minute bars available up to 2026-11-24).
 
 | Day | Checks | Same decision | Live trades | Live $ | Live % of NB capital | Backtest % (same rules, no costs) | Backtest – live |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -12,6 +12,7 @@ Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 20
 | 2026-11-19 | 12 | 11/12 | 2 | 78 | 0.31% | 0.33% | 0.03 pts |
 | 2026-11-20 | 12 | 12/12 | 1 | 797 | 3.19% | 2.91% | -0.28 pts |
 | 2026-11-23 | 4 | 4/4 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
+| 2026-11-24 | 11 | 11/11 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
 
 Total: live 2.49% of NB capital, backtest replay 2.41% (before costs).
 Timing: the bot's decision price (QQQ last trade at HH:MM:00) vs the backtest's execution price (open of minute HH:MM), signed so that positive = worse for the bot: average -0.1 bp over 13 orders.
@@ -38,3 +39,10 @@ Notes (24.11.2026, rerun with 23.11):
   So the outage did not cost a noise-band trade. The 4 checks that ran match 4/4.
 - 24.11: the 15:00 check ran and decided "flat", but GitHub refused the log push (Internal Server Error), so that line
   is missing from botlog; issue #3 was opened by the alarm. Harmless.
+
+Notes (25.11.2026, rerun with 24.11):
+- 24.11: 11/11 checks identical (the 15:00 log line is missing, see above); flat all day, replay flat too.
+- 12-24.11: 87 of 89 checks identical.
+- 25.11: no bot run was created for the 11:00 check at all (cron-job.org -> GitHub dispatch, 15:58 UTC); the noise band
+  stayed short from 10:30 to 11:30. GitHub also rejected that day's data-branch push once ("fatal error in
+  commit_refs_rules"); the data job was re-run. Replay 25.11 when its minute bars arrive.
