@@ -141,3 +141,6 @@
 2026-11-27T20:55:26.908Z [close] start, PAPER trading
 2026-11-27T20:55:27.041Z [close] session 09:30-13:00; equity 101595.96, high-water 104121.49
 2026-11-27T20:55:27.041Z [close] not the close window (New York 15:55, close 13:00), exit
+2026-11-27T20:58:16.946Z [nb] start, PAPER trading
+2026-11-27T20:58:17.049Z [nb] session 09:30-13:00; equity 101591.84, high-water 104121.49
+2026-11-27T20:58:17.050Z [nb] not a noise-band check time (New York 15:58), exit
