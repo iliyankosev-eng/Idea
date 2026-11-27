@@ -1,3 +1,6 @@
 2026-11-27T14:28:15.479Z [nb] start, PAPER trading
 2026-11-27T14:28:15.675Z [nb] session 09:30-13:00; equity 101591.96, high-water 104121.49
 2026-11-27T14:28:15.675Z [nb] not a noise-band check time (New York 09:28), exit
+2026-11-27T14:45:26.689Z [open] start, PAPER trading
+2026-11-27T14:45:26.772Z [open] session 09:30-13:00; equity 101596.96, high-water 104121.49
+2026-11-27T14:45:26.951Z [open] early close at 13:00 -> DT3 skipped (the close job runs at 15:25 and could not flatten QQQ)
