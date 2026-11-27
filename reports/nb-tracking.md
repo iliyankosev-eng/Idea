@@ -1,6 +1,6 @@
 # Noise band: live bot vs backtest replay
 
-Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24 (SIP minute bars available up to 2026-11-24).
+Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-23, 2026-11-24, 2026-11-25 (SIP minute bars available up to 2026-11-25).
 
 | Day | Checks | Same decision | Live trades | Live $ | Live % of NB capital | Backtest % (same rules, no costs) | Backtest – live |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -13,9 +13,10 @@ Days: 2026-11-12, 2026-11-13, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 20
 | 2026-11-20 | 12 | 12/12 | 1 | 797 | 3.19% | 2.91% | -0.28 pts |
 | 2026-11-23 | 4 | 4/4 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
 | 2026-11-24 | 11 | 11/11 | 0 | 0 | 0.00% | 0.00% | 0.00 pts |
+| 2026-11-25 | 11 | 11/11 | 1 | -27 | -0.11% | -0.01% | 0.10 pts |
 
-Total: live 2.49% of NB capital, backtest replay 2.41% (before costs).
-Timing: the bot's decision price (QQQ last trade at HH:MM:00) vs the backtest's execution price (open of minute HH:MM), signed so that positive = worse for the bot: average -0.1 bp over 13 orders.
+Total: live 2.38% of NB capital, backtest replay 2.40% (before costs).
+Timing: the bot's decision price (QQQ last trade at HH:MM:00) vs the backtest's execution price (open of minute HH:MM), signed so that positive = worse for the bot: average -0.5 bp over 14 orders.
 
 Notes (20.11.2026):
 - 58 of 59 checks gave the same decision. The one difference (16.11 15:00): the bot saw QQQ at 664.08 at 15:00:02, 4 cents above the
@@ -46,3 +47,9 @@ Notes (25.11.2026, rerun with 24.11):
 - 25.11: no bot run was created for the 11:00 check at all (cron-job.org -> GitHub dispatch, 15:58 UTC); the noise band
   stayed short from 10:30 to 11:30. GitHub also rejected that day's data-branch push once ("fatal error in
   commit_refs_rules"); the data job was re-run. Replay 25.11 when its minute bars arrive.
+
+Notes (27.11.2026, rerun with 25.11):
+- 25.11: the replay would have covered the short at the 11:00 check (QQQ 610.41, back above the lower band 609.11);
+  without that run the bot covered at 11:30, QQQ about 0.15% higher. Live -0.11% vs replay -0.01% of NB capital: the
+  missing run cost about 0.10 points (~$25). The 11 checks that did run match 11/11.
+- 12-25.11: 98 of 100 checks identical; live +2.38% vs replay +2.40% of NB capital.
